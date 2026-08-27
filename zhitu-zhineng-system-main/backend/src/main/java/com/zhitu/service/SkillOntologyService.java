@@ -1,0 +1,46 @@
+package com.zhitu.service;
+import com.zhitu.repository.Store;
+import jakarta.annotation.PostConstruct;
+import org.springframework.stereotype.Service;
+import java.util.*;
+@Service
+public class SkillOntologyService {
+ public record Def(String name,String stack,String category,List<String> aliases,List<String> prerequisites){}
+ private final Store store; private final Map<String,Def> defs=new LinkedHashMap<>(); private final Map<String,String> aliasToCanonical=new HashMap<>();
+ public SkillOntologyService(Store store){this.store=store; seedDefs();}
+ private void add(String name,String stack,String cat,List<String> aliases,String...pre){Def d=new Def(name,stack,cat,aliases,List.of(pre));defs.put(name,d);aliasToCanonical.put(norm(name),name);for(String a:aliases)aliasToCanonical.put(norm(a),name);}
+ private void seedDefs(){
+  add("Java","后端开发","编程语言",List.of("java开发","jdk")); add("Spring Boot","后端开发","框架",List.of("springboot","spring boot"),"Java"); add("Spring Cloud","后端开发","微服务",List.of("springcloud"),"Spring Boot"); add("MySQL","数据基础","数据库",List.of("mysql数据库","关系型数据库")); add("Redis","数据基础","缓存",List.of("redis缓存")); add("Kafka","大数据","消息队列",List.of("apache kafka","消息队列"));
+  add("Python","人工智能","编程语言",List.of("python编程","py")); add("机器学习","人工智能","算法",List.of("machine learning","ml"),"Python"); add("深度学习","人工智能","算法",List.of("deep learning","dl"),"机器学习"); add("PyTorch","人工智能","框架",List.of("torch"),"Python","深度学习"); add("TensorFlow","人工智能","框架",List.of("tf"),"Python","深度学习");
+  add("大模型API调用","大模型应用","模型接入",List.of("llm api","模型api","openai api"),"Python"); add("Prompt Engineering","大模型应用","提示工程",List.of("prompt engineering","提示工程","prompt设计"),"大模型API调用"); add("RAG","大模型应用","检索增强",List.of("检索增强生成","retrieval augmented generation"),"大模型API调用","向量数据库"); add("LangChain","大模型应用","Agent框架",List.of("langchain框架"),"Python","大模型API调用"); add("LangGraph","大模型应用","Agent框架",List.of("langgraph框架"),"LangChain"); add("AI Agent","大模型应用","智能体",List.of("智能体开发","agent开发","ai智能体"),"Prompt Engineering","大模型API调用"); add("MCP","大模型应用","协议",List.of("model context protocol","模型上下文协议"),"AI Agent"); add("向量数据库","大模型应用","数据库",List.of("milvus","faiss","chroma","pinecone")); add("知识图谱","人工智能","知识工程",List.of("knowledge graph","neo4j"));
+  add("Hadoop","大数据","离线计算",List.of("hdfs","mapreduce")); add("Spark","大数据","计算引擎",List.of("apache spark"),"Hadoop"); add("Flink","大数据","实时计算",List.of("apache flink"),"Kafka"); add("数据仓库","大数据","数仓",List.of("数仓","data warehouse")); add("数据治理","大数据","治理",List.of("data governance"),"数据仓库"); add("ETL","大数据","数据集成",List.of("数据清洗","数据集成"));
+  add("Pandas","数据分析","分析工具",List.of("pandas"),"Python"); add("NumPy","数据分析","计算库",List.of("numpy"),"Python"); add("Matplotlib","数据分析","可视化",List.of("matplotlib"),"Python"); add("Seaborn","数据分析","可视化",List.of("seaborn"),"Python"); add("Tableau","数据分析","BI工具",List.of("tableau")); add("Power BI","数据分析","BI工具",List.of("powerbi","power bi")); add("Airflow","大数据","调度",List.of("apache airflow","airflow")); add("dbt","大数据","数据建模",List.of("dbt","data build tool")); add("A/B测试","数据分析","实验分析",List.of("ab测试","a/b test","ab test")); add("时间序列分析","数据分析","统计分析",List.of("时间序列","time series")); add("用户分群","数据分析","用户分析",List.of("用户分群","人群分层")); add("漏斗分析","数据分析","用户分析",List.of("漏斗分析")); add("RFM","数据分析","用户分析",List.of("rfm")); add("K-Means","人工智能","算法",List.of("kmeans","k-means"),"机器学习"); add("XGBoost","人工智能","算法",List.of("xgboost"),"机器学习"); add("Prophet","数据分析","预测模型",List.of("prophet")); add("特征工程","人工智能","机器学习工程",List.of("特征工程"),"机器学习"); add("交叉验证","人工智能","模型评估",List.of("交叉验证","cross validation"),"机器学习"); add("SPSS","数据分析","统计工具",List.of("spss")); add("统计推断","数据分析","统计分析",List.of("统计推断")); add("假设检验","数据分析","统计分析",List.of("假设检验","hypothesis testing")); add("回归分析","数据分析","统计建模",List.of("回归分析")); add("数据可视化","数据分析","可视化",List.of("数据可视化","可视化分析")); add("指标体系","数据分析","业务分析",List.of("指标体系","指标设计")); add("同期群分析","数据分析","用户分析",List.of("同期群分析","cohort analysis")); add("经营分析","数据分析","业务分析",List.of("经营分析")); add("实验设计","数据分析","实验分析",List.of("实验设计"));
+  add("Docker","云原生","容器",List.of("容器化","docker部署")); add("Kubernetes","云原生","编排",List.of("k8s","容器编排"),"Docker"); add("Linux","云原生","操作系统",List.of("linux运维")); add("Git","工程基础","版本控制",List.of("github","gitlab")); add("CI/CD","云原生","工程效能",List.of("持续集成","持续部署"),"Git","Docker");
+  add("物联网协议","物联网","通信协议",List.of("mqtt","modbus","coap")); add("嵌入式C","物联网","编程语言",List.of("c语言","embedded c")); add("边缘计算","物联网","计算架构",List.of("edge computing"),"物联网协议"); add("数字孪生","智能系统","仿真",List.of("digital twin"),"边缘计算"); add("计算机视觉","智能系统","感知",List.of("cv","图像识别"),"深度学习"); add("ROS","智能系统","机器人",List.of("robot operating system"));
+  add("RESTful API","后端开发","接口",List.of("rest api","接口开发")); add("微服务","后端开发","架构",List.of("microservice"),"Spring Boot"); add("分布式系统","后端开发","架构",List.of("分布式架构"),"微服务"); add("单元测试","工程基础","质量",List.of("junit","pytest")); add("SQL","数据基础","查询语言",List.of("sql查询"));
+  add("JavaScript","前端开发","编程语言",List.of("javascript","js")); add("TypeScript","前端开发","编程语言",List.of("typescript","ts")); add("Vue.js","前端开发","框架",List.of("vue","vuejs","vue3"),"JavaScript"); add("React","前端开发","框架",List.of("react","reactjs"),"JavaScript"); add("Node.js","后端开发","运行时",List.of("nodejs","node.js"),"JavaScript"); add("Angular","前端开发","框架",List.of("angular"),"TypeScript");
+  add("C++","工程基础","编程语言",List.of("cpp","c++")); add("C","工程基础","编程语言",List.of("c语言")); add("C#","工程基础","编程语言",List.of("csharp","c#"),"C"); add("Go","后端开发","编程语言",List.of("golang","go语言")); add("Rust","工程基础","编程语言",List.of("rust")); add("Scala","大数据","编程语言",List.of("scala"));
+  add("PostgreSQL","数据基础","数据库",List.of("postgresql","postgres"),"SQL"); add("MongoDB","数据基础","数据库",List.of("mongodb")); add("Elasticsearch","数据基础","搜索引擎",List.of("elasticsearch","es搜索")); add("Hive","大数据","数据仓库",List.of("hive"),"Hadoop"); add("HBase","大数据","数据库",List.of("hbase"),"Hadoop"); add("ClickHouse","大数据","分析数据库",List.of("clickhouse"));
+  add("Nginx","云原生","网关",List.of("nginx")); add("Jenkins","云原生","工程效能",List.of("jenkins"),"Git","CI/CD"); add("AWS","云计算","云平台",List.of("aws","amazonwebservices")); add("Azure","云计算","云平台",List.of("azure")); add("阿里云","云计算","云平台",List.of("阿里云","aliyun")); add("Scikit-learn","人工智能","框架",List.of("sklearn","scikit-learn"),"Python","机器学习");
+ }
+ private String norm(String s){return s==null?"":s.toLowerCase(Locale.ROOT).replaceAll("[\\s_-]+","");}
+ @PostConstruct public void init(){
+  for(Def d:defs.values()){
+   Map<String,Object> p=Map.of("n",d.name(),"a",String.join(",",d.aliases()),"s",d.stack(),"c",d.category(),"d",d.category()+"技能点");
+   if(store.maybe("SELECT id FROM skill WHERE canonical_name=:n",Map.of("n",d.name())).isPresent())
+    store.update("UPDATE skill SET aliases=:a,tech_stack=:s,category=:c,description=:d WHERE canonical_name=:n",p);
+   else store.insert("INSERT INTO skill(canonical_name,aliases,tech_stack,category,description) VALUES(:n,:a,:s,:c,:d)",p);
+  }
+ }
+ public String canonicalize(String raw){if(raw==null)return null;String n=norm(raw);if(aliasToCanonical.containsKey(n))return aliasToCanonical.get(n);for(var e:aliasToCanonical.entrySet())if(n.contains(e.getKey())||e.getKey().contains(n))return e.getValue();return raw.trim();}
+ public Set<String> extract(String text){String n=norm(text);Set<String>out=new LinkedHashSet<>();for(var e:aliasToCanonical.entrySet()){String k=e.getKey();if(k.length()<2)continue;if(k.length()<=2&&k.matches("[a-z0-9]+"))continue;if(n.contains(k))out.add(e.getValue());}if(out.contains("Java")){String stripped=n.replace("javascript","");if(!stripped.contains("java")&&!n.contains("java开发")&&!n.contains("jdk")&&!n.contains("java工程师")&&!n.contains("java后端")&&!n.contains("javase"))out.remove("Java");}if(out.contains("SQL")){String stripped=n.replace("mysql","").replace("postgresql","").replace("nosql","");if(!stripped.contains("sql")&&!n.contains("sql查询")&&!n.contains("sql语句")&&!n.contains("sql开发")&&!n.contains("sqlserver"))out.remove("SQL");}return out;}
+ public Def def(String name){return defs.get(canonicalize(name));}
+ public List<String> prerequisites(String name){Def d=def(name);return d==null?List.of():d.prerequisites();}
+ public String stackOf(String name){Def d=def(name);return d==null?"其他":d.stack();}
+ public Collection<Def> all(){return defs.values();}
+
+ private static final List<String> SKILL_ACTION_MARKERS = List.of("负责","参与","使用","熟悉","掌握","了解","能够","具有","进行","完成","搭建","建设","精通","负责过");
+ private static final List<String> SKILL_SOFT_MARKERS = List.of("能力","团队","协作","沟通","责任","抗压","领导","主动","思维");
+ /** 候选技能名是否像具体技能点（而非动作短语或软技能描述词）。 */
+ public static boolean isPlausibleSkill(String raw){if(raw==null)return false;String t=raw.trim();if(t.isBlank()||t.length()>25)return false;if(t.matches("(?i)[a-z]")&&!"C".equalsIgnoreCase(t))return false;for(String m:SKILL_ACTION_MARKERS)if(t.contains(m))return false;for(String m:SKILL_SOFT_MARKERS)if(t.contains(m))return false;return true;}
+}

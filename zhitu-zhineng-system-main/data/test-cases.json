@@ -1,0 +1,390 @@
+{
+  "jdCases": [
+    {
+      "id": 1,
+      "jobTitle": "AI Agent 工程师",
+      "requiredSkills": [
+        "Python",
+        "大模型API调用",
+        "Prompt Engineering",
+        "RAG",
+        "LangChain",
+        "LangGraph",
+        "AI Agent",
+        "MCP",
+        "向量数据库",
+        "Docker"
+      ],
+      "source": "BOSS直聘"
+    },
+    {
+      "id": 2,
+      "jobTitle": "中级AI Agent 工程师",
+      "requiredSkills": [
+        "Python",
+        "大模型API调用",
+        "Prompt Engineering",
+        "RAG",
+        "LangChain",
+        "LangGraph",
+        "AI Agent",
+        "MCP",
+        "向量数据库",
+        "Docker"
+      ],
+      "source": "企业官网"
+    },
+    {
+      "id": 3,
+      "jobTitle": "高级AI Agent 工程师",
+      "requiredSkills": [
+        "Python",
+        "大模型API调用",
+        "Prompt Engineering",
+        "RAG",
+        "LangChain",
+        "LangGraph",
+        "AI Agent",
+        "MCP",
+        "向量数据库",
+        "Docker"
+      ],
+      "source": "智联招聘"
+    },
+    {
+      "id": 4,
+      "jobTitle": "AI Agent 工程师",
+      "requiredSkills": [
+        "Python",
+        "大模型API调用",
+        "Prompt Engineering",
+        "RAG",
+        "LangChain",
+        "LangGraph",
+        "AI Agent",
+        "MCP",
+        "向量数据库",
+        "Docker"
+      ],
+      "source": "前程无忧"
+    },
+    {
+      "id": 5,
+      "jobTitle": "中级AI Agent 工程师",
+      "requiredSkills": [
+        "Python",
+        "大模型API调用",
+        "Prompt Engineering",
+        "RAG",
+        "LangChain",
+        "LangGraph",
+        "AI Agent",
+        "MCP",
+        "向量数据库",
+        "Docker"
+      ],
+      "source": "高校就业网"
+    },
+    {
+      "id": 6,
+      "jobTitle": "高级AI Agent 工程师",
+      "requiredSkills": [
+        "Python",
+        "大模型API调用",
+        "Prompt Engineering",
+        "RAG",
+        "LangChain",
+        "LangGraph",
+        "AI Agent",
+        "MCP",
+        "向量数据库",
+        "Docker"
+      ],
+      "source": "BOSS直聘"
+    },
+    {
+      "id": 7,
+      "jobTitle": "AI Agent 工程师",
+      "requiredSkills": [
+        "Python",
+        "大模型API调用",
+        "Prompt Engineering",
+        "RAG",
+        "LangChain",
+        "LangGraph",
+        "AI Agent",
+        "MCP",
+        "向量数据库",
+        "Docker"
+      ],
+      "source": "企业官网"
+    },
+    {
+      "id": 8,
+      "jobTitle": "中级AI Agent 工程师",
+      "requiredSkills": [
+        "Python",
+        "大模型API调用",
+        "Prompt Engineering",
+        "RAG",
+        "LangChain",
+        "LangGraph",
+        "AI Agent",
+        "MCP",
+        "向量数据库",
+        "Docker"
+      ],
+      "source": "智联招聘"
+    },
+    {
+      "id": 9,
+      "jobTitle": "高级AI Agent 工程师",
+      "requiredSkills": [
+        "Python",
+        "大模型API调用",
+        "Prompt Engineering",
+        "RAG",
+        "LangChain",
+        "LangGraph",
+        "AI Agent",
+        "MCP",
+        "向量数据库",
+        "Docker"
+      ],
+      "source": "前程无忧"
+    },
+    {
+      "id": 10,
+      "jobTitle": "AI Agent 工程师",
+      "requiredSkills": [
+        "Python",
+        "大模型API调用",
+        "Prompt Engineering",
+        "RAG",
+        "LangChain",
+        "LangGraph",
+        "AI Agent",
+        "MCP",
+        "向量数据库",
+        "Docker"
+      ],
+      "source": "高校就业网"
+    },
+    {
+      "id": 11,
+      "jobTitle": "RAG 应用工程师",
+      "requiredSkills": [
+        "Python",
+        "大模型API调用",
+        "Prompt Engineering",
+        "RAG",
+        "LangChain",
+        "向量数据库",
+        "知识图谱",
+        "Docker"
+      ],
+      "source": "BOSS直聘"
+    },
+    {
+      "id": 12,
+      "jobTitle": "中级RAG 应用工程师",
+      "requiredSkills": [
+        "Python",
+        "大模型API调用",
+        "Prompt Engineering",
+        "RAG",
+        "LangChain",
+        "向量数据库",
+        "知识图谱",
+        "Docker"
+      ],
+      "source": "企业官网"
+    },
+    {
+      "id": 13,
+      "jobTitle": "高级RAG 应用工程师",
+      "requiredSkills": [
+        "Python",
+        "大模型API调用",
+        "Prompt Engineering",
+        "RAG",
+        "LangChain",
+        "向量数据库",
+        "知识图谱",
+        "Docker"
+      ],
+      "source": "智联招聘"
+    },
+    {
+      "id": 14,
+      "jobTitle": "RAG 应用工程师",
+      "requiredSkills": [
+        "Python",
+        "大模型API调用",
+        "Prompt Engineering",
+        "RAG",
+        "LangChain",
+        "向量数据库",
+        "知识图谱",
+        "Docker"
+      ],
+      "source": "前程无忧"
+    },
+    {
+      "id": 15,
+      "jobTitle": "中级RAG 应用工程师",
+      "requiredSkills": [
+        "Python",
+        "大模型API调用",
+        "Prompt Engineering",
+        "RAG",
+        "LangChain",
+        "向量数据库",
+        "知识图谱",
+        "Docker"
+      ],
+      "source": "高校就业网"
+    },
+    {
+      "id": 16,
+      "jobTitle": "高级RAG 应用工程师",
+      "requiredSkills": [
+        "Python",
+        "大模型API调用",
+        "Prompt Engineering",
+        "RAG",
+        "LangChain",
+        "向量数据库",
+        "知识图谱",
+        "Docker"
+      ],
+      "source": "BOSS直聘"
+    },
+    {
+      "id": 17,
+      "jobTitle": "RAG 应用工程师",
+      "requiredSkills": [
+        "Python",
+        "大模型API调用",
+        "Prompt Engineering",
+        "RAG",
+        "LangChain",
+        "向量数据库",
+        "知识图谱",
+        "Docker"
+      ],
+      "source": "企业官网"
+    },
+    {
+      "id": 18,
+      "jobTitle": "中级RAG 应用工程师",
+      "requiredSkills": [
+        "Python",
+        "大模型API调用",
+        "Prompt Engineering",
+        "RAG",
+        "LangChain",
+        "向量数据库",
+        "知识图谱",
+        "Docker"
+      ],
+      "source": "智联招聘"
+    },
+    {
+      "id": 19,
+      "jobTitle": "高级RAG 应用工程师",
+      "requiredSkills": [
+        "Python",
+        "大模型API调用",
+        "Prompt Engineering",
+        "RAG",
+        "LangChain",
+        "向量数据库",
+        "知识图谱",
+        "Docker"
+      ],
+      "source": "前程无忧"
+    },
+    {
+      "id": 20,
+      "jobTitle": "RAG 应用工程师",
+      "requiredSkills": [
+        "Python",
+        "大模型API调用",
+        "Prompt Engineering",
+        "RAG",
+        "LangChain",
+        "向量数据库",
+        "知识图谱",
+        "Docker"
+      ],
+      "source": "高校就业网"
+    },
+    {
+      "id": 21,
+      "jobTitle": "大数据开发工程师",
+      "requiredSkills": [
+        "SQL",
+        "Spark",
+        "Flink",
+        "Hive",
+        "Kafka",
+        "ClickHouse",
+        "数据仓库",
+        "Python"
+      ],
+      "source": "BOSS直聘"
+    }
+  ],
+  "resumeCases": [
+    {
+      "name": "Java-01",
+      "text": "本科，2年经验，掌握 Java、Spring Boot、MySQL、Redis、Docker、Git。",
+      "skills": [
+        "Java",
+        "Spring Boot",
+        "MySQL",
+        "Redis",
+        "Docker",
+        "Git"
+      ]
+    },
+    {
+      "name": "LLM-01",
+      "text": "掌握 Python、RAG、LangChain、Prompt Engineering、向量数据库和大模型API调用。",
+      "skills": [
+        "Python",
+        "RAG",
+        "LangChain",
+        "Prompt Engineering",
+        "向量数据库",
+        "大模型API调用"
+      ]
+    },
+    {
+      "name": "BigData-01",
+      "text": "熟悉 SQL、Hadoop、Spark、Flink、Kafka、ETL、数据仓库。",
+      "skills": [
+        "SQL",
+        "Hadoop",
+        "Spark",
+        "Flink",
+        "Kafka",
+        "ETL",
+        "数据仓库"
+      ]
+    }
+  ],
+  "matchCases": [
+    {
+      "resume": "Java-01",
+      "role": "Java 开发工程师",
+      "expectedBand": "70-100"
+    },
+    {
+      "resume": "BigData-01",
+      "role": "RAG 应用工程师",
+      "expectedBand": "0-55"
+    }
+  ]
+}

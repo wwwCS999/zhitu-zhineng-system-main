@@ -1,0 +1,18 @@
+{
+  "status": "PASS",
+  "jd_count": 120,
+  "json_files": 5,
+  "java_files": 42,
+  "vue_files": 18,
+  "metrics": {
+    "jd_parse_precision": 1.0,
+    "jd_parse_recall": 1.0,
+    "jd_parse_f1": 1.0,
+    "resume_skill_precision": 0.95,
+    "resume_skill_recall": 1.0,
+    "resume_skill_f1": 0.9744,
+    "jd_count": 120,
+    "note": "匹配准确率需使用专家打分样本在系统接口上复测；此脚本不伪造匹配金标准。"
+  },
+  "errors": []
+}

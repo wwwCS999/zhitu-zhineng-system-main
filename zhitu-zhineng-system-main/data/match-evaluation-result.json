@@ -1,0 +1,76 @@
+{
+  "binary_accuracy": 1.0,
+  "precision": 1.0,
+  "recall": 1.0,
+  "f1": 1.0,
+  "three_band_accuracy": 0.9479,
+  "mae": 7.21,
+  "binary_cases": 84,
+  "total_cases": 96,
+  "confusion_matrix": {
+    "TP": 9,
+    "TN": 75,
+    "FP": 0,
+    "FN": 0
+  },
+  "three_band_confusion": {
+    "match": {
+      "match": 9,
+      "partial": 0,
+      "mismatch": 0
+    },
+    "partial": {
+      "match": 0,
+      "partial": 7,
+      "mismatch": 5
+    },
+    "mismatch": {
+      "match": 0,
+      "partial": 0,
+      "mismatch": 75
+    }
+  },
+  "misclassified": [
+    {
+      "resume": "Java-02",
+      "role": "Java 开发工程师",
+      "truth": "partial",
+      "pred": "mismatch",
+      "overall": 49.7,
+      "coverage": 0.4
+    },
+    {
+      "resume": "DataGov-01",
+      "role": "大数据开发工程师",
+      "truth": "partial",
+      "pred": "mismatch",
+      "overall": 53.3,
+      "coverage": 0.4
+    },
+    {
+      "resume": "DevOps-02",
+      "role": "云原生 DevOps 工程师",
+      "truth": "partial",
+      "pred": "mismatch",
+      "overall": 49.9,
+      "coverage": 0.4
+    },
+    {
+      "resume": "DevOps-01",
+      "role": "物联网工程师",
+      "truth": "partial",
+      "pred": "mismatch",
+      "overall": 46.2,
+      "coverage": 0.25
+    },
+    {
+      "resume": "DevOps-02",
+      "role": "物联网工程师",
+      "truth": "partial",
+      "pred": "mismatch",
+      "overall": 41.7,
+      "coverage": 0.25
+    }
+  ],
+  "note": "匹配准确率=二分类准确率；标签由“技能覆盖率”规则生成（≥80% 匹配 / ≤20% 不匹配），打分公式复刻 MatchingScoreEngine，阈值 overall≥70 判定为匹配。"
+}

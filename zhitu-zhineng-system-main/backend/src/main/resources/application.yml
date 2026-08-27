@@ -1,0 +1,126 @@
+spring:
+  application:
+    name: zhitu-backend
+  datasource:
+    # 主业务库继续使用 H2，避免和你原 career_data_governance 中已有的 job_posting 等旧表发生结构冲突。
+    url: jdbc:h2:mem:zhitu;MODE=MySQL;DB_CLOSE_DELAY=-1;DATABASE_TO_LOWER=TRUE;NON_KEYWORDS=VALUE,DAY
+    username: sa
+    password:
+    driver-class-name: org.h2.Driver
+  sql:
+    init:
+      mode: always
+  servlet:
+    multipart:
+      max-file-size: 20MB
+      max-request-size: 25MB
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      timeout: 800ms
+
+server:
+  port: 8080
+
+logging:
+  level:
+    org.springframework.web.client: INFO
+    org.springframework.http.converter: INFO
+    org.springframework.jdbc.core: INFO
+    org.springframework.web.servlet.mvc.method.annotation: INFO
+
+management:
+  health:
+    redis:
+      enabled: ${REDIS_HEALTH_ENABLED:false}
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+
+app:
+  cors-origins: ${APP_CORS_ORIGINS:http://localhost:5173,http://127.0.0.1:5173,http://localhost:5174,http://127.0.0.1:5174,http://localhost:5175,http://127.0.0.1:5175,https://www.zhituzhipei.cc,https://zhituzhipei.cc}
+  data-file: ${DATA_FILE:../data/sample-jd-120.csv}
+  upload-dir: ${UPLOAD_DIR:../uploads}
+
+  ai:
+    # 配置 API_KEY 后默认启用；仍可用 AI_ENABLED=false 显式关闭。
+    # DeepSeek 使用 OpenAI-compatible 协议：AI_BASE_URL=https://api.deepseek.com/v1，AI_MODEL=deepseek-chat。
+    enabled: ${AI_ENABLED:true}
+    base-url: ${AI_BASE_URL:https://api.deepseek.com/v1}
+    # 依次兼容项目统一命名、DeepSeek、百炼官方命名以及你机器上已有的命名。
+    api-key: ${AI_API_KEY:${DEEPSEEK_API_KEY:${DASHSCOPE_API_KEY:${ALI_API_KEY:}}}}
+    model: ${AI_MODEL:deepseek-chat}
+    fallback-model: ${AI_FALLBACK_MODEL:}
+    # 可选：企业演示建议配置备用网关，例如：
+    # AI_FALLBACK_BASE_URL=https://dashscope.aliyuncs.com/compatible-mode/v1
+    # AI_FALLBACK_API_KEY=<DashScope Key>
+    # AI_FALLBACK_MODEL=qwen-plus
+    fallback-base-url: ${AI_FALLBACK_BASE_URL:${AI_BASE_URL:https://api.deepseek.com/v1}}
+    fallback-api-key: ${AI_FALLBACK_API_KEY:${AI_API_KEY:${DEEPSEEK_API_KEY:${DASHSCOPE_API_KEY:${ALI_API_KEY:}}}}}
+    connect-timeout-ms: ${AI_CONNECT_TIMEOUT_MS:5000}
+    read-timeout-ms: ${AI_READ_TIMEOUT_MS:180000}
+    max-tokens: ${AI_MAX_TOKENS:4096}
+    resume:
+      enabled: ${AI_RESUME_ENABLED:true}
+      model: ${AI_RESUME_MODEL:${AI_MODEL:deepseek-chat}}
+      vision-base-url: ${AI_RESUME_VISION_BASE_URL:${AI_BASE_URL:https://api.deepseek.com/v1}}
+      vision-api-key: ${AI_RESUME_VISION_API_KEY:${AI_API_KEY:${DEEPSEEK_API_KEY:${DASHSCOPE_API_KEY:${ALI_API_KEY:}}}}}
+      vision-model: ${AI_RESUME_VISION_MODEL:${AI_RESUME_MODEL:${AI_MODEL:deepseek-chat}}}
+      max-tokens: ${AI_RESUME_MAX_TOKENS:3200}
+      text-max-chars: ${AI_RESUME_TEXT_MAX_CHARS:18000}
+    learning:
+      model: ${AI_LEARNING_MODEL:${AI_MODEL:deepseek-chat}}
+    retrieval:
+      # 先在最近的治理数据窗口内检索，避免每次问答扫描百万行 MEDIUMTEXT。
+      recent-raw-rows: ${AI_RETRIEVAL_RECENT_RAW_ROWS:20000}
+      max-context-chars: ${AI_MAX_CONTEXT_CHARS:10000}
+      # 探新/演化派生表为空时，由问答智能体自动从治理数据生成一次分析证据。
+      auto-analysis-enabled: ${AI_AUTO_ANALYSIS_ENABLED:true}
+      auto-analysis-cooldown-ms: ${AI_AUTO_ANALYSIS_COOLDOWN_MS:300000}
+
+  resume:
+    external-parser:
+      enabled: ${AI_RESUME_EXTERNAL_PARSER_ENABLED:true}
+      root: ${AI_RESUME_EXTERNAL_PARSER_ROOT:D:/简历JD解析_图片OCR轻量修复V2.4_完整代码/简历JD解析_图片OCR轻量修复V2.4_完整代码}
+      python: ${AI_RESUME_EXTERNAL_PARSER_PYTHON:python}
+      mode: ${AI_RESUME_EXTERNAL_PARSER_MODE:E3}
+      ocr: ${AI_RESUME_EXTERNAL_PARSER_OCR:auto}
+      timeout-seconds: ${AI_RESUME_EXTERNAL_PARSER_TIMEOUT_SECONDS:180}
+      cache: ${AI_RESUME_EXTERNAL_PARSER_CACHE:use}
+      model: ${AI_RESUME_EXTERNAL_PARSER_MODEL:${app.ai.resume.model:${app.ai.model:deepseek-chat}}}
+      base-url: ${AI_RESUME_EXTERNAL_PARSER_BASE_URL:${app.ai.base-url:https://api.deepseek.com/v1}}
+      api-key: ${AI_RESUME_EXTERNAL_PARSER_API_KEY:${app.ai.api-key:}}
+
+  # 第二数据源：只服务“百万历史岗位年度预测验证”。
+  # 默认直接连接你截图中的 career_data_governance.dataset_job_raw。
+  raw-database:
+    # V8：127.0.0.1 避免少数 Windows 环境的 localhost/IPv6 解析波动；
+    # connectTimeout 控制建连等待，socketTimeout 给百万批处理足够的单次 SQL 时间，tcpKeepAlive 减少长任务空闲连接被回收。
+    url: ${RAW_DB_URL:jdbc:mysql://127.0.0.1:3306/career_data_governance?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai&useSSL=false&allowPublicKeyRetrieval=true&connectTimeout=10000&socketTimeout=600000&tcpKeepAlive=true&rewriteBatchedStatements=true}
+    username: ${RAW_DB_USERNAME:root}
+    password: ${RAW_DB_PASSWORD:123456}
+    table: ${RAW_DB_TABLE:dataset_job_raw}
+    holdout-year: ${RAW_HOLDOUT_YEAR:2026}
+    holdout-size: ${RAW_HOLDOUT_SIZE:1000}
+    holdout-seed: ${RAW_HOLDOUT_SEED:zhitu-2026-v1}
+
+    # V10：每 100 条作为一个可提交、可分析的增量快照。
+    # 这样每完成 100 条治理后，各业务页面刷新/重新分析即可使用最新快照。
+    governance-batch-size: ${RAW_GOVERNANCE_BATCH_SIZE:100}
+    analysis-min-governed-rows: ${RAW_ANALYSIS_MIN_GOVERNED_ROWS:100}
+    # 低于该质量分的记录仍保留，但不进入年度岗位分析。
+    minimum-quality: ${RAW_MINIMUM_QUALITY:0.45}
+
+    # 独立历史库 HikariCP。后台治理、进度轮询、人工编辑、统计页面共享这一池。
+    pool:
+      maximum-pool-size: ${RAW_DB_MAX_POOL_SIZE:8}
+      minimum-idle: ${RAW_DB_MIN_IDLE:2}
+      connection-timeout-ms: ${RAW_DB_CONNECTION_TIMEOUT_MS:30000}
+      validation-timeout-ms: ${RAW_DB_VALIDATION_TIMEOUT_MS:5000}
+      idle-timeout-ms: ${RAW_DB_IDLE_TIMEOUT_MS:600000}
+      max-lifetime-ms: ${RAW_DB_MAX_LIFETIME_MS:1500000}
+      keepalive-time-ms: ${RAW_DB_KEEPALIVE_TIME_MS:120000}
+      query-timeout-seconds: ${RAW_DB_QUERY_TIMEOUT_SECONDS:300}
+      transaction-timeout-seconds: ${RAW_DB_TRANSACTION_TIMEOUT_SECONDS:300}
