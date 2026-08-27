@@ -771,7 +771,7 @@ onMounted(load)
           </div>
           <strong>{{ report.overall_score }}%</strong>
           <b>{{ decisionLevel(report.overall_score) }}</b>
-          <p>结合技能覆盖、项目证据和五维匹配给出用人方向建议。</p>
+          <p>结合技能覆盖、项目证据和六维匹配给出用人方向建议。</p>
         </aside>
       </header>
 
@@ -801,8 +801,8 @@ onMounted(load)
       <div class="match-report-body-grid">
         <div class="match-weight-panel">
           <header>
-            <h3>五维匹配</h3>
-            <small>技能 / 项目 / 经历 / 学历 / 潜力 加权归一</small>
+            <h3>六维匹配</h3>
+            <small>技能 / 实习 / 项目 / 技术栈 / 岗位等级 / 学历 加权归一</small>
           </header>
           <div class="match-weight-list">
             <div v-for="item in dimensionRows" :key="item.label" class="match-weight-row" :class="{ warn: item.value < 70 }">
