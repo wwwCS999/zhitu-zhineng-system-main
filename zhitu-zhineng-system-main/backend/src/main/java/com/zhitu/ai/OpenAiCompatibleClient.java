@@ -107,11 +107,12 @@ public class OpenAiCompatibleClient implements AiClient {
         this.visionModel = visionModel == null || visionModel.isBlank() ? this.model : visionModel.trim();
         this.fallbackModel = fallbackModel == null ? "" : fallbackModel.trim();
         this.maxTokens = Math.max(256, Math.min(maxTokens, 8192));
-        this.enabled = configuredEnabled && !this.apiKey.isBlank();
+        this.enabled = configuredEnabled
+                && (!this.apiKey.isBlank() || !this.deepSeekApiKey.isBlank() || !this.fallbackApiKey.isBlank());
         this.visionEnabled = configuredEnabled && !this.visionApiKey.isBlank();
 
-        if (configuredEnabled && this.apiKey.isBlank()) {
-            log.info("大模型问答未启用：未配置 app.ai.api-key / AI_API_KEY");
+        if (configuredEnabled && !this.enabled) {
+            log.info("大模型问答未启用：未配置 app.ai.api-key / AI_API_KEY / DEEPSEEK_API_KEY");
         }
     }
 
@@ -176,6 +177,7 @@ public class OpenAiCompatibleClient implements AiClient {
         result.put("lastSuccessfulModel", lastSuccessfulModel().orElse(""));
         result.put("lastError", lastError().orElse(""));
         result.put("lastErrorHint", readableError(lastError));
+        result.put("retryPolicy", "主模型瞬时错误自动重试 1 次，失败后切换备用模型");
         return result;
     }
 
@@ -196,7 +198,7 @@ public class OpenAiCompatibleClient implements AiClient {
 
         try {
             ModelEndpoint primaryEndpoint = endpointFor(primaryModel);
-            String answer = requestCompletion(primaryEndpoint.client(), primaryEndpoint.apiKey(),
+            String answer = requestCompletionWithRetry(primaryEndpoint.client(), primaryEndpoint.apiKey(),
                     primaryModel, system, user, primaryMaxTokens, safeTemperature);
             lastError = null;
             lastSuccessfulModel = primaryModel;
@@ -210,7 +212,7 @@ public class OpenAiCompatibleClient implements AiClient {
                 try {
                     String retrySystem = system + "\n\nOutput policy: answer directly with final Chinese response only. Do not spend the response budget on hidden reasoning.";
                     ModelEndpoint retryEndpoint = endpointFor(primaryModel);
-                    String answer = requestCompletion(retryEndpoint.client(), retryEndpoint.apiKey(),
+                    String answer = requestCompletionWithRetry(retryEndpoint.client(), retryEndpoint.apiKey(),
                             primaryModel, retrySystem, user, retryMaxTokens, Math.min(safeTemperature, 0.2D));
                     lastError = null;
                     lastSuccessfulModel = primaryModel;
@@ -226,7 +228,7 @@ public class OpenAiCompatibleClient implements AiClient {
             if (!fallbackModel.isBlank() && !fallbackModel.equalsIgnoreCase(primaryModel)) {
                 try {
                     int fallbackMaxTokens = Math.max(2048, Math.min(primaryMaxTokens, 4096));
-                    String answer = requestCompletion(fallbackClient, fallbackApiKey, fallbackModel, system, user, fallbackMaxTokens, safeTemperature);
+                    String answer = requestCompletionWithRetry(fallbackClient, fallbackApiKey, fallbackModel, system, user, fallbackMaxTokens, safeTemperature);
                     lastError = "主模型 " + primaryModel + " 调用失败，已自动使用备用模型 " + fallbackModel;
                     lastSuccessfulModel = fallbackModel;
                     log.warn("主模型调用失败，已使用备用模型回答（primary={}, fallback={}, endpoint={}）：{}",
@@ -274,6 +276,38 @@ public class OpenAiCompatibleClient implements AiClient {
         }
     }
 
+    private String requestCompletionWithRetry(
+            RestClient targetClient,
+            String targetApiKey,
+            String requestedModel,
+            String system,
+            String user,
+            int requestedMaxTokens,
+            double temperature
+    ) throws Exception {
+        Exception lastException = null;
+        for (int attempt = 1; attempt <= 2; attempt++) {
+            try {
+                return requestCompletion(targetClient, targetApiKey, requestedModel, system, user, requestedMaxTokens, temperature);
+            } catch (Exception ex) {
+                lastException = ex;
+                if (attempt >= 2 || !isTransientModelError(ex)) {
+                    throw ex;
+                }
+                long backoffMs = 600L * attempt;
+                log.warn("模型瞬时调用异常，准备第 {} 次重试（model={}, backoff={}ms）：{}",
+                        attempt + 1, requestedModel, backoffMs, rootMessage(ex));
+                try {
+                    Thread.sleep(backoffMs);
+                } catch (InterruptedException interrupted) {
+                    Thread.currentThread().interrupt();
+                    throw ex;
+                }
+            }
+        }
+        throw lastException == null ? new IllegalStateException("模型调用失败") : lastException;
+    }
+
     private String requestCompletion(
             RestClient targetClient,
             String targetApiKey,
@@ -302,17 +336,10 @@ public class OpenAiCompatibleClient implements AiClient {
                 .body(body)
                 .retrieve()
                 .body(String.class);
-        if (responseBody != null) {
-            return extractAssistantText(responseBody, "model");
+        if (responseBody == null || responseBody.isBlank()) {
+            throw new IllegalStateException("模型响应为空");
         }
-
-        JsonNode root = mapper.readTree(responseBody);
-        JsonNode content = root.path("choices").path(0).path("message").path("content");
-        String answer = content.isTextual() ? content.asText().trim() : "";
-        if (answer.isBlank()) {
-            throw new IllegalStateException("模型响应中没有 choices[0].message.content");
-        }
-        return answer;
+        return extractAssistantText(responseBody, "model");
     }
 
     private String requestVisionCompletion(
@@ -472,6 +499,29 @@ public class OpenAiCompatibleClient implements AiClient {
                 || value.contains("reasoning_content but no final")
                 || value.contains("no usable assistant text")
                 || value.contains("choices[0].message.content");
+    }
+
+    private static boolean isTransientModelError(Throwable throwable) {
+        if (throwable instanceof RestClientResponseException responseException) {
+            int status = responseException.getStatusCode().value();
+            return status == 408
+                    || status == 409
+                    || status == 425
+                    || status == 429
+                    || status >= 500;
+        }
+        String message = rootMessage(throwable).toLowerCase(java.util.Locale.ROOT);
+        return message.contains("timeout")
+                || message.contains("timed out")
+                || message.contains("connection reset")
+                || message.contains("connection refused")
+                || message.contains("temporarily unavailable")
+                || message.contains("too many requests")
+                || message.contains("rate limit")
+                || message.contains("429")
+                || message.contains("502")
+                || message.contains("503")
+                || message.contains("504");
     }
 
     private static String stripTrailingSlash(String value) {

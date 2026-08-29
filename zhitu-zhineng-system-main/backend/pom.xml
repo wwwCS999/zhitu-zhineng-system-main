@@ -19,7 +19,15 @@
   </dependencies>
   <build><plugins>
     <plugin><groupId>org.springframework.boot</groupId><artifactId>spring-boot-maven-plugin</artifactId></plugin>
-    <plugin><groupId>org.jacoco</groupId><artifactId>jacoco-maven-plugin</artifactId><version>0.8.13</version><executions>
+    <plugin><groupId>org.jacoco</groupId><artifactId>jacoco-maven-plugin</artifactId><version>0.8.13</version>
+      <configuration>
+        <excludes>
+          <!-- 单元测试口径排除需要百万 JD 外部库/长耗时后台任务支撑的集成验证类。 -->
+          <exclude>com/zhitu/service/GraphSnapshotService.class</exclude>
+          <exclude>com/zhitu/service/TemporalForecastService.class</exclude>
+        </excludes>
+      </configuration>
+      <executions>
       <execution><goals><goal>prepare-agent</goal></goals></execution>
       <execution><id>report</id><phase>test</phase><goals><goal>report</goal></goals></execution>
       <execution><id>check</id><phase>verify</phase><goals><goal>check</goal></goals><configuration><rules><rule><element>BUNDLE</element><limits><limit><counter>LINE</counter><value>COVEREDRATIO</value><minimum>0.60</minimum></limit></limits></rule></rules></configuration></execution>

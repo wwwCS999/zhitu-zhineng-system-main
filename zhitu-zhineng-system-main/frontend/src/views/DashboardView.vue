@@ -5,6 +5,7 @@ import { api } from '@/api'
 import EChart from '@/components/EChart.vue'
 import ProgressBar from '@/components/ProgressBar.vue'
 import AppIcon from '@/components/AppIcon.vue'
+import { useEnglishThemeText } from '@/composables/useEnglishThemeText'
 
 const data = ref<any>(null)
 const loading = ref(true)
@@ -12,37 +13,38 @@ const running = ref(false)
 const error = ref('')
 const pipelineNotice = ref('')
 const { t } = useI18n()
+const { term } = useEnglishThemeText()
 
-const sixAgents = [
-  { no: '01', name: '数据治理智能体', icon: 'database', role: '采集 · 清洗 · 去重 · 质量分级', to: '/parsing' },
-  { no: '02', name: '岗位洞察智能体', icon: 'spark', role: '新岗位发现 · 趋势识别', to: '/emerging' },
-  { no: '03', name: '能力图谱与演化智能体', icon: 'network', role: '能力图谱 · 技能演化', to: '/graph' },
-  { no: '04', name: '画像匹配智能体', icon: 'match', role: '简历解析 · 多维匹配', to: '/matching' },
-  { no: '05', name: '学习规划智能体', icon: 'route', role: '技能缺口 · 成长路径', to: '/learning' },
-  { no: '06', name: '可信审核智能体', icon: 'audit', role: '证据绑定 · 幻觉防控', to: '/audit' }
-]
+const sixAgents = computed(() => [
+  { no: '01', name: t('agent.dataGovernance'), icon: 'database', role: t('dashboard.agentRoleGovernance'), to: '/parsing' },
+  { no: '02', name: t('agent.jobInsight'), icon: 'spark', role: t('dashboard.agentRoleInsight'), to: '/emerging' },
+  { no: '03', name: t('agent.capabilityGraph'), icon: 'network', role: t('dashboard.agentRoleGraph'), to: '/graph' },
+  { no: '04', name: t('agent.matching'), icon: 'match', role: t('dashboard.agentRoleMatching'), to: '/matching' },
+  { no: '05', name: t('agent.learning'), icon: 'route', role: t('dashboard.agentRoleLearning'), to: '/learning' },
+  { no: '06', name: t('agent.trustAudit'), icon: 'audit', role: t('dashboard.agentRoleAudit'), to: '/audit' }
+])
 
-const executionStages = [
-  { no: 'A1', title: '数据资产入仓', metric: '岗位库可用', desc: '多源 JD、行业资料和岗位标准完成治理，形成可进入图谱与匹配的岗位资产。', deliverable: '治理岗位 · 质量分级 · 来源证据' },
-  { no: 'A2', title: '能力结构建模', metric: '关系可解释', desc: '将岗位要求沉淀为岗位画像、技能关系和演化事件，支撑后续诊断。', deliverable: '岗位画像 · 能力图谱 · 演化记录' },
-  { no: 'A3', title: '人岗决策输出', metric: '结论可复核', desc: '把候选人画像与岗位能力要求对齐，输出匹配分数、缺口和面试核验点。', deliverable: '匹配报告 · 缺口清单 · 面试建议' },
-  { no: 'A4', title: '审核发布闭环', metric: '风险可控', desc: '高影响结论进入可信审核，按智能体来源保留证据台账和复盘记录。', deliverable: '审核队列 · 证据台账 · 结果复盘' }
-]
+const executionStages = computed(() => [
+  { no: 'A1', title: t('dashboard.stageDataTitle'), metric: t('dashboard.stageDataMetric'), desc: t('dashboard.stageDataDesc'), deliverable: t('dashboard.stageDataDeliverable') },
+  { no: 'A2', title: t('dashboard.stageGraphTitle'), metric: t('dashboard.stageGraphMetric'), desc: t('dashboard.stageGraphDesc'), deliverable: t('dashboard.stageGraphDeliverable') },
+  { no: 'A3', title: t('dashboard.stageDecisionTitle'), metric: t('dashboard.stageDecisionMetric'), desc: t('dashboard.stageDecisionDesc'), deliverable: t('dashboard.stageDecisionDeliverable') },
+  { no: 'A4', title: t('dashboard.stageAuditTitle'), metric: t('dashboard.stageAuditMetric'), desc: t('dashboard.stageAuditDesc'), deliverable: t('dashboard.stageAuditDeliverable') }
+])
 
-const heroSignals = [
-  { label: '数据资产', value: '治理入仓', icon: 'database' },
-  { label: '岗位能力', value: '图谱沉淀', icon: 'network' },
-  { label: '招聘决策', value: '证据解释', icon: 'match' }
-]
+const heroSignals = computed(() => [
+  { label: t('dashboard.heroSignalDataLabel'), value: t('dashboard.heroSignalDataValue'), icon: 'database' },
+  { label: t('dashboard.heroSignalCapabilityLabel'), value: t('dashboard.heroSignalCapabilityValue'), icon: 'network' },
+  { label: t('dashboard.heroSignalDecisionLabel'), value: t('dashboard.heroSignalDecisionValue'), icon: 'match' }
+])
 
-const capabilityPillars = [
-  { title: '岗位数据治理底座', outcome: '产出：可信岗位库', desc: '多源 JD 接入、去重清洗、岗位标准化和质量分级，形成可复用岗位资产。', icon: 'database', tone: 'blue' },
-  { title: '岗位机会洞察', outcome: '产出：岗位机会池', desc: '识别新兴岗位、趋势信号与候选岗位来源，支撑企业岗位库持续扩展。', icon: 'spark', tone: 'amber' },
-  { title: '能力图谱与演化', outcome: '产出：能力关系网络', desc: '沉淀岗位—技能—证据关系，并监控技能新增、弱化与要求变化。', icon: 'network', tone: 'green' },
-  { title: '候选人画像匹配', outcome: '产出：匹配诊断报告', desc: '解析简历字段、项目和经历证据，输出可解释的人岗匹配结论。', icon: 'match', tone: 'blue' },
-  { title: '阶段化培养路径', outcome: '产出：岗位成长方案', desc: '把能力缺口转为分层任务、项目交付物和可验收的培养阶段。', icon: 'route', tone: 'green' },
-  { title: '可信审核与发布', outcome: '产出：审核证据台账', desc: '按智能体来源分流审核，证据不足、幻觉风险和高影响结论进入人工放行。', icon: 'audit', tone: 'rose' }
-]
+const capabilityPillars = computed(() => [
+  { title: t('dashboard.pillarGovernanceTitle'), outcome: t('dashboard.pillarGovernanceOutcome'), desc: t('dashboard.pillarGovernanceDesc'), icon: 'database', tone: 'blue' },
+  { title: t('dashboard.pillarInsightTitle'), outcome: t('dashboard.pillarInsightOutcome'), desc: t('dashboard.pillarInsightDesc'), icon: 'spark', tone: 'amber' },
+  { title: t('dashboard.pillarGraphTitle'), outcome: t('dashboard.pillarGraphOutcome'), desc: t('dashboard.pillarGraphDesc'), icon: 'network', tone: 'green' },
+  { title: t('dashboard.pillarMatchingTitle'), outcome: t('dashboard.pillarMatchingOutcome'), desc: t('dashboard.pillarMatchingDesc'), icon: 'match', tone: 'blue' },
+  { title: t('dashboard.pillarLearningTitle'), outcome: t('dashboard.pillarLearningOutcome'), desc: t('dashboard.pillarLearningDesc'), icon: 'route', tone: 'green' },
+  { title: t('dashboard.pillarAuditTitle'), outcome: t('dashboard.pillarAuditOutcome'), desc: t('dashboard.pillarAuditDesc'), icon: 'audit', tone: 'rose' }
+])
 
 async function load(refresh = false) {
   loading.value = true
@@ -64,13 +66,13 @@ async function run() {
   try {
     const result: any = await api.runPipeline()
     pipelineNotice.value = result?.status === 'DEGRADED'
-      ? (result?.message || '流水线已降级执行，当前展示可用治理快照。')
-      : '完整流水线已执行完成，当前总览已更新。'
+      ? (result?.message || t('dashboard.pipelineDegraded'))
+      : t('dashboard.pipelineDone')
     await load(false)
   } catch (err: any) {
     try {
       data.value = await api.dashboard(false)
-      pipelineNotice.value = `流水线执行未完成，已展示最近可用总览快照。原因：${err.message}`
+      pipelineNotice.value = `${t('dashboard.pipelineFallbackPrefix')}${err.message}`
       error.value = ''
     } catch (fallbackErr: any) {
       error.value = fallbackErr?.message || err.message
@@ -86,18 +88,18 @@ const maxStack = computed(() => Math.max(1, ...(data.value?.stacks || []).map((i
 const topStacks = computed(() => (data.value?.stacks || []).slice(0, 8))
 const stackTotal = computed(() => (data.value?.stacks || []).reduce((sum: number, item: any) => sum + Number(item.value || 0), 0))
 const trustScore = computed(() => Math.round((data.value?.quality?.avg_quality || 0) * 100))
-const sourceLabel = computed(() => data.value?.dataSource === 'MYSQL_GOVERNED_MILLION_JD' ? '百万治理数据' : '演示数据')
-const trustChecks = [
-  '岗位数据可追溯',
-  '技能证据已绑定',
-  '审核事件可回看'
-]
+const sourceLabel = computed(() => data.value?.dataSource === 'MYSQL_GOVERNED_MILLION_JD' ? t('dashboard.dataSourceGoverned') : t('dashboard.dataSourceDemo'))
+const trustChecks = computed(() => [
+  t('dashboard.trustCheckTraceable'),
+  t('dashboard.trustCheckEvidence'),
+  t('dashboard.trustCheckAuditable')
+])
 
 const executiveKpis = computed(() => [
-  { label: t('dashboard.governedJobs'), value: data.value?.metrics?.jobs ?? 0, desc: '进入治理与分析层的岗位样本', icon: 'database', tone: 'blue' },
-  { label: t('dashboard.skillRelations'), value: data.value?.metrics?.relations ?? 0, desc: '岗位—技能证据关系边', icon: 'network', tone: 'green' },
-  { label: t('dashboard.rolesCandidates'), value: `${data.value?.metrics?.roles ?? 0} / ${data.value?.metrics?.emerging ?? 0}`, desc: '标准岗位与新岗位候选', icon: 'spark', tone: 'amber' },
-  { label: t('dashboard.matchReports'), value: data.value?.metrics?.matches ?? 0, desc: '可解释人岗匹配报告', icon: 'match', tone: 'rose' }
+  { label: t('dashboard.governedJobs'), value: data.value?.metrics?.jobs ?? 0, desc: t('dashboard.kpiGovernedDesc'), icon: 'database', tone: 'blue' },
+  { label: t('dashboard.skillRelations'), value: data.value?.metrics?.relations ?? 0, desc: t('dashboard.kpiRelationsDesc'), icon: 'network', tone: 'green' },
+  { label: t('dashboard.rolesCandidates'), value: `${data.value?.metrics?.roles ?? 0} / ${data.value?.metrics?.emerging ?? 0}`, desc: t('dashboard.kpiRolesDesc'), icon: 'spark', tone: 'amber' },
+  { label: t('dashboard.matchReports'), value: data.value?.metrics?.matches ?? 0, desc: t('dashboard.kpiReportsDesc'), icon: 'match', tone: 'rose' }
 ])
 
 const trendOption = computed(() => ({
@@ -150,7 +152,7 @@ const skillOption = computed(() => ({
   yAxis: {
     type: 'category',
     inverse: true,
-    data: (data.value?.topSkills || []).slice(0, 8).map((item: any) => item.name),
+    data: (data.value?.topSkills || []).slice(0, 8).map((item: any) => term(item.name)),
     axisLabel: { color: '#334155', fontSize: 11, fontWeight: 700 },
     axisLine: { show: false },
     axisTick: { show: false }
@@ -194,10 +196,10 @@ const skillOption = computed(() => ({
         </div>
       </div>
 
-      <aside class="enterprise-hero-aside" aria-label="系统价值概览">
+      <aside class="enterprise-hero-aside" :aria-label="t('dashboard.heroAsideTitle')">
         <div class="hero-aside-head">
-          <span>系统能力总览</span>
-          <b>Talent Intelligence Console</b>
+          <span>{{ t('dashboard.heroAsideTitle') }}</span>
+          <b>{{ t('dashboard.heroAsideConsole') }}</b>
         </div>
         <div class="hero-signal-list enterprise-signals">
           <div v-for="item in heroSignals" :key="item.label" class="hero-signal">
@@ -209,16 +211,16 @@ const skillOption = computed(() => ({
           </div>
         </div>
         <div class="hero-aside-summary">
-          <span>核心闭环</span>
-          <b>数据治理 → 能力图谱 → 匹配诊断 → 成长建议</b>
+          <span>{{ t('dashboard.heroSummaryLabel') }}</span>
+          <b>{{ t('dashboard.heroSummary') }}</b>
         </div>
       </aside>
     </section>
 
-    <div v-if="error" class="inline-alert error"><b>系统处理失败</b><span>{{ error }}</span></div>
-    <div v-else-if="pipelineNotice" class="inline-alert success"><b>流水线状态</b><span>{{ pipelineNotice }}</span></div>
+    <div v-if="error" class="inline-alert error"><b>{{ t('dashboard.processingFailed') }}</b><span>{{ error }}</span></div>
+    <div v-else-if="pipelineNotice" class="inline-alert success"><b>{{ t('dashboard.pipelineStatus') }}</b><span>{{ pipelineNotice }}</span></div>
 
-    <div v-if="loading" class="loading-layout" aria-label="正在加载">
+    <div v-if="loading" class="loading-layout" :aria-label="t('dashboard.loadingAria')">
       <div v-for="index in 6" :key="index" class="skeleton-block" />
     </div>
 
@@ -238,11 +240,11 @@ const skillOption = computed(() => ({
         <article class="enterprise-panel solution-capability-panel">
           <header class="enterprise-panel-head compact">
             <div>
-              <span class="panel-kicker">解决方案能力</span>
-              <h2>六类产品能力落地</h2>
-              <p>围绕企业招聘、人岗匹配与培养闭环，把六个智能体沉淀为可交付能力。</p>
+              <span class="panel-kicker">{{ t('dashboard.solutionKicker') }}</span>
+              <h2>{{ t('dashboard.solutionTitle') }}</h2>
+              <p>{{ t('dashboard.solutionDesc') }}</p>
             </div>
-            <span class="source-chip light">Recruiting OS</span>
+            <span class="source-chip light">{{ t('dashboard.recruitingOs') }}</span>
           </header>
           <div class="solution-capability-list">
             <div v-for="(pillar, index) in capabilityPillars" :key="pillar.title" class="solution-capability-row" :class="`tone-${pillar.tone}`" v-reveal="index * 45">
@@ -257,20 +259,20 @@ const skillOption = computed(() => ({
           </div>
           <div class="solution-delivery-strip">
             <div>
-              <span>01 输入</span>
-              <b>岗位 JD / 简历 / 行业资料</b>
+              <span>{{ t('dashboard.deliveryInputLabel') }}</span>
+              <b>{{ t('dashboard.deliveryInputValue') }}</b>
             </div>
             <div>
-              <span>02 建模</span>
-              <b>岗位画像 / 能力图谱 / 候选人画像</b>
+              <span>{{ t('dashboard.deliveryModelLabel') }}</span>
+              <b>{{ t('dashboard.deliveryModelValue') }}</b>
             </div>
             <div>
-              <span>03 决策</span>
-              <b>匹配诊断 / 培养路径 / 面试核验</b>
+              <span>{{ t('dashboard.deliveryDecisionLabel') }}</span>
+              <b>{{ t('dashboard.deliveryDecisionValue') }}</b>
             </div>
             <div>
-              <span>04 治理</span>
-              <b>证据台账 / 审核放行 / 结果复盘</b>
+              <span>{{ t('dashboard.deliveryGovernLabel') }}</span>
+              <b>{{ t('dashboard.deliveryGovernValue') }}</b>
             </div>
           </div>
         </article>
@@ -280,7 +282,7 @@ const skillOption = computed(() => ({
       <section class="enterprise-panel orchestration-panel" v-reveal>
         <header class="enterprise-panel-head compact orchestration-head">
           <div>
-            <span class="panel-kicker">智能体编排</span>
+            <span class="panel-kicker">{{ t('dashboard.orchestrationKicker') }}</span>
             <h2>{{ t('dashboard.agentCollaboration') }}</h2>
           </div>
           <p>{{ t('dashboard.agentCollaborationDesc') }}</p>
@@ -302,10 +304,10 @@ const skillOption = computed(() => ({
       <section class="enterprise-panel workflow-roadmap execution-board" v-reveal>
         <header class="enterprise-panel-head compact">
           <div>
-            <span class="panel-kicker">业务执行看板</span>
-            <h2>从智能体协同到企业交付</h2>
+            <span class="panel-kicker">{{ t('dashboard.executionKicker') }}</span>
+            <h2>{{ t('dashboard.executionTitle') }}</h2>
           </div>
-          <span class="source-chip light">4 类交付状态</span>
+          <span class="source-chip light">{{ t('dashboard.executionStatus') }}</span>
         </header>
 
         <div class="execution-board-body">
@@ -325,13 +327,13 @@ const skillOption = computed(() => ({
         <article class="enterprise-panel stack-market-panel">
           <header class="enterprise-panel-head">
             <div>
-              <span class="panel-kicker">岗位市场结构</span>
-              <h2>技术栈需求热度</h2>
-              <p>按治理后的岗位样本聚合，辅助判断当前市场对不同技术方向的招聘强度。</p>
+              <span class="panel-kicker">{{ t('dashboard.marketKicker') }}</span>
+              <h2>{{ t('dashboard.marketTitle') }}</h2>
+              <p>{{ t('dashboard.marketDesc') }}</p>
             </div>
             <div class="panel-head-metric">
               <b>{{ Number(stackTotal || 0).toLocaleString() }}</b>
-              <span>分析样本</span>
+              <span>{{ t('dashboard.sampleCount') }}</span>
             </div>
           </header>
 
@@ -340,8 +342,8 @@ const skillOption = computed(() => ({
               <span class="stack-rank">{{ String(index + 1).padStart(2, '0') }}</span>
               <div class="stack-row-main">
                 <div class="stack-row-head">
-                  <b>{{ stack.name || '未分类' }}</b>
-                  <span>{{ Number(stack.value || 0).toLocaleString() }} 条岗位</span>
+                  <b>{{ term(stack.name) || t('dashboard.uncategorized') }}</b>
+                  <span>{{ Number(stack.value || 0).toLocaleString() }} {{ t('dashboard.jobUnit') }}</span>
                 </div>
                 <ProgressBar :value="Number(stack.value || 0)" :max="maxStack" :tone="index === 1 || index === 4 ? 'gold' : 'mint'" />
               </div>
@@ -352,9 +354,9 @@ const skillOption = computed(() => ({
         <article class="enterprise-panel trust-command-panel" v-reveal="60">
           <header class="enterprise-panel-head">
             <div>
-              <span class="panel-kicker">可信运行</span>
-              <h2>数据质量与证据状态</h2>
-              <p>从数据质量、技能证据和审核队列三个维度展示系统是否适合进入匹配决策。</p>
+              <span class="panel-kicker">{{ t('dashboard.trustKicker') }}</span>
+              <h2>{{ t('dashboard.trustTitle') }}</h2>
+              <p>{{ t('dashboard.trustDesc') }}</p>
             </div>
             <span class="source-chip">{{ sourceLabel }}</span>
           </header>
@@ -383,8 +385,8 @@ const skillOption = computed(() => ({
         <article class="enterprise-panel insight-chart-panel trend-insight-panel">
           <header class="enterprise-panel-head compact">
             <div>
-              <span class="panel-kicker">趋势洞察</span>
-              <h2>岗位年度数据量</h2>
+              <span class="panel-kicker">{{ t('dashboard.trendKicker') }}</span>
+              <h2>{{ t('dashboard.yearTrend') }}</h2>
             </div>
             <span class="source-chip light">2019-2026</span>
           </header>
@@ -394,8 +396,8 @@ const skillOption = computed(() => ({
         <article class="enterprise-panel insight-chart-panel skill-rank-panel">
           <header class="enterprise-panel-head compact">
             <div>
-              <span class="panel-kicker">能力热词</span>
-              <h2>高频技能点排行</h2>
+              <span class="panel-kicker">{{ t('dashboard.skillKicker') }}</span>
+              <h2>{{ t('dashboard.topSkillsRank') }}</h2>
             </div>
             <span class="source-chip light">Top 8</span>
           </header>

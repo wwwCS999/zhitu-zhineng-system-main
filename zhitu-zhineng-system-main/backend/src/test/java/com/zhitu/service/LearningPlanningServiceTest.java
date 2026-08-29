@@ -21,6 +21,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyDouble;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.verify;
@@ -76,8 +78,7 @@ class LearningPlanningServiceTest {
         List<Map<String, Object>> fallback = List.of(fallbackStage);
         when(planner.plan(any(), any(Integer.class), any(Integer.class))).thenReturn(fallback);
         when(ai.enabled()).thenReturn(true);
-        when(ai.modelName()).thenReturn("qwen-plus");
-        when(ai.complete(anyString(), anyString())).thenReturn(Optional.of("""
+        when(ai.complete(anyString(), anyString(), anyString(), anyInt(), anyDouble())).thenReturn(Optional.of("""
                 {"title":"智能体工程师12周进阶计划","objective":"补齐评测和编排能力", "strategy":["先评测后编排","项目验收"],"steps":[{
                   "phase":1,"weekRange":"第1-4周","hours":32,"skill":"RAG评测","theme":"建立质量闭环",
                   "goal":"能够独立完成RAG离线评测","rationale":"简历已有知识库项目但缺少量化评测证据",
@@ -106,7 +107,7 @@ class LearningPlanningServiceTest {
         Map<String, Object> result = service.generate(9L, 12, 8);
 
         assertEquals("AI_DEEP_PLAN", result.get("plannerMode"));
-        assertEquals("qwen-plus", result.get("modelName"));
+        assertEquals("deepseek-chat", result.get("modelName"));
         List<?> steps = (List<?>) result.get("steps");
         assertFalse(steps.isEmpty());
         Map<?, ?> first = (Map<?, ?>) steps.get(0);
@@ -114,7 +115,10 @@ class LearningPlanningServiceTest {
         assertTrue(((List<?>) first.get("deliverables")).contains("评测报告"));
         verify(ai).complete(
                 argThat(prompt -> prompt.contains("动态规划") && prompt.contains("仅输出")),
-                argThat(input -> input.contains("张晨") && input.contains("企业知识库问答系统"))
+                argThat(input -> input.contains("张晨") && input.contains("企业知识库问答系统")),
+                anyString(),
+                anyInt(),
+                anyDouble()
         );
     }
 }

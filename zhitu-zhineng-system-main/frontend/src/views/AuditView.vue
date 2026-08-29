@@ -6,8 +6,10 @@ import { api } from '@/api'
 import EmptyState from '@/components/EmptyState.vue'
 import TrustBadge from '@/components/TrustBadge.vue'
 import AppIcon from '@/components/AppIcon.vue'
+import { useEnglishThemeText } from '@/composables/useEnglishThemeText'
 
 const route = useRoute()
+const { tx, phrase } = useEnglishThemeText()
 const pending = ref<any[]>([])
 const history = ref<any[]>([])
 const tab = ref<'queue' | 'history'>('queue')
@@ -52,12 +54,33 @@ const sourceMeta: Record<string, any> = {
 }
 
 function metaOf(type: string) {
-  return sourceMeta[type] || {
-    agent: '可信审核智能体',
-    title: '通用审核',
-    short: '通用',
-    desc: '人工确认自动化结果是否可进入生产链路。',
-    decision: '是否放行',
+  const meta = sourceMeta[type]
+  if (type === 'EMERGING_ROLE') {
+    return {
+      ...meta,
+      agent: tx('岗位洞察智能体', 'Job Insight Agent'),
+      title: tx('新岗位入库审核', 'Emerging Role Library Audit'),
+      short: tx('岗位入库', 'Role Intake'),
+      desc: tx('审核自动发现的新兴岗位是否可发布到企业岗位库。', 'Review whether automatically discovered emerging roles can be released to the enterprise role library.'),
+      decision: tx('是否纳入标准岗位库', 'Whether to add it to the standard role library')
+    }
+  }
+  if (type === 'EVOLUTION') {
+    return {
+      ...meta,
+      agent: tx('能力图谱与演化智能体', 'Capability Graph & Evolution Agent'),
+      title: tx('能力变更审核', 'Capability Change Audit'),
+      short: tx('图谱演化', 'Graph Evolution'),
+      desc: tx('审核岗位能力新增、弱化或要求修改是否可写入能力图谱。', 'Review whether added, weakened or revised capability requirements can be written into the capability graph.'),
+      decision: tx('是否更新岗位能力图谱', 'Whether to update the role capability graph')
+    }
+  }
+  return {
+    agent: tx('可信审核智能体', 'Trust Audit Agent'),
+    title: tx('通用审核', 'General Audit'),
+    short: tx('通用', 'General'),
+    desc: tx('人工确认自动化结果是否可进入生产链路。', 'Human confirmation before automated results enter production workflows.'),
+    decision: tx('是否放行', 'Whether to release'),
     icon: 'audit',
     tone: 'slate'
   }
@@ -95,9 +118,9 @@ function trustScore(item: any) {
 
 function riskLevel(item: any) {
   const risk = riskScore(item)
-  if (risk >= 0.35) return { label: '高风险', tone: 'danger' }
-  if (risk >= 0.18) return { label: '需复核', tone: 'warn' }
-  return { label: '低风险', tone: 'good' }
+  if (risk >= 0.35) return { label: tx('高风险', 'High Risk'), tone: 'danger' }
+  if (risk >= 0.18) return { label: tx('需复核', 'Review Required'), tone: 'warn' }
+  return { label: tx('低风险', 'Low Risk'), tone: 'good' }
 }
 
 function evidenceCount(item: any) {
@@ -105,28 +128,28 @@ function evidenceCount(item: any) {
 }
 
 function mainDescription(item: any) {
-  return item.definition || item.explanation || item.description || '等待人工补充审核说明。'
+  return phrase(item.definition || item.explanation || item.description || tx('等待人工补充审核说明。', 'Waiting for human audit notes.'))
 }
 
 function auditSubject(item: any) {
-  if (item.targetType === 'EVOLUTION') return `${item.role_name || '岗位'} · ${item.skill_name || '能力'}`
-  return item.title || item.candidate_name || `审核对象 #${item.id}`
+  if (item.targetType === 'EVOLUTION') return `${phrase(item.role_name || tx('岗位', 'Role'))} · ${phrase(item.skill_name || tx('能力', 'Capability'))}`
+  return phrase(item.title || item.candidate_name || `${tx('审核对象', 'Audit Subject')} #${item.id}`)
 }
 
 function gateChecks(item: any) {
   if (item.targetType === 'EMERGING_ROLE') {
     return [
-      { label: '多源样本', value: `${toNumber(item.sample_size)} 条`, ok: toNumber(item.sample_size) >= 30 },
-      { label: '独立来源', value: `${toNumber(item.source_count)} 个`, ok: toNumber(item.source_count) >= 2 },
-      { label: '增长信号', value: `${pct(item.growth_rate)}%`, ok: toNumber(item.growth_rate) > 0 },
-      { label: '幻觉风险', value: `${pct(riskScore(item))}%`, ok: riskScore(item) < 0.2 }
+      { label: tx('多源样本', 'Multi-source Samples'), value: `${toNumber(item.sample_size)} ${tx('条', 'records')}`, ok: toNumber(item.sample_size) >= 30 },
+      { label: tx('独立来源', 'Independent Sources'), value: `${toNumber(item.source_count)} ${tx('个', 'sources')}`, ok: toNumber(item.source_count) >= 2 },
+      { label: tx('增长信号', 'Growth Signal'), value: `${pct(item.growth_rate)}%`, ok: toNumber(item.growth_rate) > 0 },
+      { label: tx('幻觉风险', 'Hallucination Risk'), value: `${pct(riskScore(item))}%`, ok: riskScore(item) < 0.2 }
     ]
   }
   return [
-    { label: '证据数量', value: `${toNumber(item.evidence_count)} 条`, ok: toNumber(item.evidence_count) >= 3 },
-    { label: '置信度', value: `${pct(item.confidence)}%`, ok: toNumber(item.confidence) >= 0.7 },
-    { label: '变化类型', value: item.change_type || '待确认', ok: Boolean(item.change_type) },
-    { label: '幻觉风险', value: `${pct(riskScore(item))}%`, ok: riskScore(item) < 0.3 }
+    { label: tx('证据数量', 'Evidence Count'), value: `${toNumber(item.evidence_count)} ${tx('条', 'records')}`, ok: toNumber(item.evidence_count) >= 3 },
+    { label: tx('置信度', 'Confidence'), value: `${pct(item.confidence)}%`, ok: toNumber(item.confidence) >= 0.7 },
+    { label: tx('变化类型', 'Change Type'), value: phrase(item.change_type || tx('待确认', 'Pending')), ok: Boolean(item.change_type) },
+    { label: tx('幻觉风险', 'Hallucination Risk'), value: `${pct(riskScore(item))}%`, ok: riskScore(item) < 0.3 }
   ]
 }
 
@@ -152,10 +175,10 @@ function historyTargetType(item: any) {
 }
 
 function actionLabel(action: string) {
-  if (action === 'APPROVE') return '通过'
-  if (action === 'REJECT') return '驳回'
-  if (action === 'MODIFY') return '修订后通过'
-  return action || '未知'
+  if (action === 'APPROVE') return tx('通过', 'Approve')
+  if (action === 'REJECT') return tx('驳回', 'Reject')
+  if (action === 'MODIFY') return tx('修订后通过', 'Approve with Revision')
+  return action || tx('未知', 'Unknown')
 }
 
 function actionTone(action: string) {
@@ -166,12 +189,12 @@ function actionTone(action: string) {
 
 function parseAuditSections(comment: unknown) {
   const text = String(comment || '').trim()
-  if (!text) return [{ label: '审核意见', value: '未填写审核意见' }]
+  if (!text) return [{ label: tx('审核意见', 'Audit Comment'), value: tx('未填写审核意见', 'No audit comment provided') }]
   const matches = [...text.matchAll(/【([^】]+)】([\s\S]*?)(?=【[^】]+】|$)/g)]
-  if (!matches.length) return [{ label: '审核意见', value: text }]
+  if (!matches.length) return [{ label: tx('审核意见', 'Audit Comment'), value: phrase(text) }]
   return matches.map(match => ({
-    label: match[1].trim(),
-    value: match[2].trim() || '未填写'
+    label: phrase(match[1].trim()),
+    value: phrase(match[2].trim() || tx('未填写', 'Not filled'))
   })).filter(row => row.label)
 }
 
@@ -200,7 +223,7 @@ function snapshotRows(value: unknown) {
     .slice(0, 10)
   return entries.map(([key, val]) => ({
     key,
-    value: typeof val === 'object' ? JSON.stringify(val) : String(val)
+    value: typeof val === 'object' ? JSON.stringify(val) : phrase(val)
   }))
 }
 
@@ -228,10 +251,10 @@ const sourceStats = computed(() => {
   return [
     {
       type: 'ALL',
-      agent: '全部智能体',
-      title: '全量审核队列',
-      short: '全部',
-      desc: '跨智能体统一排队，但审核来源和发布影响独立展示。',
+      agent: tx('全部智能体', 'All Agents'),
+      title: tx('全量审核队列', 'Full Audit Queue'),
+      short: tx('全部', 'All'),
+      desc: tx('跨智能体统一排队，但审核来源和发布影响独立展示。', 'Unified cross-agent queue with independent source and release-impact display.'),
       icon: 'audit',
       tone: 'slate',
       count: pending.value.length,
@@ -254,9 +277,9 @@ const avgTrustPercent = computed(() => sourceStats.value[0]?.avgTrust || 0)
 const approvedHistory = computed(() => history.value.filter(item => item.action === 'APPROVE' || item.action === 'MODIFY').length)
 
 const decisionActionText = computed(() => {
-  if (decisionAction.value === 'REJECT') return '驳回'
-  if (decisionAction.value === 'MODIFY') return '修订后通过'
-  return '通过'
+  if (decisionAction.value === 'REJECT') return tx('驳回', 'Reject')
+  if (decisionAction.value === 'MODIFY') return tx('修订后通过', 'Approve with Revision')
+  return tx('通过', 'Approve')
 })
 
 const decisionTone = computed(() => {
@@ -276,10 +299,10 @@ const decisionChecklist = computed(() => {
   const gates = gateChecks(item)
   const failed = gates.filter(gate => !gate.ok)
   const base = [
-    { label: '来源智能体', value: metaOf(item.targetType).agent },
-    { label: '证据门禁', value: failed.length ? `${failed.length} 项需说明` : '全部通过' },
-    { label: '发布影响', value: metaOf(item.targetType).decision },
-    { label: '风险等级', value: riskLevel(item).label }
+    { label: tx('来源智能体', 'Source Agent'), value: metaOf(item.targetType).agent },
+    { label: tx('证据门禁', 'Evidence Gate'), value: failed.length ? `${failed.length} ${tx('项需说明', 'items need explanation')}` : tx('全部通过', 'All Passed') },
+    { label: tx('发布影响', 'Release Impact'), value: metaOf(item.targetType).decision },
+    { label: tx('风险等级', 'Risk Level'), value: riskLevel(item).label }
   ]
   return base
 })
@@ -405,56 +428,56 @@ onMounted(async () => {
   <div class="audit-product-page">
     <section class="audit-command-center" v-reveal>
       <div class="audit-command-copy">
-        <span class="match-kicker">可信审核智能体</span>
-        <h1>企业可信治理与发布审核台</h1>
-        <p>把岗位洞察、能力演化等智能体输出分流到不同审核队列，按证据充分度、幻觉风险和发布影响做人工放行。</p>
+        <span class="match-kicker">{{ tx('可信审核智能体', 'Trust Audit Agent') }}</span>
+        <h1>{{ tx('企业可信治理与发布审核台', 'Enterprise Trusted Governance & Release Audit Console') }}</h1>
+        <p>{{ tx('把岗位洞察、能力演化等智能体输出分流到不同审核队列，按证据充分度、幻觉风险和发布影响做人工放行。', 'Route outputs from job insight and capability evolution agents into audit queues, with human approval based on evidence sufficiency, hallucination risk and release impact.') }}</p>
         <div class="match-command-actions">
           <button class="button secondary" type="button" :disabled="loading" @click="load">
-            <AppIcon name="refresh" :size="16" />{{ loading ? '刷新中' : '刷新队列' }}
+            <AppIcon name="refresh" :size="16" />{{ loading ? tx('刷新中', 'Refreshing') : tx('刷新队列', 'Refresh Queue') }}
           </button>
           <button class="button primary" type="button" @click="tab = 'queue'">
-            <AppIcon name="audit" :size="16" />进入审核
+            <AppIcon name="audit" :size="16" />{{ tx('进入审核', 'Enter Audit') }}
           </button>
         </div>
       </div>
 
       <aside class="audit-command-card">
         <div>
-          <span>待审核事项</span>
+          <span>{{ tx('待审核事项', 'Pending Audit Items') }}</span>
           <strong>{{ pending.length }}</strong>
         </div>
         <div class="audit-command-meter">
-          <span>平均可信度</span>
+          <span>{{ tx('平均可信度', 'Average Trust') }}</span>
           <b>{{ avgTrustPercent }}%</b>
         </div>
         <div class="audit-command-checks">
-          <span><AppIcon name="check" :size="13" />来源分区</span>
-          <span><AppIcon name="check" :size="13" />证据门禁</span>
-          <span><AppIcon name="check" :size="13" />审计留痕</span>
+          <span><AppIcon name="check" :size="13" />{{ tx('来源分区', 'Source Zones') }}</span>
+          <span><AppIcon name="check" :size="13" />{{ tx('证据门禁', 'Evidence Gate') }}</span>
+          <span><AppIcon name="check" :size="13" />{{ tx('审计留痕', 'Audit Trail') }}</span>
         </div>
       </aside>
     </section>
 
     <section class="audit-kpi-strip">
       <article>
-        <span>跨智能体队列</span>
+        <span>{{ tx('跨智能体队列', 'Cross-agent Queues') }}</span>
         <strong>{{ sourceStats.length - 1 }}</strong>
-        <small>岗位洞察 / 能力演化分流审核</small>
+        <small>{{ tx('岗位洞察 / 能力演化分流审核', 'Job insight / capability evolution routed audit') }}</small>
       </article>
       <article>
-        <span>高风险复核</span>
+        <span>{{ tx('高风险复核', 'High-risk Review') }}</span>
         <strong>{{ highRiskCount }}</strong>
-        <small>按幻觉风险和证据不足优先处理</small>
+        <small>{{ tx('按幻觉风险和证据不足优先处理', 'Prioritized by hallucination risk and weak evidence') }}</small>
       </article>
       <article>
-        <span>已留痕记录</span>
+        <span>{{ tx('已留痕记录', 'Audit Records') }}</span>
         <strong>{{ history.length }}</strong>
-        <small>审核前后状态可追溯</small>
+        <small>{{ tx('审核前后状态可追溯', 'Before/after status is traceable') }}</small>
       </article>
       <article>
-        <span>放行/修订</span>
+        <span>{{ tx('放行/修订', 'Released / Revised') }}</span>
         <strong>{{ approvedHistory }}</strong>
-        <small>进入岗位库或能力图谱发布链路</small>
+        <small>{{ tx('进入岗位库或能力图谱发布链路', 'Released to role library or capability graph workflows') }}</small>
       </article>
     </section>
 
@@ -473,7 +496,7 @@ onMounted(async () => {
           <small>{{ source.agent }}</small>
           <p>{{ source.desc }}</p>
         </div>
-        <em>{{ source.count }} 项</em>
+        <em>{{ source.count }} {{ tx('项', 'items') }}</em>
         <strong>{{ source.avgTrust }}%</strong>
       </button>
     </section>
@@ -481,13 +504,13 @@ onMounted(async () => {
     <section class="surface audit-workbench" v-reveal>
       <header class="surface-head audit-workbench-head">
         <div>
-          <span class="eyebrow">审核工作台</span>
-          <h2>{{ selectedSource === 'ALL' ? '跨智能体审核队列' : metaOf(selectedSource).title }}</h2>
-          <p>{{ selectedSource === 'ALL' ? '按风险优先展示所有智能体待审核输出，卡片内保留来源和发布影响。' : metaOf(selectedSource).desc }}</p>
+          <span class="eyebrow">{{ tx('审核工作台', 'Audit Workbench') }}</span>
+          <h2>{{ selectedSource === 'ALL' ? tx('跨智能体审核队列', 'Cross-agent Audit Queue') : metaOf(selectedSource).title }}</h2>
+          <p>{{ selectedSource === 'ALL' ? tx('按风险优先展示所有智能体待审核输出，卡片内保留来源和发布影响。', 'Show pending outputs by risk priority, with source and release impact retained in each card.') : metaOf(selectedSource).desc }}</p>
         </div>
         <div class="segmented-control">
-          <button type="button" :class="{ active: tab === 'queue' }" @click="tab = 'queue'">审核队列 {{ visiblePending.length }}</button>
-          <button type="button" :class="{ active: tab === 'history' }" @click="tab = 'history'">审计历史 {{ history.length }}</button>
+          <button type="button" :class="{ active: tab === 'queue' }" @click="tab = 'queue'">{{ tx('审核队列', 'Audit Queue') }} {{ visiblePending.length }}</button>
+          <button type="button" :class="{ active: tab === 'history' }" @click="tab = 'history'">{{ tx('审计历史', 'Audit History') }} {{ history.length }}</button>
         </div>
       </header>
 
@@ -513,14 +536,14 @@ onMounted(async () => {
 
           <div class="audit-review-main">
             <div>
-              <span class="eyebrow">决策事项</span>
+              <span class="eyebrow">{{ tx('决策事项', 'Decision Item') }}</span>
               <h3>{{ auditSubject(item) }}</h3>
               <p>{{ mainDescription(item) }}</p>
             </div>
             <aside>
               <TrustBadge :score="trustScore(item)" />
               <strong>{{ pct(riskScore(item)) }}%</strong>
-              <span>幻觉风险</span>
+              <span>{{ tx('幻觉风险', 'Hallucination Risk') }}</span>
             </aside>
           </div>
 
@@ -533,12 +556,12 @@ onMounted(async () => {
 
           <div class="audit-evidence-panel">
             <div>
-              <b>证据摘要</b>
-              <span>{{ evidenceCount(item) }} 条可复核信号</span>
+              <b>{{ tx('证据摘要', 'Evidence Summary') }}</b>
+              <span>{{ evidenceCount(item) }} {{ tx('条可复核信号', 'reviewable signals') }}</span>
             </div>
             <div class="skill-cloud">
-              <span v-for="tag in evidenceTags(item)" :key="tag" class="tag blue">{{ tag }}</span>
-              <span v-if="!evidenceTags(item).length" class="tag">待补充证据</span>
+              <span v-for="tag in evidenceTags(item)" :key="tag" class="tag blue">{{ phrase(tag) }}</span>
+              <span v-if="!evidenceTags(item).length" class="tag">{{ tx('待补充证据', 'Evidence pending') }}</span>
             </div>
           </div>
 
@@ -549,13 +572,13 @@ onMounted(async () => {
 
           <footer>
             <button class="button primary" type="button" @click="openDecision(item, 'APPROVE')">
-              <AppIcon name="check" :size="15" />通过
+              <AppIcon name="check" :size="15" />{{ tx('通过', 'Approve') }}
             </button>
             <button class="button secondary" type="button" @click="openDecision(item, 'MODIFY')">
-              <AppIcon name="edit" :size="15" />修订
+              <AppIcon name="edit" :size="15" />{{ tx('修订', 'Revise') }}
             </button>
             <button class="button danger" type="button" @click="openDecision(item, 'REJECT')">
-              <AppIcon name="close" :size="15" />驳回
+              <AppIcon name="close" :size="15" />{{ tx('驳回', 'Reject') }}
             </button>
           </footer>
         </article>
@@ -583,18 +606,18 @@ onMounted(async () => {
             </span>
           </p>
           <div class="audit-history-meta">
-            <span>审核人：{{ item.reviewer || '管理员' }}</span>
-            <span>风险：{{ pct(item.risk_score) }}%</span>
+            <span>{{ tx('审核人：', 'Reviewer: ') }}{{ item.reviewer || tx('管理员', 'Admin') }}</span>
+            <span>{{ tx('风险：', 'Risk: ') }}{{ pct(item.risk_score) }}%</span>
             <span>{{ item.created_at }}</span>
           </div>
-          <strong>查看详情</strong>
+          <strong>{{ tx('查看详情', 'View Details') }}</strong>
         </button>
       </div>
 
       <EmptyState
         v-else
-        :title="tab === 'queue' ? '当前筛选下没有待审核项' : '暂无审计记录'"
-        description="智能体输出进入岗位库、能力图谱或匹配链路前，需要完成来源区分、证据复核和人工留痕。"
+        :title="tab === 'queue' ? tx('当前筛选下没有待审核项', 'No pending audit items under current filters') : tx('暂无审计记录', 'No audit records yet')"
+        :description="tx('智能体输出进入岗位库、能力图谱或匹配链路前，需要完成来源区分、证据复核和人工留痕。', 'Before agent outputs enter the role library, capability graph or matching workflows, source separation, evidence review and audit trails are required.')"
       />
     </section>
 

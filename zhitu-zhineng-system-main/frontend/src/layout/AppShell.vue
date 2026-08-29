@@ -8,24 +8,32 @@ import FloatingAgent from '@/components/FloatingAgent.vue'
 const route = useRoute()
 const { t, locale } = useI18n()
 const mobileOpen = ref(false)
-const pageTitle = computed(() => String(route.meta.title || t('app.brand')))
+
+const savedLocale = localStorage.getItem('zhitu-locale')
+if (savedLocale === 'zh' || savedLocale === 'en') {
+  locale.value = savedLocale
+}
 
 function toggleLocale() {
-  locale.value = locale.value === 'zh' ? 'en' : 'zh'
+  const nextLocale = locale.value === 'zh' ? 'en' : 'zh'
+  locale.value = nextLocale
+  localStorage.setItem('zhitu-locale', nextLocale)
 }
 
 const navigation = [
-  { to: '/', label: 'app.overview', desc: '项目驾驶舱', icon: 'home', tag: 'Overview' },
-  { to: '/parsing', label: 'agent.dataGovernance', desc: '数据接入与治理', icon: 'database', tag: 'Data' },
-  { to: '/emerging', label: 'agent.jobInsight', desc: '新岗位发现与验证', icon: 'spark', tag: 'Insight' },
-  { to: '/graph', label: 'agent.capabilityGraph', desc: '岗位能力图谱', icon: 'network', tag: 'Graph' },
-  { to: '/matching', label: 'agent.matching', desc: '画像与岗位匹配', icon: 'match', tag: 'Match' },
-  { to: '/learning', label: 'agent.learning', desc: '技能缺口补齐', icon: 'route', tag: 'Learn' },
-  { to: '/audit', label: 'agent.trustAudit', desc: '证据与可信审核', icon: 'audit', tag: 'Trust' },
-  { to: '/chat', label: '智能问答', desc: '图谱 RAG 助手', icon: 'chat', tag: 'Ask' }
+  { to: '/', label: 'app.overview', desc: 'app.overviewDesc', icon: 'home', tag: 'Overview' },
+  { to: '/parsing', label: 'agent.dataGovernance', desc: 'agent.dataGovernanceDesc', icon: 'database', tag: 'Data' },
+  { to: '/emerging', label: 'agent.jobInsight', desc: 'agent.jobInsightDesc', icon: 'spark', tag: 'Insight' },
+  { to: '/graph', label: 'agent.capabilityGraph', desc: 'agent.capabilityGraphDesc', icon: 'network', tag: 'Graph' },
+  { to: '/matching', label: 'agent.matching', desc: 'agent.matchingDesc', icon: 'match', tag: 'Match' },
+  { to: '/learning', label: 'agent.learning', desc: 'agent.learningDesc', icon: 'route', tag: 'Learn' },
+  { to: '/audit', label: 'agent.trustAudit', desc: 'agent.trustAuditDesc', icon: 'audit', tag: 'Trust' },
+  { to: '/chat', label: 'app.chat', desc: 'app.chatDesc', icon: 'chat', tag: 'Ask' }
 ]
 
 const activeModuleInfo = computed(() => navigation.find((item) => item.to === route.path) ?? navigation[0])
+const activeModuleName = computed(() => t(activeModuleInfo.value.label))
+const pageTitle = computed(() => locale.value === 'en' ? activeModuleName.value : String(route.meta.title || activeModuleName.value))
 
 watch(() => route.fullPath, () => {
   mobileOpen.value = false
@@ -33,19 +41,19 @@ watch(() => route.fullPath, () => {
 </script>
 
 <template>
-  <div class="app-shell">
+  <div class="app-shell" :class="`locale-${locale}`">
     <div class="workspace-frame">
-      <aside class="workspace-sidebar" :class="{ 'is-open': mobileOpen }" aria-label="系统模块导航">
-        <RouterLink to="/" class="brand sidebar-brand" aria-label="返回系统总览">
-          <span class="brand-mark">职</span>
+      <aside class="workspace-sidebar" :class="{ 'is-open': mobileOpen }" :aria-label="t('app.workflow')">
+        <RouterLink to="/" class="brand sidebar-brand" :aria-label="t('app.backHome')">
+          <span class="brand-mark">{{ t('app.brandMark') }}</span>
           <span class="brand-copy">
             <b>{{ t('app.brand') }}</b>
             <small>{{ t('app.brandSub') }}</small>
           </span>
         </RouterLink>
 
-        <div class="sidebar-section-label">核心工作流</div>
-        <nav class="sidebar-nav" aria-label="核心工作流">
+        <div class="sidebar-section-label">{{ t('app.workflow') }}</div>
+        <nav class="sidebar-nav" :aria-label="t('app.workflow')">
           <RouterLink
             v-for="item in navigation"
             :key="item.to"
@@ -55,7 +63,7 @@ watch(() => route.fullPath, () => {
             <span class="sidebar-link-icon"><AppIcon :name="item.icon" :size="17" /></span>
             <span class="sidebar-link-copy">
               <b>{{ item.label.startsWith('agent.') || item.label.startsWith('app.') ? t(item.label) : item.label }}</b>
-              <small>{{ item.desc }}</small>
+              <small>{{ t(item.desc) }}</small>
             </span>
             <em>{{ item.tag }}</em>
           </RouterLink>
@@ -64,8 +72,8 @@ watch(() => route.fullPath, () => {
         <div class="sidebar-foot-card">
           <span class="agent-dot" />
           <div>
-            <b>6 个智能体在线</b>
-            <small>治理、探新、图谱、匹配、学习、审核协同运行</small>
+            <b>{{ t('app.agentsOnline') }}</b>
+            <small>{{ t('app.agentsOnlineDesc') }}</small>
           </div>
         </div>
       </aside>
@@ -74,13 +82,13 @@ watch(() => route.fullPath, () => {
         v-if="mobileOpen"
         class="sidebar-scrim"
         type="button"
-        aria-label="关闭导航"
+        :aria-label="t('app.closeNav')"
         @click="mobileOpen = false"
       />
 
       <div class="workspace-content">
         <header class="workspace-topbar">
-          <button class="mobile-menu" type="button" aria-label="打开导航" @click="mobileOpen = !mobileOpen">
+          <button class="mobile-menu" type="button" :aria-label="t('app.openNav')" @click="mobileOpen = !mobileOpen">
             <AppIcon :name="mobileOpen ? 'close' : 'menu'" :size="20" />
           </button>
           <div class="topbar-title">
@@ -89,11 +97,11 @@ watch(() => route.fullPath, () => {
               {{ activeModuleInfo.label.startsWith('agent.') || activeModuleInfo.label.startsWith('app.') ? t(activeModuleInfo.label) : activeModuleInfo.label }}
             </span>
             <h1>{{ pageTitle }}</h1>
-            <p>面向信息技术岗位的多源数据治理、能力图谱构建、动态演化分析与人岗精准匹配。</p>
+            <p>{{ t('app.topbarDesc') }}</p>
           </div>
           <div class="topbar-actions">
             <RouterLink to="/matching" class="button primary topbar-cta">
-              <AppIcon name="match" :size="15" /> 开始匹配
+              <AppIcon name="match" :size="15" /> {{ t('app.startMatching') }}
             </RouterLink>
             <button class="locale-toggle" type="button" @click="toggleLocale">
               {{ t('app.toggleLang') }}
@@ -110,8 +118,8 @@ watch(() => route.fullPath, () => {
         </main>
 
         <footer class="app-footer">
-          <span>{{ t('app.brandSub') }} · 多源异构数据驱动岗位和能力图谱构建与动态演化分析研究</span>
-          <a href="https://beian.miit.gov.cn/" target="_blank" rel="noopener noreferrer">鄂ICP备2026045194号</a>
+          <span>{{ t('app.brandSub') }} · {{ t('app.footerResearch') }}</span>
+          <a href="https://beian.miit.gov.cn/" target="_blank" rel="noopener noreferrer">{{ t('app.filing') }}</a>
         </footer>
       </div>
     </div>

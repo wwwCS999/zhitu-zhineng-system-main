@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 import { api } from '@/api'
 import AppIcon from '@/components/AppIcon.vue'
 import RichAnswer from '@/components/RichAnswer.vue'
@@ -14,6 +15,7 @@ type FloatingMessage = {
 
 const route = useRoute()
 const router = useRouter()
+const { t, locale } = useI18n()
 const opened = ref(false)
 const busy = ref(false)
 const input = ref('')
@@ -23,23 +25,35 @@ const modelStatus = ref<any>({ enabled: false, model: '', mode: 'LOADING' })
 const position = ref({ x: 0, y: 0 })
 const dragging = ref(false)
 
-const sectionSuggestions: Record<string, string[]> = {
-  '/': ['概括当前系统的数据状态', '哪些能力分析最值得关注？'],
-  '/parsing': ['当前岗位数据治理质量如何？', '2025 年有效岗位有多少？'],
-  '/emerging': ['当前发现了哪些新岗位？', '所选年份的岗位探新准确率如何？'],
-  '/evolution': ['Java 岗位新增了哪些技能？', '技能需求发生了什么变化？'],
-  '/graph': ['解释当前岗位能力图谱', '岗位与技能之间有什么关系？'],
-  '/matching': ['如何理解岗位匹配分数？', '当前主要技能缺口是什么？'],
-  '/learning': ['如何根据技能差距生成学习路径？', '学习计划应该如何排序？'],
-  '/audit': ['当前有哪些结果需要审核？', '如何判断证据是否可信？'],
-  '/chat': ['当前发现了哪些新岗位？', '查询 2025 年热门岗位排行']
+const routeTitleKeys: Record<string, string> = {
+  '/': 'app.overview',
+  '/parsing': 'agent.dataGovernance',
+  '/emerging': 'agent.jobInsight',
+  '/evolution': 'agent.capabilityGraph',
+  '/graph': 'agent.capabilityGraph',
+  '/matching': 'agent.matching',
+  '/learning': 'agent.learning',
+  '/audit': 'agent.trustAudit',
+  '/chat': 'app.chat'
 }
 
-const pageTitle = computed(() => String(route.meta.title || '系统总览'))
-const suggestions = computed(() => sectionSuggestions[route.path] || sectionSuggestions['/'])
+const suggestionKeys: Record<string, string[]> = {
+  '/': ['floating.suggestionOverview1', 'floating.suggestionOverview2'],
+  '/parsing': ['floating.suggestionParsing1', 'floating.suggestionParsing2'],
+  '/emerging': ['floating.suggestionEmerging1', 'floating.suggestionEmerging2'],
+  '/evolution': ['floating.suggestionEvolution1', 'floating.suggestionEvolution2'],
+  '/graph': ['floating.suggestionGraph1', 'floating.suggestionGraph2'],
+  '/matching': ['floating.suggestionMatching1', 'floating.suggestionMatching2'],
+  '/learning': ['floating.suggestionLearning1', 'floating.suggestionLearning2'],
+  '/audit': ['floating.suggestionAudit1', 'floating.suggestionAudit2'],
+  '/chat': ['floating.suggestionChat1', 'floating.suggestionChat2']
+}
+
+const pageTitle = computed(() => t(routeTitleKeys[route.path] || 'app.overview'))
+const suggestions = computed(() => (suggestionKeys[route.path] || suggestionKeys['/']).map((key) => t(key)))
 const statusText = computed(() => modelStatus.value.enabled
-  ? `${modelStatus.value.model || '大模型'} · 数据证据模式`
-  : '数据库检索模式')
+  ? `${modelStatus.value.model || t('floating.modelFallback')} · ${t('floating.dataMode')}`
+  : t('floating.retrievalMode'))
 
 function createSessionId() {
   const id = typeof crypto.randomUUID === 'function'
@@ -53,7 +67,7 @@ const sessionId = ref(sessionStorage.getItem('zhitu-floating-agent-session-id') 
 const messages = ref<FloatingMessage[]>([
   {
     role: 'assistant',
-    text: '你好，我是小职。可以直接问我当前板块的数据、结论、操作方法或岗位趋势，我会结合系统数据库回答。'
+    text: t('floating.welcome')
   }
 ])
 
@@ -91,7 +105,7 @@ function resetConversation() {
   sessionId.value = createSessionId()
   messages.value = [{
     role: 'assistant',
-    text: `已开启新对话。你现在位于【${pageTitle.value}】，可以继续询问这个板块的数据和功能。`
+    text: `${t('floating.resetPrefix')}${pageTitle.value}${t('floating.resetSuffix')}`
   }]
   input.value = ''
 }
@@ -108,7 +122,7 @@ async function send(text?: string) {
   input.value = ''
   busy.value = true
   await scrollBottom()
-  const contextualQuestion = `当前所在系统板块：${pageTitle.value}（${route.path}）。请优先结合该板块对应的系统数据与功能回答。用户问题：${question}`
+  const contextualQuestion = `${t('floating.contextPrefix')}${pageTitle.value} (${route.path})${t('floating.contextSuffix')}${question}`
   try {
     const result: any = await api.chat(contextualQuestion, sessionId.value)
     messages.value.push({
@@ -118,7 +132,7 @@ async function send(text?: string) {
       agents: result.agents
     })
   } catch (error: any) {
-    messages.value.push({ role: 'assistant', text: `请求暂时没有完成：${error.message || '请稍后重试'}` })
+    messages.value.push({ role: 'assistant', text: `${t('floating.requestFailed')}${error.message || t('floating.retryLater')}` })
   } finally {
     busy.value = false
     await scrollBottom()
@@ -162,6 +176,12 @@ function openFullChat() {
 
 watch(() => route.fullPath, () => nextTick(clampPosition))
 
+watch(locale, () => {
+  if (messages.value.length === 1 && messages.value[0]?.role === 'assistant') {
+    messages.value = [{ role: 'assistant', text: t('floating.welcome') }]
+  }
+})
+
 onMounted(async () => {
   window.addEventListener('resize', clampPosition)
   try { modelStatus.value = await api.agentStatus() } catch { modelStatus.value = { enabled: false } }
@@ -176,9 +196,9 @@ onBeforeUnmount(() => {
 <template>
   <Teleport to="body">
     <Transition name="zhidian-launcher">
-      <button v-if="!opened" class="zhidian-launcher" type="button" aria-label="打开小职智能问答" @click="open">
+      <button v-if="!opened" class="zhidian-launcher" type="button" :aria-label="t('floating.launcherLabel')" @click="open">
         <span class="launcher-orbit"><i /><AppIcon name="spark" :size="24" /></span>
-        <span><b>小职</b><small>随时问数据</small></span>
+        <span><b>{{ t('floating.name') }}</b><small>{{ t('floating.tagline') }}</small></span>
         <span class="launcher-pulse" />
       </button>
     </Transition>
@@ -190,31 +210,31 @@ onBeforeUnmount(() => {
         class="zhidian-panel"
         :class="{ dragging }"
         :style="{ left: `${position.x}px`, top: `${position.y}px` }"
-        aria-label="小职智能问答窗口"
+        :aria-label="t('floating.panelLabel')"
       >
         <header class="zhidian-head" @pointerdown="startDrag">
           <span class="drag-handle" />
           <div class="zhidian-identity">
             <span class="zhidian-logo"><AppIcon name="spark" :size="21" /></span>
-            <div><b>小职</b><small>沿着当前数据继续理解</small></div>
+            <div><b>{{ t('floating.name') }}</b><small>{{ t('floating.subtitle') }}</small></div>
           </div>
-          <span class="zhidian-mode"><i /> AI 助教</span>
+          <span class="zhidian-mode"><i /> {{ t('floating.mode') }}</span>
           <div class="zhidian-head-actions">
-            <button type="button" title="新对话" aria-label="新对话" @click="resetConversation"><AppIcon name="plus" :size="17" /></button>
-            <button type="button" title="打开完整问答页" aria-label="打开完整问答页" @click="openFullChat"><AppIcon name="chat" :size="16" /></button>
-            <button type="button" title="收起" aria-label="收起" @click="close"><AppIcon name="close" :size="17" /></button>
+            <button type="button" :title="t('floating.newChat')" :aria-label="t('floating.newChat')" @click="resetConversation"><AppIcon name="plus" :size="17" /></button>
+            <button type="button" :title="t('floating.openFull')" :aria-label="t('floating.openFull')" @click="openFullChat"><AppIcon name="chat" :size="16" /></button>
+            <button type="button" :title="t('floating.collapse')" :aria-label="t('floating.collapse')" @click="close"><AppIcon name="close" :size="17" /></button>
           </div>
         </header>
 
         <div class="zhidian-context">
-          <span><AppIcon name="focus" :size="14" /> 正在理解</span>
+          <span><AppIcon name="focus" :size="14" /> {{ t('floating.understanding') }}</span>
           <b>{{ pageTitle }}</b>
           <small>{{ statusText }}</small>
         </div>
 
         <div ref="messageBox" class="zhidian-messages">
           <div v-if="messages.length === 1" class="zhidian-suggestions">
-            <span>你可以接着问</span>
+            <span>{{ t('floating.suggestionsTitle') }}</span>
             <button v-for="suggestion in suggestions" :key="suggestion" type="button" @click="send(suggestion)">
               {{ suggestion }}<AppIcon name="arrow" :size="13" />
             </button>
@@ -222,8 +242,8 @@ onBeforeUnmount(() => {
 
           <article v-for="(message, index) in messages" :key="index" class="zhidian-message" :class="message.role">
             <div v-if="message.role === 'assistant'" class="zhidian-speaker">
-              <span><AppIcon name="spark" :size="13" /></span><b>小职</b>
-              <em v-if="message.confidence">可信度 {{ Math.round(message.confidence * 100) }}%</em>
+              <span><AppIcon name="spark" :size="13" /></span><b>{{ t('floating.name') }}</b>
+              <em v-if="message.confidence">{{ t('floating.confidence') }} {{ Math.round(message.confidence * 100) }}%</em>
             </div>
             <div class="zhidian-bubble">
               <RichAnswer v-if="message.role === 'assistant'" :content="message.text" compact />
@@ -232,8 +252,8 @@ onBeforeUnmount(() => {
           </article>
 
           <article v-if="busy" class="zhidian-message assistant">
-            <div class="zhidian-speaker"><span><AppIcon name="spark" :size="13" /></span><b>小职</b></div>
-            <div class="zhidian-bubble zhidian-thinking"><i /><i /><i /><span>正在查询数据库并组织答案</span></div>
+            <div class="zhidian-speaker"><span><AppIcon name="spark" :size="13" /></span><b>{{ t('floating.name') }}</b></div>
+            <div class="zhidian-bubble zhidian-thinking"><i /><i /><i /><span>{{ t('floating.thinking') }}</span></div>
           </article>
         </div>
 
@@ -241,14 +261,14 @@ onBeforeUnmount(() => {
           <textarea
             v-model="input"
             rows="2"
-            :placeholder="`询问${pageTitle}相关的数据或操作…`"
+            :placeholder="`${t('floating.placeholderPrefix')}${pageTitle}${t('floating.placeholderSuffix')}`"
             @keydown.enter.exact.prevent="send()"
             @keydown.shift.enter.stop
           />
-          <button type="button" :disabled="busy || !input.trim()" aria-label="发送问题" @click="send()">
+          <button type="button" :disabled="busy || !input.trim()" :aria-label="t('floating.send')" @click="send()">
             <AppIcon name="send" :size="17" />
           </button>
-          <small>Enter 发送 · Shift + Enter 换行</small>
+          <small>{{ t('floating.keyboardHint') }}</small>
         </footer>
       </section>
     </Transition>

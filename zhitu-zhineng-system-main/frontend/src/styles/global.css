@@ -14940,3 +14940,59 @@ body {
     grid-template-columns: 1fr !important;
   }
 }
+
+/* ============ English enterprise theme polish ============ */
+.app-shell.locale-en {
+  font-feature-settings: "kern" 1, "liga" 1;
+}
+
+.app-shell.locale-en .brand-copy b,
+.app-shell.locale-en .sidebar-link-copy b,
+.app-shell.locale-en .topbar-title h1,
+.app-shell.locale-en .enterprise-hero h1,
+.app-shell.locale-en .enterprise-panel h2 {
+  letter-spacing: -0.035em;
+}
+
+.app-shell.locale-en .brand-copy small {
+  max-width: 188px;
+  line-height: 1.35;
+  letter-spacing: 0.04em;
+}
+
+.app-shell.locale-en .sidebar-link {
+  min-height: 66px;
+}
+
+.app-shell.locale-en .sidebar-link-copy b {
+  font-size: 13px;
+}
+
+.app-shell.locale-en .sidebar-link-copy small {
+  font-size: 10px;
+  line-height: 1.35;
+  letter-spacing: 0.01em;
+}
+
+.app-shell.locale-en .sidebar-link em {
+  font-size: 9px;
+  letter-spacing: 0.04em;
+}
+
+.app-shell.locale-en .topbar-title p,
+.app-shell.locale-en .enterprise-hero p,
+.app-shell.locale-en .enterprise-panel-head p {
+  max-width: 760px;
+  line-height: 1.65;
+}
+
+.app-shell.locale-en .enterprise-hero h1 {
+  max-width: 760px;
+  font-size: clamp(40px, 4.8vw, 72px);
+}
+
+.app-shell.locale-en .hero-aside-summary b,
+.app-shell.locale-en .solution-delivery-strip b,
+.app-shell.locale-en .execution-stage-card small {
+  line-height: 1.35;
+}

@@ -3,6 +3,7 @@ import { computed, nextTick, onMounted, ref } from 'vue'
 import { api } from '@/api'
 import AppIcon from '@/components/AppIcon.vue'
 import RichAnswer from '@/components/RichAnswer.vue'
+import { useEnglishThemeText } from '@/composables/useEnglishThemeText'
 
 type ChatMessage = {
   role: 'assistant' | 'user'
@@ -27,6 +28,7 @@ const busy = ref(false)
 const box = ref<HTMLElement>()
 const modelStatus = ref<any>({ enabled: false, model: '', mode: 'LOADING', lastError: '' })
 const activeEvidenceGroup = ref('ALL')
+const { tx, phrase } = useEnglishThemeText()
 
 const sessionId = (() => {
   const key = 'zhitu-agent-session-id'
@@ -39,30 +41,30 @@ const sessionId = (() => {
   return created
 })()
 
-const agentCatalog: AgentCard[] = [
-  { key: 'qa', name: '问答编排智能体', short: '编排', icon: 'brain', scope: '识别问题意图、组织上下文与证据口径', tone: 'slate' },
-  { key: 'data', name: '数据治理智能体', short: '数据', icon: 'database', scope: '读取治理后的 JD、质量快照和结构化字段', tone: 'blue' },
-  { key: 'insight', name: '岗位洞察智能体', short: '洞察', icon: 'spark', scope: '回答新岗位、岗位趋势和候选岗位来源', tone: 'amber' },
-  { key: 'graph', name: '能力图谱与演化智能体', short: '图谱', icon: 'network', scope: '解释岗位能力关系、技能新增与弱化', tone: 'mint' },
-  { key: 'match', name: '画像匹配智能体', short: '匹配', icon: 'match', scope: '定位候选人与岗位之间的匹配诊断', tone: 'blue' },
-  { key: 'learn', name: '学习规划智能体', short: '培养', icon: 'route', scope: '把能力缺口转化为阶段性培养建议', tone: 'mint' },
-  { key: 'audit', name: '可信审核智能体', short: '审核', icon: 'audit', scope: '标记证据门禁、可追溯性和人工复核动作', tone: 'rose' }
-]
+const agentCatalog = computed<AgentCard[]>(() => [
+  { key: 'qa', name: tx('问答编排智能体', 'Q&A Orchestration Agent'), short: tx('编排', 'Route'), icon: 'brain', scope: tx('识别问题意图、组织上下文与证据口径', 'Detect intent, organize context and evidence policy'), tone: 'slate' },
+  { key: 'data', name: tx('数据治理智能体', 'Data Governance Agent'), short: tx('数据', 'Data'), icon: 'database', scope: tx('读取治理后的 JD、质量快照和结构化字段', 'Read governed JDs, quality snapshots and structured fields'), tone: 'blue' },
+  { key: 'insight', name: tx('岗位洞察智能体', 'Job Insight Agent'), short: tx('洞察', 'Insight'), icon: 'spark', scope: tx('回答新岗位、岗位趋势和候选岗位来源', 'Answer emerging-role, trend and source questions'), tone: 'amber' },
+  { key: 'graph', name: tx('能力图谱与演化智能体', 'Capability Graph & Evolution Agent'), short: tx('图谱', 'Graph'), icon: 'network', scope: tx('解释岗位能力关系、技能新增与弱化', 'Explain role-capability relations and skill evolution'), tone: 'mint' },
+  { key: 'match', name: tx('画像匹配智能体', 'Talent Matching Agent'), short: tx('匹配', 'Match'), icon: 'match', scope: tx('定位候选人与岗位之间的匹配诊断', 'Diagnose candidate-role matching results'), tone: 'blue' },
+  { key: 'learn', name: tx('学习规划智能体', 'Learning Path Agent'), short: tx('培养', 'Learn'), icon: 'route', scope: tx('把能力缺口转化为阶段性培养建议', 'Turn capability gaps into staged development plans'), tone: 'mint' },
+  { key: 'audit', name: tx('可信审核智能体', 'Trust Audit Agent'), short: tx('审核', 'Audit'), icon: 'audit', scope: tx('标记证据门禁、可追溯性和人工复核动作', 'Mark evidence gates, traceability and human review actions'), tone: 'rose' }
+])
 
-const quickQuestions = [
-  '当前有哪些高可信的新岗位需要进入审核？',
-  'Java 开发工程师最近新增或弱化了哪些技能要求？',
-  '张晨匹配 Java 开发工程师的主要短板是什么？',
-  '基于当前画像和岗位，应该怎么生成阶段性培养方案？'
-]
+const quickQuestions = computed(() => [
+  tx('当前有哪些高可信的新岗位需要进入审核？', 'Which high-confidence emerging roles should enter audit review?'),
+  tx('Java 开发工程师最近新增或弱化了哪些技能要求？', 'Which Java developer skill requirements have emerged or weakened recently?'),
+  tx('张晨匹配 Java 开发工程师的主要短板是什么？', 'What are Zhang Chen’s major gaps for the Java Developer role?'),
+  tx('基于当前画像和岗位，应该怎么生成阶段性培养方案？', 'How should a staged development plan be generated from the current profile and role?')
+])
 
 const messages = ref<ChatMessage[]>([
   {
     role: 'assistant',
-    text: '我是智能问答工作台。你可以围绕岗位洞察、能力图谱、画像匹配、学习规划和可信审核提问；系统会先检索业务证据，再调用阿里云百炼兼容模型生成回答，并把参与智能体、证据来源和可复核动作一起展示。',
-    agents: ['问答编排智能体', '可信审核智能体'],
+    text: tx('我是智能问答工作台。你可以围绕岗位洞察、能力图谱、画像匹配、学习规划和可信审核提问；系统会先检索业务证据，再调用大模型生成回答，并把参与智能体、证据来源和可复核动作一起展示。', 'I am the AI Q&A workbench. Ask about role insights, capability graphs, talent matching, learning plans and trusted audit. The system retrieves business evidence first, then generates an auditable LLM answer.'),
+    agents: [tx('问答编排智能体', 'Q&A Orchestration Agent'), tx('可信审核智能体', 'Trust Audit Agent')],
     evidence: [],
-    actions: ['回答必须绑定系统证据', '模型未配置时自动降级为检索摘要'],
+    actions: [tx('回答必须绑定系统证据', 'Answers must bind to system evidence'), tx('模型未配置时自动降级为检索摘要', 'Falls back to retrieval summary when the model is unavailable')],
     confidence: 0.72
   }
 ])
@@ -75,12 +77,18 @@ const evidenceRows = computed(() => lastAssistant.value?.evidence || [])
 const answerActions = computed(() => lastAssistant.value?.actions || [])
 const confidencePercent = computed(() => Math.round((lastAssistant.value?.confidence || 0) * 100))
 const modelEnabled = computed(() => Boolean(modelStatus.value?.enabled))
-const providerLabel = computed(() => modelEnabled.value ? '阿里云百炼已接入' : '待配置 AI_API_KEY')
+const providerLabel = computed(() => {
+  if (!modelEnabled.value) return tx('待配置 AI_API_KEY', 'AI_API_KEY Required')
+  const model = String(modelStatus.value?.model || '').toLowerCase()
+  if (model.startsWith('deepseek')) return tx('DeepSeek 主模型已接入', 'DeepSeek Primary Model Connected')
+  if (model.startsWith('qwen')) return tx('阿里云百炼已接入', 'Alibaba DashScope Connected')
+  return tx('OpenAI 兼容模型已接入', 'OpenAI-compatible Model Connected')
+})
 
 const modelModeLabel = computed(() => {
-  if (modelStatus.value?.mode === 'LOADING') return '连接检查中'
-  if (modelEnabled.value) return `${modelStatus.value?.model || 'qwen-plus'} · 证据问答`
-  return '检索降级模式'
+  if (modelStatus.value?.mode === 'LOADING') return tx('连接检查中', 'Checking connection')
+  if (modelEnabled.value) return `${modelStatus.value?.model || 'qwen-plus'} · ${tx('证据问答', 'Evidence Q&A')}`
+  return tx('检索降级模式', 'Retrieval fallback mode')
 })
 
 const agentUsageText = computed(() => [
@@ -88,12 +96,12 @@ const agentUsageText = computed(() => [
   ...(answerActions.value || [])
 ].join(' '))
 
-const routedAgents = computed(() => agentCatalog.map(agent => {
+const routedAgents = computed(() => agentCatalog.value.map(agent => {
   const active = isAgentActive(agent)
   return {
     ...agent,
     active,
-    status: active ? '已参与' : agent.key === 'audit' ? '证据门禁' : '本次未调用'
+    status: active ? tx('已参与', 'Active') : agent.key === 'audit' ? tx('证据门禁', 'Evidence Gate') : tx('本次未调用', 'Standby')
   }
 }))
 
@@ -109,7 +117,7 @@ const evidenceGroups = computed(() => {
     group.rows.push(row)
   }
   return [
-    { key: 'ALL', title: '全部证据', agent: '跨智能体证据池', icon: 'audit', tone: 'slate', count: evidenceRows.value.length, rows: evidenceRows.value },
+    { key: 'ALL', title: tx('全部证据', 'All Evidence'), agent: tx('跨智能体证据池', 'Cross-agent Evidence Pool'), icon: 'audit', tone: 'slate', count: evidenceRows.value.length, rows: evidenceRows.value },
     ...Array.from(groups.values())
   ]
 })
@@ -129,7 +137,7 @@ const routeSummary = computed(() => {
   const active = routedAgents.value.filter(agent => agent.active).length
   return {
     active,
-    total: agentCatalog.length,
+    total: agentCatalog.value.length,
     evidence: evidenceRows.value.length,
     actions: answerActions.value.length
   }
@@ -154,31 +162,31 @@ function hasEvidence(...types: string[]) {
 function evidenceMeta(row: Record<string, any>) {
   const type = String(row.evidenceType || row.evidence_type || '')
   if (type === 'governance_snapshot' || type === 'governed_job' || type === 'database_analysis_plan') {
-    return { key: 'data', title: '数据治理证据', agent: '数据治理智能体', icon: 'database', tone: 'blue' }
+    return { key: 'data', title: tx('数据治理证据', 'Data Governance Evidence'), agent: tx('数据治理智能体', 'Data Governance Agent'), icon: 'database', tone: 'blue' }
   }
   if (type === 'emerging_role_analysis' || type === 'automatic_analysis_run') {
-    return { key: 'insight', title: '岗位洞察证据', agent: '岗位洞察智能体', icon: 'spark', tone: 'amber' }
+    return { key: 'insight', title: tx('岗位洞察证据', 'Job Insight Evidence'), agent: tx('岗位洞察智能体', 'Job Insight Agent'), icon: 'spark', tone: 'amber' }
   }
   if (type === 'skill_evolution_analysis' || type === 'role_skill_relation' || type === 'graph_role') {
-    return { key: 'graph', title: '图谱演化证据', agent: '能力图谱与演化智能体', icon: 'network', tone: 'mint' }
+    return { key: 'graph', title: tx('图谱演化证据', 'Graph Evolution Evidence'), agent: tx('能力图谱与演化智能体', 'Capability Graph & Evolution Agent'), icon: 'network', tone: 'mint' }
   }
   if (type === 'matching_report') {
-    return { key: 'match', title: '画像匹配证据', agent: '画像匹配智能体', icon: 'match', tone: 'blue' }
+    return { key: 'match', title: tx('画像匹配证据', 'Talent Matching Evidence'), agent: tx('画像匹配智能体', 'Talent Matching Agent'), icon: 'match', tone: 'blue' }
   }
   if (type === 'learning_path' || type === 'learning_context') {
-    return { key: 'learn', title: '培养路径证据', agent: '学习规划智能体', icon: 'route', tone: 'mint' }
+    return { key: 'learn', title: tx('培养路径证据', 'Learning Path Evidence'), agent: tx('学习规划智能体', 'Learning Path Agent'), icon: 'route', tone: 'mint' }
   }
-  return { key: 'audit', title: '可信审核证据', agent: '可信审核智能体', icon: 'audit', tone: 'rose' }
+  return { key: 'audit', title: tx('可信审核证据', 'Trust Audit Evidence'), agent: tx('可信审核智能体', 'Trust Audit Agent'), icon: 'audit', tone: 'rose' }
 }
 
 function evidenceTitle(row: Record<string, any>, index: number) {
   return row.candidate_name || row.role_name || row.title_standard || row.skill_name ||
-    row.person_name || row.title || row.evidenceType || `证据 ${index + 1}`
+    row.person_name || row.title || row.evidenceType || `${tx('证据', 'Evidence')} ${index + 1}`
 }
 
 function evidenceDescription(row: Record<string, any>) {
   return row.definition || row.explanation || row.description_clean || row.objective ||
-    row.responsibilities || row.suggestions || row.source || '已纳入本次问答上下文，可展开查看结构化字段。'
+    row.responsibilities || row.suggestions || row.source || tx('已纳入本次问答上下文，可展开查看结构化字段。', 'Included in the current Q&A context. Expand to inspect structured fields.')
 }
 
 function evidenceTags(row: Record<string, any>) {
@@ -199,7 +207,7 @@ function formatValue(value: unknown) {
   if (value == null || value === '') return '-'
   if (typeof value === 'number') return Number.isInteger(value) ? String(value) : value.toFixed(2)
   if (typeof value === 'object') return JSON.stringify(value)
-  return String(value)
+  return phrase(value)
 }
 
 async function scrollBottom() {
@@ -219,8 +227,8 @@ async function send(text?: string) {
     const result: any = await api.chat(question, sessionId)
     messages.value.push({
       role: 'assistant',
-      text: result.answer || '当前没有生成回答。',
-      agents: result.agents || [],
+      text: result.answer || tx('当前没有生成回答。', 'No answer was generated.'),
+      agents: (result.agents || []).map((item: unknown) => phrase(item)),
       evidence: result.evidence || [],
       actions: result.suggestedActions || [],
       confidence: result.confidence || 0
@@ -228,9 +236,9 @@ async function send(text?: string) {
   } catch (err: any) {
     messages.value.push({
       role: 'assistant',
-      text: `请求暂时没有完成：${err.message || '请稍后重试'}`,
-      agents: ['问答编排智能体'],
-      actions: ['检查后端服务、百炼 Key 或数据源连接'],
+      text: `${tx('请求暂时没有完成：', 'The request could not be completed: ')}${err.message || tx('请稍后重试', 'please try again later')}`,
+      agents: [tx('问答编排智能体', 'Q&A Orchestration Agent')],
+      actions: [tx('检查后端服务、模型 Key 或数据源连接', 'Check backend service, model key or data source connection')],
       confidence: 0.25
     })
   } finally {
@@ -243,7 +251,7 @@ async function refreshStatus() {
   try {
     modelStatus.value = await api.agentStatus()
   } catch {
-    modelStatus.value = { enabled: false, model: '', mode: 'STATUS_UNAVAILABLE', lastError: '状态接口不可用' }
+    modelStatus.value = { enabled: false, model: '', mode: 'STATUS_UNAVAILABLE', lastError: tx('状态接口不可用', 'Status API unavailable') }
   }
 }
 
@@ -254,15 +262,15 @@ onMounted(refreshStatus)
   <div class="qa-product-page">
     <section class="qa-command-hero" v-reveal>
       <div class="qa-hero-copy">
-        <span class="match-kicker">智能问答智能体</span>
-        <h1>企业岗位能力问答工作台</h1>
-        <p>面向招聘、岗位治理和培养决策，把多智能体输出统一编排为可追溯问答。回答先检索系统证据，再由阿里云百炼兼容模型生成，证据不足时明确降级。</p>
+        <span class="match-kicker">{{ tx('智能问答智能体', 'AI Q&A Agent') }}</span>
+        <h1>{{ tx('企业岗位能力问答工作台', 'Enterprise Job-Capability Q&A Workbench') }}</h1>
+        <p>{{ tx('面向招聘、岗位治理和培养决策，把多智能体输出统一编排为可追溯问答。回答先检索系统证据，再由大模型生成，证据不足时明确降级。', 'For recruiting, job governance and talent development decisions, orchestrate multi-agent outputs into traceable answers. The system retrieves evidence first, then generates an LLM answer with clear fallback when evidence is insufficient.') }}</p>
         <div class="match-command-actions">
           <button class="button secondary" type="button" @click="refreshStatus">
-            <AppIcon name="refresh" :size="16" />刷新模型状态
+            <AppIcon name="refresh" :size="16" />{{ tx('刷新模型状态', 'Refresh Model Status') }}
           </button>
           <button class="button primary" type="button" @click="send(quickQuestions[0])">
-            <AppIcon name="spark" :size="16" />查看待审核新岗位
+            <AppIcon name="spark" :size="16" />{{ tx('查看待审核新岗位', 'View Roles for Audit') }}
           </button>
         </div>
       </div>
@@ -277,41 +285,41 @@ onMounted(refreshStatus)
           <b>{{ confidencePercent }}%</b>
         </div>
         <div class="qa-model-checks">
-          <span><AppIcon name="check" :size="13" />后端读取 AI_API_KEY</span>
-          <span><AppIcon name="check" :size="13" />DashScope 兼容模式</span>
-          <span><AppIcon name="check" :size="13" />证据绑定回答</span>
+          <span><AppIcon name="check" :size="13" />{{ tx('后端读取 AI_API_KEY', 'Backend reads AI API key') }}</span>
+          <span><AppIcon name="check" :size="13" />{{ tx('OpenAI 兼容模式', 'OpenAI-compatible mode') }}</span>
+          <span><AppIcon name="check" :size="13" />{{ tx('证据绑定回答', 'Evidence-grounded answer') }}</span>
         </div>
       </aside>
     </section>
 
     <section class="qa-kpi-strip">
       <article>
-        <span>参与智能体</span>
+        <span>{{ tx('参与智能体', 'Participating Agents') }}</span>
         <strong>{{ routeSummary.active }} / {{ routeSummary.total }}</strong>
-        <small>按问题意图动态路由，不同来源独立标记。</small>
+        <small>{{ tx('按问题意图动态路由，不同来源独立标记。', 'Dynamic routing by question intent with source-level labeling.') }}</small>
       </article>
       <article>
-        <span>可复核证据</span>
+        <span>{{ tx('可复核证据', 'Reviewable Evidence') }}</span>
         <strong>{{ routeSummary.evidence }}</strong>
-        <small>回答中的证据编号可对应到下方台账。</small>
+        <small>{{ tx('回答中的证据编号可对应到下方台账。', 'Evidence IDs in answers map to the ledger below.') }}</small>
       </article>
       <article>
-        <span>证据覆盖率</span>
+        <span>{{ tx('证据覆盖率', 'Evidence Coverage') }}</span>
         <strong>{{ evidenceCoverage }}%</strong>
-        <small>结构化证据越完整，企业审核越容易落地。</small>
+        <small>{{ tx('结构化证据越完整，企业审核越容易落地。', 'More complete structured evidence makes enterprise audit easier.') }}</small>
       </article>
       <article>
-        <span>后续动作</span>
+        <span>{{ tx('后续动作', 'Next Actions') }}</span>
         <strong>{{ routeSummary.actions }}</strong>
-        <small>输出跳转、复核、补充数据或生成方案建议。</small>
+        <small>{{ tx('输出跳转、复核、补充数据或生成方案建议。', 'Suggest navigation, review, data enrichment or plan generation.') }}</small>
       </article>
     </section>
 
     <section class="qa-workbench qa-workbench-redesign" v-reveal>
       <aside class="qa-left-rail">
         <div class="qa-panel qa-intent-panel">
-          <span class="eyebrow">企业提问入口</span>
-          <h2>业务指令台</h2>
+          <span class="eyebrow">{{ tx('企业提问入口', 'Enterprise Query Entry') }}</span>
+          <h2>{{ tx('业务指令台', 'Business Command Console') }}</h2>
           <div class="qa-question-list">
             <button v-for="question in quickQuestions" :key="question" type="button" @click="send(question)">
               <span>{{ question }}</span>
@@ -321,8 +329,8 @@ onMounted(refreshStatus)
         </div>
 
         <div class="qa-panel qa-route-panel">
-          <span class="eyebrow">智能体分区</span>
-          <h2>多智能体路由管线</h2>
+          <span class="eyebrow">{{ tx('智能体分区', 'Agent Zones') }}</span>
+          <h2>{{ tx('多智能体路由管线', 'Multi-agent Routing Pipeline') }}</h2>
           <div class="qa-agent-list">
             <article
               v-for="agent in routedAgents"
@@ -344,9 +352,9 @@ onMounted(refreshStatus)
       <main class="qa-chat-panel">
         <header class="qa-chat-head">
           <div>
-            <span class="eyebrow">证据问答</span>
-            <h2>AI 决策解释流</h2>
-            <p>把岗位库、能力图谱、候选人画像、学习规划与可信审核证据合并成一条可追溯回答。</p>
+            <span class="eyebrow">{{ tx('证据问答', 'Evidence Q&A') }}</span>
+            <h2>{{ tx('AI 决策解释流', 'AI Decision Explanation Stream') }}</h2>
+            <p>{{ tx('把岗位库、能力图谱、候选人画像、学习规划与可信审核证据合并成一条可追溯回答。', 'Merge role libraries, capability graphs, talent profiles, learning plans and audit evidence into one traceable answer.') }}</p>
           </div>
           <span class="status-badge" :class="modelEnabled ? 'good' : 'warn'">{{ modelModeLabel }}</span>
         </header>
@@ -358,8 +366,8 @@ onMounted(refreshStatus)
             </div>
             <div class="qa-message-body">
               <div class="qa-message-meta">
-                <b>{{ message.role === 'user' ? '提问人' : '职途智配问答' }}</b>
-                <span v-if="message.confidence">可信度 {{ Math.round(message.confidence * 100) }}%</span>
+                <b>{{ message.role === 'user' ? tx('提问人', 'User') : tx('职途智配问答', 'Zhitu Q&A') }}</b>
+                <span v-if="message.confidence">{{ tx('可信度', 'Confidence') }} {{ Math.round(message.confidence * 100) }}%</span>
               </div>
               <div class="qa-bubble" :class="{ rich: message.role === 'assistant' }">
                 <RichAnswer v-if="message.role === 'assistant'" :content="message.text" />
@@ -375,33 +383,33 @@ onMounted(refreshStatus)
           <div v-if="messages.length <= 1 && !busy" class="qa-decision-empty">
             <div class="qa-decision-node">
               <span>01</span>
-              <b>岗位能力</b>
-              <small>JD 治理与标准能力要求</small>
+              <b>{{ tx('岗位能力', 'Role Capabilities') }}</b>
+              <small>{{ tx('JD 治理与标准能力要求', 'JD governance and standard requirements') }}</small>
             </div>
             <div class="qa-decision-node">
               <span>02</span>
-              <b>候选画像</b>
-              <small>技能、项目、经历证据</small>
+              <b>{{ tx('候选画像', 'Talent Profile') }}</b>
+              <small>{{ tx('技能、项目、经历证据', 'Skills, projects and experience evidence') }}</small>
             </div>
             <div class="qa-decision-node">
               <span>03</span>
-              <b>匹配诊断</b>
-              <small>短板、风险和建议动作</small>
+              <b>{{ tx('匹配诊断', 'Match Diagnosis') }}</b>
+              <small>{{ tx('短板、风险和建议动作', 'Gaps, risks and recommended actions') }}</small>
             </div>
             <div class="qa-decision-node">
               <span>04</span>
-              <b>可信审核</b>
-              <small>证据门槛与人工复核</small>
+              <b>{{ tx('可信审核', 'Trusted Audit') }}</b>
+              <small>{{ tx('证据门槛与人工复核', 'Evidence gate and human review') }}</small>
             </div>
           </div>
 
           <article v-if="busy" class="qa-message assistant">
             <div class="qa-message-avatar"><AppIcon name="brain" :size="17" /></div>
             <div class="qa-message-body">
-              <div class="qa-message-meta"><b>职途智配问答</b><span>检索中</span></div>
+              <div class="qa-message-meta"><b>{{ tx('职途智配问答', 'Zhitu Q&A') }}</b><span>{{ tx('检索中', 'Retrieving') }}</span></div>
               <div class="qa-bubble qa-typing">
                 <i /><i /><i />
-                <span>正在检索治理库、图谱、匹配报告与审核记录</span>
+                <span>{{ tx('正在检索治理库、图谱、匹配报告与审核记录', 'Retrieving governance library, graph, matching reports and audit records') }}</span>
               </div>
             </div>
           </article>
@@ -411,12 +419,12 @@ onMounted(refreshStatus)
           <textarea
             v-model="input"
             rows="3"
-            placeholder="输入岗位、技能、候选人、审核或培养方案问题，例如：张晨为什么适合 Java 开发工程师？"
+            :placeholder="tx('输入岗位、技能、候选人、审核或培养方案问题，例如：张晨为什么适合 Java 开发工程师？', 'Ask about roles, skills, candidates, audit or development plans, e.g. why is Zhang Chen suitable for Java Developer?')"
             @keydown.ctrl.enter.prevent="send()"
           />
           <div>
             <button class="button primary" type="button" :disabled="busy || !input.trim()" @click="send()">
-              <AppIcon name="send" :size="16" />发送
+              <AppIcon name="send" :size="16" />{{ tx('发送', 'Send') }}
             </button>
           </div>
         </footer>
@@ -426,8 +434,8 @@ onMounted(refreshStatus)
         <div class="qa-panel qa-evidence-summary">
           <header>
             <div>
-              <span class="eyebrow">证据台账</span>
-              <h2>证据驾驶舱</h2>
+              <span class="eyebrow">{{ tx('证据台账', 'Evidence Ledger') }}</span>
+              <h2>{{ tx('证据驾驶舱', 'Evidence Cockpit') }}</h2>
             </div>
             <strong>{{ evidenceRows.length }}</strong>
           </header>
@@ -448,22 +456,22 @@ onMounted(refreshStatus)
 
         <div class="qa-panel qa-evidence-ledger">
           <header>
-            <span class="eyebrow">可复核字段</span>
-            <h2>引用明细</h2>
+            <span class="eyebrow">{{ tx('可复核字段', 'Reviewable Fields') }}</span>
+            <h2>{{ tx('引用明细', 'Citation Details') }}</h2>
           </header>
 
           <div v-if="visibleEvidence.length" class="qa-evidence-list">
             <article v-for="(row, index) in visibleEvidence.slice(0, 8)" :key="index">
               <div>
-                <span>证据 {{ index + 1 }}</span>
-                <b>{{ evidenceTitle(row, index) }}</b>
-                <p>{{ evidenceDescription(row) }}</p>
+                <span>{{ tx('证据', 'Evidence') }} {{ index + 1 }}</span>
+                <b>{{ phrase(evidenceTitle(row, index)) }}</b>
+                <p>{{ phrase(evidenceDescription(row)) }}</p>
               </div>
               <div class="qa-evidence-tags">
-                <span v-for="tag in evidenceTags(row)" :key="tag" class="tag">{{ tag }}</span>
+                <span v-for="tag in evidenceTags(row)" :key="tag" class="tag">{{ phrase(tag) }}</span>
               </div>
               <details>
-                <summary>查看结构化字段</summary>
+                <summary>{{ tx('查看结构化字段', 'View structured fields') }}</summary>
                 <dl>
                   <template v-for="(value, key) in row" :key="key">
                     <dt>{{ key }}</dt>
@@ -476,8 +484,8 @@ onMounted(refreshStatus)
 
           <div v-else class="qa-empty-ledger">
             <AppIcon name="audit" :size="24" />
-            <b>等待业务证据</b>
-            <p>发送问题后，这里会按智能体来源展示可复核证据。</p>
+            <b>{{ tx('等待业务证据', 'Waiting for business evidence') }}</b>
+            <p>{{ tx('发送问题后，这里会按智能体来源展示可复核证据。', 'After you send a question, reviewable evidence will appear here by agent source.') }}</p>
           </div>
         </div>
       </aside>

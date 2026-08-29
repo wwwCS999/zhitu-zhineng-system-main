@@ -4,6 +4,9 @@ import { ElMessage } from 'element-plus'
 import { api } from '@/api'
 import AppIcon from '@/components/AppIcon.vue'
 import ProgressBar from '@/components/ProgressBar.vue'
+import { useEnglishThemeText } from '@/composables/useEnglishThemeText'
+
+const { tx, phrase } = useEnglishThemeText()
 
 const matches = ref<any[]>([])
 const resumes = ref<any[]>([])
@@ -451,10 +454,10 @@ const pyramidLayers = computed(() => pathSteps.value.map((step: any, index: numb
   completed: isStageCompleted(index)
 })))
 const planDashboardMetrics = computed(() => [
-  { label: '阶段层级', value: pathSteps.value.length, unit: '层', hint: '按岗位胜任路径逐层解锁' },
-  { label: '企业任务包', value: planTaskCount.value, unit: '项', hint: '面向真实业务场景拆解' },
-  { label: '交付证据', value: planDeliverableCount.value, unit: '件', hint: '可进入作品集或转正评审' },
-  { label: '验收门禁', value: planAssessmentCount.value, unit: '条', hint: '导师/系统复核标准' }
+  { label: tx('阶段层级', 'Stages'), value: pathSteps.value.length, unit: tx('层', ''), hint: tx('按岗位胜任路径逐层解锁', 'Unlocked by role-readiness path') },
+  { label: tx('企业任务包', 'Enterprise Task Packages'), value: planTaskCount.value, unit: tx('项', 'items'), hint: tx('面向真实业务场景拆解', 'Decomposed for real business scenarios') },
+  { label: tx('交付证据', 'Deliverable Evidence'), value: planDeliverableCount.value, unit: tx('件', 'items'), hint: tx('可进入作品集或转正评审', 'Can enter portfolio or probation review') },
+  { label: tx('验收门禁', 'Acceptance Gates'), value: planAssessmentCount.value, unit: tx('条', 'items'), hint: tx('导师/系统复核标准', 'Mentor / system review criteria') }
 ])
 
 const selectedModeObjects = computed(() => {
@@ -462,15 +465,37 @@ const selectedModeObjects = computed(() => {
   return selected.length ? selected : [planModes[0]]
 })
 
-const selectedModeLabels = computed(() => selectedModeObjects.value.map(item => item.label).join(' / '))
+function planModeLabel(value: string, fallback = '阶段培养') {
+  if (value === 'SKILL_GAP') return tx('缺口补齐', 'Gap Closure')
+  if (value === 'ONBOARDING') return tx('试用转正', 'Onboarding to Conversion')
+  if (value === 'PROMOTION') return tx('晋升储备', 'Promotion Reserve')
+  if (value === 'PORTFOLIO') return tx('作品集强化', 'Portfolio Strengthening')
+  return tx(fallback, 'Stage Development')
+}
+
+function planModeDesc(value: string, fallback = '') {
+  if (value === 'SKILL_GAP') return tx('优先处理岗位硬性技能缺口，适合招聘筛选后的短期培养。', 'Prioritize hard role-skill gaps for short-term development after recruiting screening.')
+  if (value === 'ONBOARDING') return tx('强调基础规范、交付节奏和企业项目协作。', 'Emphasize engineering standards, delivery rhythm and enterprise collaboration.')
+  if (value === 'PROMOTION') return tx('提升复杂项目、业务指标和架构表达能力。', 'Improve complex-project delivery, business metrics and architecture communication.')
+  if (value === 'PORTFOLIO') return tx('把学习结果沉淀成可面试、可复盘、可展示的作品证据。', 'Convert learning outcomes into interview-ready, reviewable and demoable portfolio evidence.')
+  return phrase(fallback)
+}
+
+function strategyRoute(value: string) {
+  if (value === 'SKILL_GAP') return { route: tx('P0 缺口优先', 'P0 Gap First'), acceptance: tx('硬性技能通过专项验收', 'Hard skills pass focused acceptance'), output: tx('短板清单', 'Gap List') }
+  if (value === 'ONBOARDING') return { route: tx('试用期上岗', 'Probation Onboarding'), acceptance: tx('企业规范与交付节奏达标', 'Enterprise standards and delivery rhythm met'), output: tx('上岗任务包', 'Onboarding Task Package') }
+  if (value === 'PROMOTION') return { route: tx('晋升储备', 'Promotion Reserve'), acceptance: tx('复杂任务与业务指标可解释', 'Complex tasks and business metrics are explainable'), output: tx('晋升证据', 'Promotion Evidence') }
+  if (value === 'PORTFOLIO') return { route: tx('作品集沉淀', 'Portfolio Building'), acceptance: tx('项目证据可演示、可复盘', 'Project evidence is demoable and reviewable'), output: tx('作品集', 'Portfolio') }
+  return { route: tx('阶段培养', 'Stage Development'), acceptance: tx('按企业导师验收', 'Accepted by enterprise mentor'), output: tx('阶段产出', 'Stage Output') }
+}
+
+const selectedModeLabels = computed(() => selectedModeObjects.value.map(item => planModeLabel(item.value, item.label)).join(' / '))
 
 const strategyRouteCards = computed(() => selectedModeObjects.value.map(item => ({
   ...item,
-  ...(strategyRouteMeta[item.value] || {
-    route: item.label,
-    acceptance: '按企业导师验收',
-    output: '阶段产出'
-  })
+  label: planModeLabel(item.value, item.label),
+  desc: planModeDesc(item.value, item.desc),
+  ...strategyRoute(item.value)
 })))
 
 const planningEngineCards = computed(() => [
@@ -644,22 +669,22 @@ onMounted(load)
   <div class="learning-product-page">
     <section class="match-command-center learning-command-center" v-reveal>
       <div class="match-command-copy">
-        <span class="match-kicker">学习规划智能体</span>
-        <h1>AI 岗位培养方案规划台</h1>
-        <p>把人岗匹配报告、候选画像、岗位缺口和企业培养策略统一送入规划引擎，生成阶段路径、任务包和验收方案。</p>
+        <span class="match-kicker">{{ tx('学习规划智能体', 'Learning Path Agent') }}</span>
+        <h1>{{ tx('AI 岗位培养方案规划台', 'AI Role Development Planning Console') }}</h1>
+        <p>{{ tx('把人岗匹配报告、候选画像、岗位缺口和企业培养策略统一送入规划引擎，生成阶段路径、任务包和验收方案。', 'Feed matching reports, talent profiles, role gaps and enterprise training strategies into the planning engine to generate staged paths, task packages and acceptance plans.') }}</p>
         <div class="match-command-actions">
           <button class="button secondary" type="button" :disabled="refreshing" @click="refreshData">
-            <AppIcon name="refresh" :size="16" />{{ refreshing ? '刷新中' : '同步最新匹配' }}
+            <AppIcon name="refresh" :size="16" />{{ refreshing ? tx('刷新中', 'Refreshing') : tx('同步最新匹配', 'Sync Latest Matches') }}
           </button>
           <button class="button primary" type="button" :disabled="loading || !matchId" @click="generate">
-            <AppIcon name="route" :size="16" />{{ loading ? 'AI 规划中' : 'AI 动态生成方案' }}
+            <AppIcon name="route" :size="16" />{{ loading ? tx('AI 规划中', 'AI Planning') : tx('AI 动态生成方案', 'Generate AI Plan') }}
           </button>
         </div>
       </div>
 
       <aside class="match-readiness-card learning-command-card">
         <div class="match-readiness-head">
-          <span>当前培养对象</span>
+          <span>{{ tx('当前培养对象', 'Current Development Target') }}</span>
           <b>{{ candidateName }}</b>
         </div>
         <div class="match-route-line">
@@ -669,7 +694,7 @@ onMounted(load)
         </div>
         <div class="match-readiness-meter">
           <div>
-            <span>AI 规划准备度</span>
+            <span>{{ tx('AI 规划准备度', 'AI Planning Readiness') }}</span>
             <strong>{{ planReadinessPercent }}%</strong>
           </div>
           <ProgressBar :value="planReadinessPercent" :tone="planReadinessPercent >= 75 ? 'mint' : 'gold'" />
@@ -686,31 +711,31 @@ onMounted(load)
       <article class="surface learning-control-card" v-reveal="40">
         <header class="surface-head">
           <div>
-            <span class="eyebrow">规划输入</span>
-            <h2>锁定人岗样本</h2>
-            <p>选择一次人岗匹配报告，系统自动读取候选画像、岗位能力图谱和缺口清单。</p>
+            <span class="eyebrow">{{ tx('规划输入', 'Planning Input') }}</span>
+            <h2>{{ tx('锁定人岗样本', 'Lock Person-Job Sample') }}</h2>
+            <p>{{ tx('选择一次人岗匹配报告，系统自动读取候选画像、岗位能力图谱和缺口清单。', 'Select a matching report; the system reads the talent profile, role capability graph and gap list automatically.') }}</p>
           </div>
         </header>
         <div class="surface-body learning-control-body">
           <label class="field">
-            <span>匹配报告</span>
+            <span>{{ tx('匹配报告', 'Match Report') }}</span>
             <select v-model="matchId" class="select">
-              <option v-for="item in matches" :key="item.id" :value="item.id">{{ item.person_name }} → {{ item.role_name }}（{{ item.overall_score }}）</option>
+              <option v-for="item in matches" :key="item.id" :value="item.id">{{ phrase(item.person_name) }} → {{ phrase(item.role_name) }}（{{ item.overall_score }}）</option>
             </select>
           </label>
           <div class="learning-config-strip">
-            <div><span>候选人</span><b>{{ candidateName }}</b></div>
-            <div><span>目标岗位</span><b>{{ targetRoleName }}</b></div>
-            <div><span>岗位方向</span><b>{{ targetTechStack }}</b></div>
+            <div><span>{{ tx('候选人', 'Candidate') }}</span><b>{{ phrase(candidateName) }}</b></div>
+            <div><span>{{ tx('目标岗位', 'Target Role') }}</span><b>{{ phrase(targetRoleName) }}</b></div>
+            <div><span>{{ tx('岗位方向', 'Role Domain') }}</span><b>{{ phrase(targetTechStack) }}</b></div>
           </div>
           <div class="learning-phase-rule">
             <article>
-              <span>阶段制规则</span>
-              <b>基础校准 → 专项训练 → 场景交付 → 胜任评审</b>
+              <span>{{ tx('阶段制规则', 'Stage Rule') }}</span>
+              <b>{{ tx('基础校准 → 专项训练 → 场景交付 → 胜任评审', 'Baseline Calibration → Focused Training → Scenario Delivery → Readiness Review') }}</b>
             </article>
             <article>
-              <span>解锁方式</span>
-              <b>完成本层交付证据和验收门禁后进入下一层</b>
+              <span>{{ tx('解锁方式', 'Unlock Rule') }}</span>
+              <b>{{ tx('完成本层交付证据和验收门禁后进入下一层', 'Move to the next stage after deliverables and acceptance gates pass') }}</b>
             </article>
           </div>
         </div>
@@ -719,11 +744,11 @@ onMounted(load)
       <article class="surface learning-priority-card" v-reveal="80">
         <header class="surface-head">
           <div>
-            <span class="eyebrow">策略矩阵</span>
-            <h2>选择企业培养策略</h2>
-            <p>支持多策略同时生效，大模型会据此调整推荐路径、任务深度和验收口径。</p>
+            <span class="eyebrow">{{ tx('策略矩阵', 'Strategy Matrix') }}</span>
+            <h2>{{ tx('选择企业培养策略', 'Select Enterprise Development Strategy') }}</h2>
+            <p>{{ tx('支持多策略同时生效，大模型会据此调整推荐路径、任务深度和验收口径。', 'Multiple strategies can be active. The model adjusts path recommendation, task depth and acceptance criteria accordingly.') }}</p>
           </div>
-          <span class="status-badge good">已选 {{ selectedModeObjects.length }} 项</span>
+          <span class="status-badge good">{{ tx('已选', 'Selected') }} {{ selectedModeObjects.length }} {{ tx('项', 'items') }}</span>
         </header>
         <div class="surface-body">
           <div class="learning-mode-selector strategy-mode-selector">
@@ -735,18 +760,18 @@ onMounted(load)
               @click="togglePlanMode(mode.value)"
             >
               <span class="strategy-check"><AppIcon :name="selectedPlanModes.includes(mode.value) ? 'check' : 'plus'" :size="14" /></span>
-              <b>{{ mode.label }}</b>
-              <small>{{ mode.desc }}</small>
+              <b>{{ planModeLabel(mode.value, mode.label) }}</b>
+              <small>{{ planModeDesc(mode.value, mode.desc) }}</small>
             </button>
           </div>
           <div class="learning-strategy-summary">
             <article>
-              <span>目标组合</span>
+              <span>{{ tx('目标组合', 'Target Mix') }}</span>
               <b>{{ selectedModeLabels }}</b>
             </article>
             <article>
-              <span>规划机制</span>
-              <b>大模型编排 · 阶段任务 · 交付证据 · 企业门禁</b>
+              <span>{{ tx('规划机制', 'Planning Mechanism') }}</span>
+              <b>{{ tx('大模型编排 · 阶段任务 · 交付证据 · 企业门禁', 'LLM orchestration · staged tasks · deliverable evidence · enterprise gates') }}</b>
             </article>
           </div>
           <div class="learning-strategy-routes">
@@ -771,28 +796,28 @@ onMounted(load)
     <section class="surface learning-orchestration-board" v-reveal>
       <header class="surface-head">
         <div>
-          <span class="eyebrow">培养路径编排驾驶舱</span>
-          <h2>从岗位缺口到可验收产出</h2>
-          <p>把匹配结果、能力资产和企业验收任务压缩成一张阶段制培养蓝图。</p>
+          <span class="eyebrow">{{ tx('培养路径编排驾驶舱', 'Development Path Orchestration Cockpit') }}</span>
+          <h2>{{ tx('从岗位缺口到可验收产出', 'From Role Gaps to Acceptable Deliverables') }}</h2>
+          <p>{{ tx('把匹配结果、能力资产和企业验收任务压缩成一张阶段制培养蓝图。', 'Compress matching results, capability assets and enterprise acceptance tasks into a staged development blueprint.') }}</p>
         </div>
         <div class="learning-board-badges">
-          <span class="status-badge good">{{ matchScore ? `${formatNumber(matchScore, 1)}% 匹配` : '待评估' }}</span>
-          <span class="status-badge risk">{{ missingSkills.length }} 项缺口</span>
+          <span class="status-badge good">{{ matchScore ? `${formatNumber(matchScore, 1)}% ${tx('匹配', 'Match')}` : tx('待评估', 'Pending') }}</span>
+          <span class="status-badge risk">{{ missingSkills.length }} {{ tx('项缺口', 'gaps') }}</span>
           <span class="status-badge">{{ plannerLabel }}</span>
         </div>
       </header>
       <div class="learning-orchestration-shell">
         <aside class="learning-orchestration-score">
-          <span class="cockpit-label">方案态势</span>
+          <span class="cockpit-label">{{ tx('方案态势', 'Plan Status') }}</span>
           <strong>{{ matchScore ? `${formatNumber(matchScore, 1)}%` : '--' }}</strong>
-          <small>当前岗位匹配度</small>
+          <small>{{ tx('当前岗位匹配度', 'Current role match score') }}</small>
           <div class="cockpit-metrics">
-            <div><b>{{ missingSkills.length }}</b><span>待补齐</span></div>
-            <div><b>{{ reusableSkills.length }}</b><span>可复用</span></div>
-            <div><b>{{ phaseStageCount }}</b><span>阶段门禁</span></div>
+            <div><b>{{ missingSkills.length }}</b><span>{{ tx('待补齐', 'Gaps') }}</span></div>
+            <div><b>{{ reusableSkills.length }}</b><span>{{ tx('可复用', 'Reusable') }}</span></div>
+            <div><b>{{ phaseStageCount }}</b><span>{{ tx('阶段门禁', 'Stage Gates') }}</span></div>
           </div>
           <div class="cockpit-mode-list">
-            <span v-for="mode in selectedModeObjects" :key="mode.value">{{ mode.label }}</span>
+            <span v-for="mode in selectedModeObjects" :key="mode.value">{{ planModeLabel(mode.value, mode.label) }}</span>
           </div>
         </aside>
 
@@ -812,18 +837,18 @@ onMounted(load)
             <article class="learning-queue-panel">
               <header>
                 <span><AppIcon name="target" :size="17" /></span>
-                <div><b>缺口处理队列</b><small>{{ missingSkills.length ? '进入专项训练优先级' : '暂无硬性短板' }}</small></div>
+                <div><b>{{ tx('缺口处理队列', 'Gap Handling Queue') }}</b><small>{{ missingSkills.length ? tx('进入专项训练优先级', 'Prioritized for focused training') : tx('暂无硬性短板', 'No hard gaps') }}</small></div>
               </header>
               <div class="learning-training-queue compact">
                 <div v-for="(skill, index) in missingSkills.slice(0, 5)" :key="skill">
                   <span>{{ String(index + 1).padStart(2, '0') }}</span>
-                  <b>{{ skill }}</b>
-                  <em>补齐</em>
+                  <b>{{ phrase(skill) }}</b>
+                  <em>{{ tx('补齐', 'Close') }}</em>
                 </div>
                 <div v-if="!missingSkills.length" class="empty-row">
                   <span>OK</span>
-                  <b>可直接进入项目化验收路径</b>
-                  <em>可验证</em>
+                  <b>{{ tx('可直接进入项目化验收路径', 'Ready for project-based acceptance path') }}</b>
+                  <em>{{ tx('可验证', 'Verifiable') }}</em>
                 </div>
               </div>
             </article>
@@ -831,11 +856,11 @@ onMounted(load)
             <article class="learning-asset-panel">
               <header>
                 <span><AppIcon name="brain" :size="17" /></span>
-                <div><b>能力资产复用</b><small>减少重复学习，优先转化为项目证据。</small></div>
+                <div><b>{{ tx('能力资产复用', 'Capability Asset Reuse') }}</b><small>{{ tx('减少重复学习，优先转化为项目证据。', 'Reduce repeated learning and convert existing strengths into project evidence first.') }}</small></div>
               </header>
               <div class="skill-cloud learning-asset-cloud">
-                <span v-for="skill in reusableSkills.slice(0, 14)" :key="skill" class="tag blue">{{ skill }}</span>
-                <span v-if="!reusableSkills.length" class="muted">等待匹配报告识别候选人能力资产</span>
+                <span v-for="skill in reusableSkills.slice(0, 14)" :key="skill" class="tag blue">{{ phrase(skill) }}</span>
+                <span v-if="!reusableSkills.length" class="muted">{{ tx('等待匹配报告识别候选人能力资产', 'Waiting for the matching report to identify reusable capability assets') }}</span>
               </div>
             </article>
           </div>
@@ -846,17 +871,17 @@ onMounted(load)
     <section v-if="detail" class="surface learning-plan-dashboard" v-reveal>
       <header class="surface-head learning-plan-dashboard-head">
         <div>
-          <span class="eyebrow">培养方案输出</span>
+          <span class="eyebrow">{{ tx('培养方案输出', 'Development Plan Output') }}</span>
           <h2>{{ displayPlanTitle }}</h2>
           <p>{{ displayPlanObjective }}</p>
         </div>
         <div class="learning-plan-actions">
           <button class="button secondary" type="button" :disabled="optimizing" @click="optimizePath">
-            <AppIcon name="spark" :size="15" />{{ optimizing ? '校准中' : 'AI 校准当前方案' }}
+            <AppIcon name="spark" :size="15" />{{ optimizing ? tx('校准中', 'Calibrating') : tx('AI 校准当前方案', 'AI Calibrate Current Plan') }}
           </button>
           <div class="learning-path-meta">
-            <span class="status-badge good">{{ pathSteps.length }} 层阶段</span>
-            <span class="status-badge">企业门禁制</span>
+            <span class="status-badge good">{{ pathSteps.length }} {{ tx('层阶段', 'stages') }}</span>
+            <span class="status-badge">{{ tx('企业门禁制', 'Enterprise Gate System') }}</span>
             <span class="status-badge">{{ plannerLabel }}</span>
           </div>
         </div>
@@ -874,11 +899,11 @@ onMounted(load)
         <article class="pyramid-visual-card">
           <header>
             <div>
-              <span class="eyebrow">晋升式路径</span>
-              <h3>{{ targetRoleName }}能力金字塔</h3>
-              <p>按前置依赖逐层解锁，完成本层任务后进入下一层训练。</p>
+              <span class="eyebrow">{{ tx('晋升式路径', 'Promotion-style Path') }}</span>
+              <h3>{{ phrase(targetRoleName) }} {{ tx('能力金字塔', 'Capability Pyramid') }}</h3>
+              <p>{{ tx('按前置依赖逐层解锁，完成本层任务后进入下一层训练。', 'Unlock layers according to prerequisites and proceed after current-stage tasks are accepted.') }}</p>
             </div>
-            <span class="status-badge good">{{ completedStageCount }} / {{ pathSteps.length }} 已完成</span>
+            <span class="status-badge good">{{ completedStageCount }} / {{ pathSteps.length }} {{ tx('已完成', 'completed') }}</span>
           </header>
           <div class="learning-pyramid" :style="{ '--layer-count': pathSteps.length }">
             <button
@@ -892,25 +917,25 @@ onMounted(load)
             >
               <span>{{ String(layer.index + 1).padStart(2, '0') }}</span>
               <div>
-                <b>{{ layer.skill }}</b>
+                <b>{{ phrase(layer.skill) }}</b>
                 <small>{{ stageDisplayLabel(layer, layer.index) }}</small>
               </div>
               <em>{{ layer.status }}</em>
             </button>
           </div>
           <footer class="pyramid-legend">
-            <span><i class="done"></i>已完成</span>
-            <span><i class="active"></i>当前层</span>
-            <span><i></i>待解锁</span>
+            <span><i class="done"></i>{{ tx('已完成', 'Completed') }}</span>
+            <span><i class="active"></i>{{ tx('当前层', 'Current') }}</span>
+            <span><i></i>{{ tx('待解锁', 'Locked') }}</span>
           </footer>
         </article>
 
         <article v-if="selectedStage" class="pyramid-current-card">
           <header>
             <div>
-              <span class="eyebrow">{{ shortText(selectedStage.pyramidTier, '当前层级') }}</span>
-              <h3>{{ selectedStage.skill }}</h3>
-              <p>第 {{ selectedStageIndex + 1 }} 阶段 · {{ shortText(selectedStage.theme, '专项训练') }}</p>
+              <span class="eyebrow">{{ phrase(shortText(selectedStage.pyramidTier, tx('当前层级', 'Current Tier'))) }}</span>
+              <h3>{{ phrase(selectedStage.skill) }}</h3>
+              <p>{{ tx('第', 'Stage') }} {{ selectedStageIndex + 1 }} {{ tx('阶段', '') }} · {{ phrase(shortText(selectedStage.theme, tx('专项训练', 'Focused Training'))) }}</p>
             </div>
             <strong>Gate {{ String(selectedStageIndex + 1).padStart(2, '0') }}</strong>
           </header>
@@ -918,7 +943,7 @@ onMounted(load)
             <AppIcon :name="isStageUnlocked(selectedStageIndex) ? 'check' : 'focus'" :size="16" />
             <div>
               <b>{{ stageStatusLabel(selectedStageIndex) }}</b>
-              <span>{{ shortText(selectedStage.unlockRule, '上一层验收通过后解锁') }}</span>
+              <span>{{ phrase(shortText(selectedStage.unlockRule, tx('上一层验收通过后解锁', 'Unlock after previous stage acceptance'))) }}</span>
             </div>
           </div>
           <div class="pyramid-stage-metrics">
@@ -934,7 +959,7 @@ onMounted(load)
             :disabled="isStageCompleted(selectedStageIndex)"
             @click="completeSelectedStage"
           >
-            <AppIcon name="check" :size="15" />{{ isStageCompleted(selectedStageIndex) ? '本层已完成' : '完成本层并解锁下一层' }}
+            <AppIcon name="check" :size="15" />{{ isStageCompleted(selectedStageIndex) ? tx('本层已完成', 'Stage Completed') : tx('完成本层并解锁下一层', 'Complete Stage and Unlock Next') }}
           </button>
         </article>
       </div>
@@ -943,11 +968,11 @@ onMounted(load)
         <article class="climb-altitude-card">
           <header>
             <div>
-              <span class="eyebrow">登山路线</span>
-              <h3>第 {{ selectedStageIndex + 1 }} 层高度</h3>
-              <p>每一层能力金字塔对应一个山路高度，完成本层验收后继续上行。</p>
+              <span class="eyebrow">{{ tx('登山路线', 'Climb Route') }}</span>
+              <h3>{{ tx('第', 'Layer') }} {{ selectedStageIndex + 1 }} {{ tx('层高度', 'Altitude') }}</h3>
+              <p>{{ tx('每一层能力金字塔对应一个山路高度，完成本层验收后继续上行。', 'Each pyramid layer maps to a climb altitude; move upward after acceptance.') }}</p>
             </div>
-            <span class="status-badge good">{{ climbProgressPercent }}% 进度</span>
+            <span class="status-badge good">{{ climbProgressPercent }}% {{ tx('进度', 'Progress') }}</span>
           </header>
 
           <div class="climb-mountain-map">
@@ -962,7 +987,7 @@ onMounted(load)
             >
                 <span>{{ String(layer.index + 1).padStart(2, '0') }}</span>
                 <div>
-                  <b>{{ layer.skill }}</b>
+                  <b>{{ phrase(layer.skill) }}</b>
                   <small>{{ stageDisplayLabel(layer, layer.index) }}</small>
                 </div>
                 <em>{{ layer.status }}</em>
@@ -970,18 +995,18 @@ onMounted(load)
           </div>
 
           <footer>
-            <span>当前能力</span>
-            <b>{{ selectedStage.skill }}</b>
-            <small>{{ shortText(selectedStage.dependency, '无强制前置能力') }}</small>
+            <span>{{ tx('当前能力', 'Current Capability') }}</span>
+            <b>{{ phrase(selectedStage.skill) }}</b>
+            <small>{{ phrase(shortText(selectedStage.dependency, tx('无强制前置能力', 'No mandatory prerequisite'))) }}</small>
           </footer>
         </article>
 
         <article class="climb-instruction-card" :class="enterpriseStagePackage ? `strategy-${enterpriseStagePackage.strategy.accent}` : ''">
           <header>
             <div>
-              <span class="eyebrow">{{ enterpriseStagePackage?.strategy.label || shortText(selectedStage.pyramidTier, '当前层级') }}</span>
-              <h3>{{ selectedStage.skill }} · {{ enterpriseStagePackage?.strategy.route || '阶段规划' }}</h3>
-              <p>第 {{ selectedStageIndex + 1 }} 阶段 · {{ shortText(selectedStage.theme, '专项训练') }} · {{ enterpriseStagePackage?.strategy.acceptance }}</p>
+              <span class="eyebrow">{{ phrase(enterpriseStagePackage?.strategy.label || shortText(selectedStage.pyramidTier, tx('当前层级', 'Current Tier'))) }}</span>
+              <h3>{{ phrase(selectedStage.skill) }} · {{ phrase(enterpriseStagePackage?.strategy.route || tx('阶段规划', 'Stage Plan')) }}</h3>
+              <p>{{ tx('第', 'Stage') }} {{ selectedStageIndex + 1 }} {{ tx('阶段', '') }} · {{ phrase(shortText(selectedStage.theme, tx('专项训练', 'Focused Training'))) }} · {{ phrase(enterpriseStagePackage?.strategy.acceptance) }}</p>
             </div>
             <span class="status-badge good">{{ stageStatusLabel(selectedStageIndex) }}</span>
           </header>
@@ -989,8 +1014,8 @@ onMounted(load)
           <template v-if="enterpriseStagePackage && stageOperatingView">
             <div class="stage-os-hero">
               <div>
-                <span>{{ enterpriseStagePackage.strategy.label }} · {{ enterpriseStagePackage.strategy.route }}</span>
-                <b>{{ enterpriseStagePackage.outcome }}</b>
+                <span>{{ phrase(enterpriseStagePackage.strategy.label) }} · {{ phrase(enterpriseStagePackage.strategy.route) }}</span>
+                <b>{{ phrase(enterpriseStagePackage.outcome) }}</b>
               </div>
               <strong>{{ enterpriseStagePackage.score }}</strong>
             </div>
@@ -1016,7 +1041,7 @@ onMounted(load)
                 </div>
                 <strong>{{ item.metric }}<em>{{ item.unit }}</em></strong>
                 <ul>
-                  <li v-for="text in item.items" :key="text">{{ text }}</li>
+                  <li v-for="text in item.items" :key="text">{{ phrase(text) }}</li>
                 </ul>
               </article>
             </div>
@@ -1024,35 +1049,35 @@ onMounted(load)
             <div class="stage-os-console">
               <section>
                 <header>
-                  <span>验收闸口</span>
-                  <b>{{ stageOperatingView.gates.length }} 条</b>
+                  <span>{{ tx('验收闸口', 'Acceptance Gates') }}</span>
+                  <b>{{ stageOperatingView.gates.length }} {{ tx('条', 'items') }}</b>
                 </header>
                 <div>
-                  <em v-for="item in stageOperatingView.gates" :key="item">{{ item }}</em>
+                  <em v-for="item in stageOperatingView.gates" :key="item">{{ phrase(item) }}</em>
                 </div>
               </section>
               <section>
                 <header>
-                  <span>交付资产</span>
-                  <b>{{ stageOperatingView.assets.length }} 件</b>
+                  <span>{{ tx('交付资产', 'Deliverable Assets') }}</span>
+                  <b>{{ stageOperatingView.assets.length }} {{ tx('件', 'items') }}</b>
                 </header>
                 <div>
-                  <em v-for="item in stageOperatingView.assets" :key="item">{{ item }}</em>
+                  <em v-for="item in stageOperatingView.assets" :key="item">{{ phrase(item) }}</em>
                 </div>
               </section>
               <section>
                 <header>
-                  <span>AI 编排依据</span>
-                  <b>动态</b>
+                  <span>{{ tx('AI 编排依据', 'AI Orchestration Basis') }}</span>
+                  <b>{{ tx('动态', 'Dynamic') }}</b>
                 </header>
-                <p>{{ stageOperatingView.basis }}</p>
+                <p>{{ phrase(stageOperatingView.basis) }}</p>
               </section>
             </div>
           </template>
 
           <div class="climb-unlock-note">
             <AppIcon name="check" :size="16" />
-            <span>{{ shortText(selectedStage.unlockRule, '完成本层验收后解锁下一层') }}</span>
+            <span>{{ phrase(shortText(selectedStage.unlockRule, tx('完成本层验收后解锁下一层', 'Unlock the next stage after current-stage acceptance'))) }}</span>
           </div>
         </article>
       </div>
@@ -1061,9 +1086,9 @@ onMounted(load)
     <section v-else class="surface learning-standby-board" v-reveal>
       <div class="learning-standby-copy">
         <div class="inspector-icon"><AppIcon name="book" :size="22" /></div>
-        <span class="eyebrow">待生成方案</span>
-        <h2>先确认培养对象，系统将生成可验收路径</h2>
-        <p>页面会保留企业端真正需要判断的信息：能力缺口、阶段门禁、交付证据、风险控制和面试验证口径，避免课程化配置干扰用人决策。</p>
+        <span class="eyebrow">{{ tx('待生成方案', 'Plan Pending') }}</span>
+        <h2>{{ tx('先确认培养对象，系统将生成可验收路径', 'Confirm the development target to generate an acceptable path') }}</h2>
+        <p>{{ tx('页面会保留企业端真正需要判断的信息：能力缺口、阶段门禁、交付证据、风险控制和面试验证口径，避免课程化配置干扰用人决策。', 'The page keeps enterprise decision information visible: capability gaps, stage gates, deliverable evidence, risk control and interview verification criteria.') }}</p>
       </div>
       <div class="learning-preview-lanes">
         <article v-for="item in allocationCards" :key="item.label">

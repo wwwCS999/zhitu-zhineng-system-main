@@ -17,6 +17,9 @@ import {
   type GraphPayload,
   type GraphSizeValue
 } from '@/api/graph'
+import { useEnglishThemeText } from '@/composables/useEnglishThemeText'
+
+const { tx, phrase, term } = useEnglishThemeText()
 
 const chartRef = ref<any>(null)
 const loading = ref(false)
@@ -473,14 +476,14 @@ function linkColor(link: GraphLink) {
 
 function linkLabel(type: string) {
   if (type === 'REQUIRED') {
-    return '必备技能'
+    return tx('必备技能', 'Required Skill')
   }
 
   if (type === 'BONUS') {
-    return '加分技能'
+    return tx('加分技能', 'Preferred Skill')
   }
 
-  return '相关技能'
+  return tx('相关技能', 'Related Skill')
 }
 
 /**
@@ -835,7 +838,7 @@ function spreadGraph() {
   selectedNodeId.value = ''
   selectedEdge.value = null
   chartRef.value?.restoreView?.()
-  ElMessage.success('已重新执行舒展布局')
+  ElMessage.success(tx('已重新执行舒展布局', 'Graph layout has been refreshed'))
 }
 
 function safeFileName(name: string) {
@@ -843,11 +846,11 @@ function safeFileName(name: string) {
 }
 
 const exportBaseName = computed(() => {
-  const stackName = techStack.value || '全部技术栈'
-  const currentLevel = level.value || '全部级别'
+  const stackName = techStack.value || tx('全部技术栈', 'All Tech Stacks')
+  const currentLevel = level.value || tx('全部级别', 'All Levels')
 
   return safeFileName(
-    `职途智配-岗位能力图谱-${stackName}-${currentLevel}`
+    `${tx('职途智配-岗位能力图谱', 'Zhitu-Capability-Graph')}-${stackName}-${currentLevel}`
   )
 })
 
@@ -857,9 +860,9 @@ async function exportPng() {
       `${exportBaseName.value}.png`,
       2
     )
-    ElMessage.success('PNG 图谱已导出')
+    ElMessage.success(tx('PNG 图谱已导出', 'PNG graph exported'))
   } catch (err: any) {
-    ElMessage.error(err?.message || 'PNG 导出失败')
+    ElMessage.error(err?.message || tx('PNG 导出失败', 'PNG export failed'))
   }
 }
 
@@ -872,7 +875,7 @@ function pct(value: unknown) {
 }
 
 function roleSkillLabel(node: GraphNode) {
-  return node.type === 'ROLE' ? '岗位节点' : '技能节点'
+  return node.type === 'ROLE' ? tx('岗位节点', 'Role Node') : tx('技能节点', 'Skill Node')
 }
 
 function relationClass(type: string) {
@@ -888,11 +891,11 @@ function relationClass(type: string) {
 }
 
 function sourceName(edge: GraphLink) {
-  return nodeMap.value.get(edge.source)?.name || edge.source
+  return phrase(nodeMap.value.get(edge.source)?.name || edge.source)
 }
 
 function targetName(edge: GraphLink) {
-  return nodeMap.value.get(edge.target)?.name || edge.target
+  return phrase(nodeMap.value.get(edge.target)?.name || edge.target)
 }
 
 onMounted(async () => {
@@ -930,33 +933,33 @@ const evolutionMaxAbsDelta = computed(() => {
 const evolutionActionPlans = computed(() => [
   {
     step: '01',
-    title: '岗位标准更新',
-    value: `${evolutionCounts.value.added + evolutionCounts.value.modified} 项`,
-    desc: '升温或口径变化技能进入岗位能力画像，更新 JD 模板和岗位任职要求。',
+    title: tx('岗位标准更新', 'Role Standard Update'),
+    value: `${evolutionCounts.value.added + evolutionCounts.value.modified} ${tx('项', 'items')}`,
+    desc: tx('升温或口径变化技能进入岗位能力画像，更新 JD 模板和岗位任职要求。', 'Warming or redefined skills update role profiles, JD templates and role requirements.'),
     icon: 'file',
     tone: 'blue'
   },
   {
     step: '02',
-    title: '招聘筛选联动',
-    value: `${evolutionCounts.value.added} 项`,
-    desc: '把新增高频技能同步到筛选规则、面试题库和候选人画像匹配权重。',
+    title: tx('招聘筛选联动', 'Recruiting Screening Sync'),
+    value: `${evolutionCounts.value.added} ${tx('项', 'items')}`,
+    desc: tx('把新增高频技能同步到筛选规则、面试题库和候选人画像匹配权重。', 'Sync new high-frequency skills to screening rules, interview banks and talent matching weights.'),
     icon: 'match',
     tone: 'mint'
   },
   {
     step: '03',
-    title: '存量能力降权',
-    value: `${evolutionCounts.value.weakened} 项`,
-    desc: '对弱化技能发起人工复核，确认是否降权、替换、合并或从岗位库移除。',
+    title: tx('存量能力降权', 'Legacy Capability Downgrade'),
+    value: `${evolutionCounts.value.weakened} ${tx('项', 'items')}`,
+    desc: tx('对弱化技能发起人工复核，确认是否降权、替换、合并或从岗位库移除。', 'Route weakening skills to human review for downgrade, replacement, merge or removal.'),
     icon: 'pulse',
     tone: 'rose'
   },
   {
     step: '04',
-    title: '可信审核发布',
-    value: `${evolutionAuditCount.value} 项`,
-    desc: '高影响变更保留证据链和审核意见，通过后再发布到匹配与培养模块。',
+    title: tx('可信审核发布', 'Trusted Audit Release'),
+    value: `${evolutionAuditCount.value} ${tx('项', 'items')}`,
+    desc: tx('高影响变更保留证据链和审核意见，通过后再发布到匹配与培养模块。', 'High-impact changes keep evidence chains and audit comments before release to matching and learning modules.'),
     icon: 'audit',
     tone: 'gold'
   }
@@ -981,27 +984,27 @@ const graphQualityScore = computed(() => {
 })
 const graphStatusCards = computed(() => [
   {
-    label: '岗位覆盖',
+    label: tx('岗位覆盖', 'Role Coverage'),
     value: fmt(visibleSummary.value.roles),
-    desc: `${techStack.value || '全部技术栈'} · ${level.value || '全部级别'}`,
+    desc: `${term(techStack.value || tx('全部技术栈', 'All Tech Stacks'))} · ${phrase(level.value || tx('全部级别', 'All Levels'))}`,
     icon: 'briefcase'
   },
   {
-    label: '能力节点',
+    label: tx('能力节点', 'Capability Nodes'),
     value: fmt(visibleSummary.value.skills),
-    desc: '可进入匹配、学习路径和审核',
+    desc: tx('可进入匹配、学习路径和审核', 'Ready for matching, learning path and audit workflows'),
     icon: 'network'
   },
   {
-    label: '强证据关系',
+    label: tx('强证据关系', 'Strong Evidence Links'),
     value: fmt(strongRelationCount.value),
-    desc: `最低 ${minEvidence.value} 条 JD 证据`,
+    desc: tx(`最低 ${minEvidence.value} 条 JD 证据`, `At least ${minEvidence.value} JD evidence records`),
     icon: 'route'
   },
   {
-    label: '演化待审核',
+    label: tx('演化待审核', 'Evolution Audits'),
     value: fmt(evolutionAuditCount.value),
-    desc: '新增、弱化、修改待确认',
+    desc: tx('新增、弱化、修改待确认', 'Added, weakened or modified skills pending confirmation'),
     icon: 'audit'
   }
 ])
@@ -1031,7 +1034,7 @@ async function analyzeEvolution() {
 }
 
 function changeLabel(type: string) {
-  return type === 'ADDED' ? '新增' : type === 'WEAKENED' ? '弱化' : '修改'
+  return type === 'ADDED' ? tx('新增', 'Added') : type === 'WEAKENED' ? tx('弱化', 'Weakened') : tx('修改', 'Modified')
 }
 
 function evolutionToNumber(value: unknown, fallback = 0) {
@@ -1104,27 +1107,27 @@ function evolutionBusinessLevel(event: any) {
   <div class="graph-product-page">
     <section class="capability-command-hero" v-reveal>
       <div class="capability-command-copy">
-        <span class="panel-kicker">能力图谱与演化智能体</span>
-        <h1>岗位能力图谱运营工作台</h1>
-        <p>把已治理 JD 中的岗位、技能、证据和变化趋势沉淀为可运营的能力资产，支撑招聘标准、匹配诊断、学习路径和可信审核。</p>
+        <span class="panel-kicker">{{ tx('能力图谱与演化智能体', 'Capability Graph & Evolution Agent') }}</span>
+        <h1>{{ tx('岗位能力图谱运营工作台', 'Job Capability Graph Operations Workbench') }}</h1>
+        <p>{{ tx('把已治理 JD 中的岗位、技能、证据和变化趋势沉淀为可运营的能力资产，支撑招聘标准、匹配诊断、学习路径和可信审核。', 'Turn roles, skills, evidence and trend changes from governed JDs into operational capability assets for recruiting standards, matching diagnosis, learning paths and trusted audit.') }}</p>
         <div class="capability-command-actions">
           <button class="button primary" type="button" :disabled="loading" @click="loadGraph(true)">
-            <AppIcon name="refresh" :size="16" /> {{ loading ? '构建中' : '构建 / 更新图谱' }}
+            <AppIcon name="refresh" :size="16" /> {{ loading ? tx('构建中', 'Building') : tx('构建 / 更新图谱', 'Build / Update Graph') }}
           </button>
-          <button class="button secondary" type="button" :disabled="loading" @click="resetView">重置视图</button>
-          <button class="button secondary" type="button" :disabled="!visibleSummary.nodes" @click="exportPng">导出 PNG</button>
+          <button class="button secondary" type="button" :disabled="loading" @click="resetView">{{ tx('重置视图', 'Reset View') }}</button>
+          <button class="button secondary" type="button" :disabled="!visibleSummary.nodes" @click="exportPng">{{ tx('导出 PNG', 'Export PNG') }}</button>
         </div>
       </div>
 
       <aside class="capability-command-console">
         <div class="console-head">
-          <span>图谱健康度</span>
+          <span>{{ tx('图谱健康度', 'Graph Health') }}</span>
           <b>{{ graphQualityScore }}%</b>
         </div>
         <div class="console-facts">
-          <div><span>当前子图</span><b>{{ fmt(visibleSummary.nodes) }} 节点</b></div>
-          <div><span>关系数量</span><b>{{ fmt(visibleSummary.links) }} 条</b></div>
-          <div><span>证据门槛</span><b>{{ minEvidence }}+ JD</b></div>
+          <div><span>{{ tx('当前子图', 'Current Subgraph') }}</span><b>{{ fmt(visibleSummary.nodes) }} {{ tx('节点', 'nodes') }}</b></div>
+          <div><span>{{ tx('关系数量', 'Relations') }}</span><b>{{ fmt(visibleSummary.links) }} {{ tx('条', 'links') }}</b></div>
+          <div><span>{{ tx('证据门槛', 'Evidence Gate') }}</span><b>{{ minEvidence }}+ JD</b></div>
         </div>
         <div class="palette-strip">
           <span v-for="color in palette" :key="color" :style="{ background: color }" />
@@ -1151,78 +1154,78 @@ function evolutionBusinessLevel(event: any) {
       <aside class="enterprise-panel graph-ops-panel">
         <header class="enterprise-panel-head compact">
           <div>
-            <span class="panel-kicker">图谱控制台</span>
-            <h2>构建范围与证据阈值</h2>
+            <span class="panel-kicker">{{ tx('图谱控制台', 'Graph Console') }}</span>
+            <h2>{{ tx('构建范围与证据阈值', 'Build Scope & Evidence Threshold') }}</h2>
           </div>
         </header>
 
         <div class="graph-filter-grid">
           <label class="graph-field">
-            <span>图谱规模</span>
+            <span>{{ tx('图谱规模', 'Graph Size') }}</span>
             <select v-model="sizePreset" class="select">
-              <option v-for="item in meta.sizes" :key="item.value" :value="item.value">{{ item.label }}</option>
+              <option v-for="item in meta.sizes" :key="item.value" :value="item.value">{{ tx(item.label, item.value === 'small' ? 'Small Graph' : item.value === 'large' ? 'Large Graph' : 'Medium Graph') }}</option>
             </select>
-            <small>{{ selectedSize?.description || '控制图谱展示范围' }}</small>
+            <small>{{ tx(selectedSize?.description || '控制图谱展示范围', selectedSize?.value === 'small' ? 'Good for quick review and demos' : selectedSize?.value === 'large' ? 'For panoramic capability exploration' : 'Recommended for daily analysis') }}</small>
           </label>
 
           <label class="graph-field">
-            <span>技术栈</span>
+            <span>{{ tx('技术栈', 'Tech Stack') }}</span>
             <select v-model="techStack" class="select">
-              <option value="">全部技术栈</option>
-              <option v-for="item in meta.techStacks" :key="item" :value="item">{{ item }}</option>
+              <option value="">{{ tx('全部技术栈', 'All Tech Stacks') }}</option>
+              <option v-for="item in meta.techStacks" :key="item" :value="item">{{ term(item) }}</option>
             </select>
-            <small>按业务方向聚焦岗位能力资产</small>
+            <small>{{ tx('按业务方向聚焦岗位能力资产', 'Focus role-capability assets by business domain') }}</small>
           </label>
 
           <label class="graph-field">
-            <span>岗位级别</span>
+            <span>{{ tx('岗位级别', 'Role Level') }}</span>
             <select v-model="level" class="select">
-              <option value="">全部级别</option>
-              <option v-for="item in meta.levels" :key="item" :value="item">{{ item }}</option>
+              <option value="">{{ tx('全部级别', 'All Levels') }}</option>
+              <option v-for="item in meta.levels" :key="item" :value="item">{{ phrase(item) }}</option>
             </select>
-            <small>区分初级、中级、高级岗位能力要求</small>
+            <small>{{ tx('区分初级、中级、高级岗位能力要求', 'Compare junior, mid-level and senior capability requirements') }}</small>
           </label>
 
           <label class="graph-field">
-            <span>最低证据数量</span>
+            <span>{{ tx('最低证据数量', 'Minimum Evidence') }}</span>
             <select v-model.number="minEvidence" class="select">
-              <option v-for="item in meta.evidenceOptions" :key="item" :value="item">≥ {{ item }} 条 JD</option>
+              <option v-for="item in meta.evidenceOptions" :key="item" :value="item">≥ {{ item }} JD</option>
             </select>
-            <small>过滤弱证据关系，提升图谱可用性</small>
+            <small>{{ tx('过滤弱证据关系，提升图谱可用性', 'Filter weak-evidence relations to improve graph usability') }}</small>
           </label>
         </div>
 
         <div class="center-control-card">
           <div class="center-control-head">
-            <span class="panel-kicker">中心探索</span>
+            <span class="panel-kicker">{{ tx('中心探索', 'Center Exploration') }}</span>
             <div class="center-mode-tabs">
-              <button type="button" :class="{ active: centerType === 'ALL' }" @click="centerType = 'ALL'">全景</button>
-              <button type="button" :class="{ active: centerType === 'ROLE' }" @click="centerType = 'ROLE'">岗位</button>
-              <button type="button" :class="{ active: centerType === 'SKILL' }" @click="centerType = 'SKILL'">技能</button>
+              <button type="button" :class="{ active: centerType === 'ALL' }" @click="centerType = 'ALL'">{{ tx('全景', 'All') }}</button>
+              <button type="button" :class="{ active: centerType === 'ROLE' }" @click="centerType = 'ROLE'">{{ tx('岗位', 'Roles') }}</button>
+              <button type="button" :class="{ active: centerType === 'SKILL' }" @click="centerType = 'SKILL'">{{ tx('技能', 'Skills') }}</button>
             </div>
           </div>
 
           <div v-if="centerType !== 'ALL'" class="center-selector-row">
             <label class="graph-field">
-              <span>{{ centerType === 'ROLE' ? '中心岗位' : '中心技能' }}</span>
+              <span>{{ centerType === 'ROLE' ? tx('中心岗位', 'Center Role') : tx('中心技能', 'Center Skill') }}</span>
               <select v-model="centerId" class="select">
-                <option v-for="node in centerCandidates" :key="node.id" :value="node.id">{{ node.name }}</option>
+                <option v-for="node in centerCandidates" :key="node.id" :value="node.id">{{ phrase(node.name) }}</option>
               </select>
             </label>
 
             <label class="graph-field">
-              <span>展开层级</span>
+              <span>{{ tx('展开层级', 'Expansion Depth') }}</span>
               <select v-model.number="depth" class="select">
-                <option :value="1">1 跳 · 直接关系</option>
-                <option :value="2">2 跳 · 扩展关联</option>
-                <option :value="3">3 跳 · 深度探索</option>
+                <option :value="1">{{ tx('1 跳 · 直接关系', '1 hop · Direct relations') }}</option>
+                <option :value="2">{{ tx('2 跳 · 扩展关联', '2 hops · Extended relations') }}</option>
+                <option :value="3">{{ tx('3 跳 · 深度探索', '3 hops · Deep exploration') }}</option>
               </select>
             </label>
           </div>
 
           <div class="center-tip">
-            <b>{{ visibleSummary.nodes }} 个节点 · {{ visibleSummary.links }} 条关系</b>
-            <span>{{ centerType === 'ALL' ? '当前为全景图谱' : '当前为中心子图' }}</span>
+            <b>{{ visibleSummary.nodes }} {{ tx('个节点', 'nodes') }} · {{ visibleSummary.links }} {{ tx('条关系', 'relations') }}</b>
+            <span>{{ centerType === 'ALL' ? tx('当前为全景图谱', 'Panoramic graph view') : tx('当前为中心子图', 'Center-focused subgraph') }}</span>
           </div>
         </div>
 
@@ -1232,26 +1235,26 @@ function evolutionBusinessLevel(event: any) {
         <article class="enterprise-panel graph-visual-panel">
           <header class="graph-visual-head">
             <div>
-              <span class="panel-kicker">岗位—技能网络</span>
-              <h2>能力关系图谱</h2>
-              <p>点击节点锁定邻居，拖拽节点调整布局，滚轮缩放查看局部结构。</p>
+              <span class="panel-kicker">{{ tx('岗位—技能网络', 'Role-Skill Network') }}</span>
+              <h2>{{ tx('能力关系图谱', 'Capability Relation Graph') }}</h2>
+              <p>{{ tx('点击节点锁定邻居，拖拽节点调整布局，滚轮缩放查看局部结构。', 'Click a node to lock neighbors, drag nodes to adjust layout, and zoom to inspect local structures.') }}</p>
             </div>
             <div class="canvas-tools">
-              <button type="button" class="mini-button spread-button" @click="spreadGraph">重新平铺</button>
-              <button v-if="selectedNodeId || selectedEdge" type="button" class="mini-button" @click="clearSelection">清除高亮</button>
+              <button type="button" class="mini-button spread-button" @click="spreadGraph">{{ tx('重新平铺', 'Re-layout') }}</button>
+              <button v-if="selectedNodeId || selectedEdge" type="button" class="mini-button" @click="clearSelection">{{ tx('清除高亮', 'Clear Highlight') }}</button>
               <span class="graph-source-badge">MYSQL GOVERNED</span>
             </div>
           </header>
 
           <div class="graph-legend">
-            <span class="legend-title">关系</span>
-            <span class="legend-item"><i class="legend-line required" />必备</span>
-            <span class="legend-item"><i class="legend-line bonus" />加分</span>
-            <span class="legend-item"><i class="legend-line mentioned" />相关</span>
+            <span class="legend-title">{{ tx('关系', 'Relations') }}</span>
+            <span class="legend-item"><i class="legend-line required" />{{ tx('必备', 'Required') }}</span>
+            <span class="legend-item"><i class="legend-line bonus" />{{ tx('加分', 'Preferred') }}</span>
+            <span class="legend-item"><i class="legend-line mentioned" />{{ tx('相关', 'Related') }}</span>
             <span class="legend-divider" />
-            <span class="legend-title">节点</span>
-            <span class="legend-item"><i class="legend-role" />岗位</span>
-            <span class="legend-item"><i class="legend-skill" />技能</span>
+            <span class="legend-title">{{ tx('节点', 'Nodes') }}</span>
+            <span class="legend-item"><i class="legend-role" />{{ tx('岗位', 'Roles') }}</span>
+            <span class="legend-item"><i class="legend-skill" />{{ tx('技能', 'Skills') }}</span>
           </div>
 
           <div v-if="visibleGraph.nodes.length" class="chart-box">
@@ -1267,16 +1270,16 @@ function evolutionBusinessLevel(event: any) {
 
           <div v-else class="graph-empty">
             <div class="graph-empty-icon"><AppIcon name="network" :size="34" /></div>
-            <h3>当前条件下暂无图谱关系</h3>
-            <p>可以降低最低证据数量，或切换技术栈和岗位级别后重新构建。</p>
+            <h3>{{ tx('当前条件下暂无图谱关系', 'No graph relations under current filters') }}</h3>
+            <p>{{ tx('可以降低最低证据数量，或切换技术栈和岗位级别后重新构建。', 'Lower the minimum evidence threshold or switch tech stack / role level, then rebuild.') }}</p>
           </div>
         </article>
 
         <aside class="enterprise-panel graph-detail-panel">
           <header class="detail-head">
-            <span class="panel-kicker">证据详情</span>
-            <h2>节点与关系</h2>
-            <p>查看岗位、技能、证据强度和直接关联对象。</p>
+            <span class="panel-kicker">{{ tx('证据详情', 'Evidence Details') }}</span>
+            <h2>{{ tx('节点与关系', 'Nodes & Relations') }}</h2>
+            <p>{{ tx('查看岗位、技能、证据强度和直接关联对象。', 'Inspect roles, skills, evidence strength and direct neighbors.') }}</p>
           </header>
 
           <template v-if="selectedNode">
@@ -1284,36 +1287,36 @@ function evolutionBusinessLevel(event: any) {
               <span class="selected-color" :style="{ background: stackColor(selectedNode.stack) }" />
               <div>
                 <small>{{ roleSkillLabel(selectedNode) }}</small>
-                <h3>{{ selectedNode.name }}</h3>
+                <h3>{{ phrase(selectedNode.name) }}</h3>
               </div>
             </div>
 
             <template v-if="selectedNode.type === 'ROLE'">
               <div class="detail-stat-grid">
-                <div><span>JD 证据</span><strong>{{ fmt(selectedNode.sampleCount) }}</strong></div>
-                <div><span>可信度</span><strong>{{ pct(selectedNode.confidence) }}</strong></div>
+                <div><span>{{ tx('JD 证据', 'JD Evidence') }}</span><strong>{{ fmt(selectedNode.sampleCount) }}</strong></div>
+                <div><span>{{ tx('可信度', 'Confidence') }}</span><strong>{{ pct(selectedNode.confidence) }}</strong></div>
               </div>
-              <div class="detail-property"><span>技术栈</span><b>{{ selectedNode.stack || '未分类' }}</b></div>
-              <div class="detail-property"><span>岗位级别</span><b>{{ selectedNode.meta || '未标注' }}</b></div>
-              <div class="detail-property"><span>直接关联技能</span><b>{{ selectedNeighbors.length }} 项</b></div>
+              <div class="detail-property"><span>{{ tx('技术栈', 'Tech Stack') }}</span><b>{{ term(selectedNode.stack || tx('未分类', 'Uncategorized')) }}</b></div>
+              <div class="detail-property"><span>{{ tx('岗位级别', 'Role Level') }}</span><b>{{ phrase(selectedNode.meta || tx('未标注', 'Unspecified')) }}</b></div>
+              <div class="detail-property"><span>{{ tx('直接关联技能', 'Direct Skills') }}</span><b>{{ selectedNeighbors.length }} {{ tx('项', 'items') }}</b></div>
             </template>
 
             <template v-else>
               <div class="detail-stat-grid">
-                <div><span>JD 证据</span><strong>{{ fmt(selectedNode.evidenceCount) }}</strong></div>
-                <div><span>关联岗位</span><strong>{{ fmt(selectedNode.roleCount) }}</strong></div>
-                <div><span>可信度</span><strong>{{ pct(selectedNode.confidence) }}</strong></div>
-                <div><span>证据强度</span><strong>{{ Number(selectedNode.supportWeight || 0).toFixed(1) }}</strong></div>
+                <div><span>{{ tx('JD 证据', 'JD Evidence') }}</span><strong>{{ fmt(selectedNode.evidenceCount) }}</strong></div>
+                <div><span>{{ tx('关联岗位', 'Linked Roles') }}</span><strong>{{ fmt(selectedNode.roleCount) }}</strong></div>
+                <div><span>{{ tx('可信度', 'Confidence') }}</span><strong>{{ pct(selectedNode.confidence) }}</strong></div>
+                <div><span>{{ tx('证据强度', 'Evidence Strength') }}</span><strong>{{ Number(selectedNode.supportWeight || 0).toFixed(1) }}</strong></div>
               </div>
-              <div class="detail-property"><span>技能技术栈</span><b>{{ selectedNode.stack || '未分类' }}</b></div>
-              <div class="detail-property"><span>技能类别</span><b>{{ selectedNode.meta || '技能点' }}</b></div>
+              <div class="detail-property"><span>{{ tx('技能技术栈', 'Skill Tech Stack') }}</span><b>{{ term(selectedNode.stack || tx('未分类', 'Uncategorized')) }}</b></div>
+              <div class="detail-property"><span>{{ tx('技能类别', 'Skill Category') }}</span><b>{{ phrase(selectedNode.meta || tx('技能点', 'Skill')) }}</b></div>
             </template>
 
-            <button class="button primary full-width graph-center-button" type="button" @click="useSelectedAsCenter">以此节点为中心展开</button>
+            <button class="button primary full-width graph-center-button" type="button" @click="useSelectedAsCenter">{{ tx('以此节点为中心展开', 'Expand from This Node') }}</button>
 
             <div class="neighbor-section">
               <div class="neighbor-title">
-                <span>直接关联</span>
+                <span>{{ tx('直接关联', 'Direct Relations') }}</span>
                 <small>TOP {{ selectedNeighbors.length }}</small>
               </div>
               <div v-if="selectedNeighbors.length" class="neighbor-list">
@@ -1326,13 +1329,13 @@ function evolutionBusinessLevel(event: any) {
                 >
                   <span class="neighbor-dot" :style="{ background: stackColor(item.node.stack) }" />
                   <div>
-                    <b>{{ item.node.name }}</b>
-                    <small>{{ linkLabel(item.link.type) }} · {{ fmt(item.link.evidenceCount) }} 条证据</small>
+                    <b>{{ phrase(item.node.name) }}</b>
+                    <small>{{ linkLabel(item.link.type) }} · {{ fmt(item.link.evidenceCount) }} {{ tx('条证据', 'evidence records') }}</small>
                   </div>
                   <span class="neighbor-arrow">›</span>
                 </button>
               </div>
-              <p v-else class="detail-muted">当前节点暂无直接关系。</p>
+              <p v-else class="detail-muted">{{ tx('当前节点暂无直接关系。', 'No direct relations for this node.') }}</p>
             </div>
           </template>
 
@@ -1345,15 +1348,15 @@ function evolutionBusinessLevel(event: any) {
             </div>
 
             <div class="detail-stat-grid">
-              <div><span>JD 证据</span><strong>{{ fmt(selectedEdge.evidenceCount) }}</strong></div>
-              <div><span>可信度</span><strong>{{ pct(selectedEdge.confidence) }}</strong></div>
-              <div><span>证据强度</span><strong>{{ Number(selectedEdge.supportWeight || 0).toFixed(2) }}</strong></div>
-              <div><span>必备比例</span><strong>{{ pct(selectedEdge.requiredRatio) }}</strong></div>
+              <div><span>{{ tx('JD 证据', 'JD Evidence') }}</span><strong>{{ fmt(selectedEdge.evidenceCount) }}</strong></div>
+              <div><span>{{ tx('可信度', 'Confidence') }}</span><strong>{{ pct(selectedEdge.confidence) }}</strong></div>
+              <div><span>{{ tx('证据强度', 'Evidence Strength') }}</span><strong>{{ Number(selectedEdge.supportWeight || 0).toFixed(2) }}</strong></div>
+              <div><span>{{ tx('必备比例', 'Required Ratio') }}</span><strong>{{ pct(selectedEdge.requiredRatio) }}</strong></div>
             </div>
 
             <div class="evidence-meter">
               <div class="meter-head">
-                <span>必备 / 加分证据结构</span>
+                <span>{{ tx('必备 / 加分证据结构', 'Required / Preferred Evidence Mix') }}</span>
                 <b>{{ pct(selectedEdge.requiredRatio) }} / {{ pct(selectedEdge.bonusRatio) }}</b>
               </div>
               <div class="meter-track">
@@ -1362,8 +1365,8 @@ function evolutionBusinessLevel(event: any) {
               </div>
             </div>
 
-            <div class="detail-property"><span>技术栈</span><b>{{ selectedEdge.techStack || '未分类' }}</b></div>
-            <div class="detail-property"><span>岗位级别</span><b>{{ selectedEdge.level || '未标注' }}</b></div>
+            <div class="detail-property"><span>{{ tx('技术栈', 'Tech Stack') }}</span><b>{{ term(selectedEdge.techStack || tx('未分类', 'Uncategorized')) }}</b></div>
+            <div class="detail-property"><span>{{ tx('岗位级别', 'Role Level') }}</span><b>{{ phrase(selectedEdge.level || tx('未标注', 'Unspecified')) }}</b></div>
           </template>
 
           <template v-else>
@@ -1371,13 +1374,13 @@ function evolutionBusinessLevel(event: any) {
               <div class="placeholder-network">
                 <span /><span /><span /><span /><i /><i /><i />
               </div>
-              <h3>点击图谱开始探索</h3>
-              <p>选择岗位可查看关联技能；选择技能可反向查看共同需要该技能的岗位。</p>
+              <h3>{{ tx('点击图谱开始探索', 'Click the graph to explore') }}</h3>
+              <p>{{ tx('选择岗位可查看关联技能；选择技能可反向查看共同需要该技能的岗位。', 'Select a role to inspect linked skills, or select a skill to find roles that share it.') }}</p>
             </div>
             <div class="interaction-guide">
-              <div><span>01</span><p><b>点击节点</b> 打开证据详情。</p></div>
-              <div><span>02</span><p><b>中心模式</b> 围绕岗位或技能展开关系。</p></div>
-              <div><span>03</span><p><b>直接关联</b> 查看岗位与技能证据链。</p></div>
+              <div><span>01</span><p><b>{{ tx('点击节点', 'Click Node') }}</b> {{ tx('打开证据详情。', 'to open evidence details.') }}</p></div>
+              <div><span>02</span><p><b>{{ tx('中心模式', 'Center Mode') }}</b> {{ tx('围绕岗位或技能展开关系。', 'to expand around a role or skill.') }}</p></div>
+              <div><span>03</span><p><b>{{ tx('直接关联', 'Direct Relations') }}</b> {{ tx('查看岗位与技能证据链。', 'to inspect role-skill evidence chains.') }}</p></div>
             </div>
           </template>
         </aside>
@@ -1387,9 +1390,9 @@ function evolutionBusinessLevel(event: any) {
     <section class="enterprise-panel graph-qa-panel" v-reveal>
       <header class="enterprise-panel-head compact">
         <div>
-          <span class="panel-kicker">图谱问答</span>
-          <h2>基于岗位—技能证据的可追溯问答</h2>
-          <p>用于快速核验岗位能力要求，回答结果不挤占图谱控制台和画布空间。</p>
+          <span class="panel-kicker">{{ tx('图谱问答', 'Graph Q&A') }}</span>
+          <h2>{{ tx('基于岗位—技能证据的可追溯问答', 'Traceable Q&A Based on Role-Skill Evidence') }}</h2>
+          <p>{{ tx('用于快速核验岗位能力要求，回答结果不挤占图谱控制台和画布空间。', 'Quickly verify role capability requirements without crowding the graph console or canvas.') }}</p>
         </div>
       </header>
 
@@ -1399,17 +1402,17 @@ function evolutionBusinessLevel(event: any) {
             <input
               v-model="graphQuestion"
               class="input"
-              placeholder="例如：中级数据库管理员需要掌握哪些技能？"
+              :placeholder="tx('例如：中级数据库管理员需要掌握哪些技能？', 'Example: which skills are required for a mid-level database administrator?')"
               @keydown.enter.prevent="askGraph"
             />
             <button class="button primary" type="button" :disabled="graphAsking || !graphQuestion.trim()" @click="askGraph">
-              <AppIcon name="send" :size="15" /> {{ graphAsking ? '检索中' : '提问' }}
+              <AppIcon name="send" :size="15" /> {{ graphAsking ? tx('检索中', 'Retrieving') : tx('提问', 'Ask') }}
             </button>
           </div>
           <div class="qa-suggestion-row">
-            <button type="button" @click="graphQuestion = 'AI Agent 工程师需要掌握哪些技能？'">AI Agent 工程师技能要求</button>
-            <button type="button" @click="graphQuestion = '中级数据库管理员需要掌握哪些技能？'">中级数据库管理员能力</button>
-            <button type="button" @click="graphQuestion = '哪些岗位共同需要 Python？'">Python 关联岗位</button>
+            <button type="button" @click="graphQuestion = tx('AI Agent 工程师需要掌握哪些技能？', 'What skills are required for an AI Agent Engineer?')">{{ tx('AI Agent 工程师技能要求', 'AI Agent Engineer Skill Requirements') }}</button>
+            <button type="button" @click="graphQuestion = tx('中级数据库管理员需要掌握哪些技能？', 'What skills are required for a mid-level database administrator?')">{{ tx('中级数据库管理员能力', 'Mid-level DBA Capabilities') }}</button>
+            <button type="button" @click="graphQuestion = tx('哪些岗位共同需要 Python？', 'Which roles commonly require Python?')">{{ tx('Python 关联岗位', 'Python-linked Roles') }}</button>
           </div>
         </div>
 
@@ -1417,8 +1420,8 @@ function evolutionBusinessLevel(event: any) {
           <div class="graph-rag-answer-text">{{ graphAnswer }}</div>
           <div v-if="graphEvidence.length" class="graph-rag-evidence">
             <div v-for="(ev, index) in graphEvidence" :key="ev.role" class="graph-rag-evidence-item">
-              <b>证据 {{ index + 1 }} · {{ ev.role }}</b>
-              <span class="muted">{{ ev.stack }}</span>
+              <b>{{ tx('证据', 'Evidence') }} {{ index + 1 }} · {{ phrase(ev.role) }}</b>
+              <span class="muted">{{ term(ev.stack) }}</span>
               <div class="jd-tag-list">
                 <span v-for="skill in ev.skills" :key="skill" class="jd-tag jd-tag-mint">{{ skill }}</span>
               </div>
@@ -1428,8 +1431,8 @@ function evolutionBusinessLevel(event: any) {
 
         <div v-else class="graph-qa-empty">
           <AppIcon name="chat" :size="28" />
-          <b>等待提问</b>
-          <span>回答会显示在这里，不影响左侧构建参数和图谱探索布局。</span>
+          <b>{{ tx('等待提问', 'Waiting for a question') }}</b>
+          <span>{{ tx('回答会显示在这里，不影响左侧构建参数和图谱探索布局。', 'Answers appear here without affecting build parameters or graph exploration layout.') }}</span>
         </div>
       </div>
     </section>
@@ -1437,20 +1440,20 @@ function evolutionBusinessLevel(event: any) {
     <section class="enterprise-panel evolution-ops-panel evolution-market-panel" v-reveal>
       <header class="enterprise-panel-head compact evolution-ops-head">
         <div>
-          <span class="panel-kicker">能力演化运营</span>
-          <h2>岗位技能变化监控</h2>
-          <p>按岗位技能证据的时间变化生成涨跌行情，帮助企业判断哪些能力需要加权、降权、修订或进入可信审核。</p>
+          <span class="panel-kicker">{{ tx('能力演化运营', 'Capability Evolution Operations') }}</span>
+          <h2>{{ tx('岗位技能变化监控', 'Role Skill Change Monitoring') }}</h2>
+          <p>{{ tx('按岗位技能证据的时间变化生成涨跌行情，帮助企业判断哪些能力需要加权、降权、修订或进入可信审核。', 'Generate rise/fall signals from time-series role-skill evidence to decide which capabilities should be weighted, downgraded, revised or audited.') }}</p>
         </div>
         <div class="evolution-actions">
           <select v-model="evolutionFilter" class="select compact-select">
-            <option value="ALL">全部变化</option>
-            <option value="ADDED">新增</option>
-            <option value="WEAKENED">弱化</option>
-            <option value="MODIFIED">修改</option>
+            <option value="ALL">{{ tx('全部变化', 'All Changes') }}</option>
+            <option value="ADDED">{{ tx('新增', 'Added') }}</option>
+            <option value="WEAKENED">{{ tx('弱化', 'Weakened') }}</option>
+            <option value="MODIFIED">{{ tx('修改', 'Modified') }}</option>
           </select>
-          <button class="button secondary" type="button" @click="loadEvolution">刷新</button>
-          <button class="button primary" type="button" :disabled="evolutionLoading" @click="analyzeEvolution">{{ evolutionLoading ? '分析中' : '执行演化分析' }}</button>
-          <RouterLink to="/audit" class="button dark">查看待审核</RouterLink>
+          <button class="button secondary" type="button" @click="loadEvolution">{{ tx('刷新', 'Refresh') }}</button>
+          <button class="button primary" type="button" :disabled="evolutionLoading" @click="analyzeEvolution">{{ evolutionLoading ? tx('分析中', 'Analyzing') : tx('执行演化分析', 'Run Evolution Analysis') }}</button>
+          <RouterLink to="/audit" class="button dark">{{ tx('查看待审核', 'View Audit Queue') }}</RouterLink>
         </div>
       </header>
 
@@ -1459,21 +1462,21 @@ function evolutionBusinessLevel(event: any) {
           <article class="evolution-market-main">
             <div class="market-main-head">
               <div>
-                <span class="panel-kicker">技能行情趋势</span>
-                <h3>岗位能力行情雷达榜</h3>
-                <p>按影响幅度展示全部技能变化，左侧为降温/降权风险，右侧为升温/加权机会，点击任一技能查看处置建议。</p>
+                <span class="panel-kicker">{{ tx('技能行情趋势', 'Skill Market Trend') }}</span>
+                <h3>{{ tx('岗位能力行情雷达榜', 'Role Capability Signal Radar') }}</h3>
+                <p>{{ tx('按影响幅度展示全部技能变化，左侧为降温/降权风险，右侧为升温/加权机会，点击任一技能查看处置建议。', 'Rank all skill changes by impact. Left means cooling/downgrade risk; right means warming/weighting opportunity. Click any skill for action suggestions.') }}</p>
               </div>
               <div class="market-momentum" :class="evolutionNetMomentum >= 0 ? 'up' : 'down'">
-                <span>全局净变化</span>
+                <span>{{ tx('全局净变化', 'Net Momentum') }}</span>
                 <strong>{{ evolutionNetMomentum >= 0 ? '+' : '' }}{{ evolutionNetMomentum.toFixed(1) }}pp</strong>
-                <small>{{ evolutionShown.length }} 条信号</small>
+                <small>{{ evolutionShown.length }} {{ tx('条信号', 'signals') }}</small>
               </div>
             </div>
             <div class="evolution-impact-board">
               <div class="impact-scale">
-                <span>降温 / 风险</span>
+                <span>{{ tx('降温 / 风险', 'Cooling / Risk') }}</span>
                 <b>0</b>
-                <span>升温 / 机会</span>
+                <span>{{ tx('升温 / 机会', 'Warming / Opportunity') }}</span>
               </div>
               <button
                 v-for="(event, index) in evolutionTopMovers"
@@ -1485,8 +1488,8 @@ function evolutionBusinessLevel(event: any) {
               >
                 <span class="impact-rank">{{ String(index + 1).padStart(2, '0') }}</span>
                 <div class="impact-skill">
-                  <b>{{ event.skill_name }}</b>
-                  <small>{{ event.role_name }}</small>
+                  <b>{{ phrase(event.skill_name) }}</b>
+                  <small>{{ phrase(event.role_name) }}</small>
                 </div>
                 <div class="impact-track">
                   <span />
@@ -1501,19 +1504,19 @@ function evolutionBusinessLevel(event: any) {
 
           <aside class="evolution-market-summary">
             <div class="evolution-kpi-row">
-              <article><span>新增</span><b>{{ evolutionCounts.added }}</b><small>升温技能</small></article>
-              <article><span>弱化</span><b>{{ evolutionCounts.weakened }}</b><small>降权候选</small></article>
-              <article><span>修订</span><b>{{ evolutionCounts.modified }}</b><small>口径变化</small></article>
-              <article><span>待审核</span><b>{{ evolutionAuditCount }}</b><small>需人工放行</small></article>
+              <article><span>{{ tx('新增', 'Added') }}</span><b>{{ evolutionCounts.added }}</b><small>{{ tx('升温技能', 'Warming skills') }}</small></article>
+              <article><span>{{ tx('弱化', 'Weakened') }}</span><b>{{ evolutionCounts.weakened }}</b><small>{{ tx('降权候选', 'Downgrade candidates') }}</small></article>
+              <article><span>{{ tx('修订', 'Revised') }}</span><b>{{ evolutionCounts.modified }}</b><small>{{ tx('口径变化', 'Definition changes') }}</small></article>
+              <article><span>{{ tx('待审核', 'Pending Audit') }}</span><b>{{ evolutionAuditCount }}</b><small>{{ tx('需人工放行', 'Needs human approval') }}</small></article>
             </div>
             <div v-if="evolutionSelectedEvent" class="evolution-signal-card" :class="evolutionTone(evolutionSelectedEvent)">
-              <span>{{ changeLabel(evolutionSelectedEvent.change_type) }}信号</span>
-              <h3>{{ evolutionSelectedEvent.role_name }} · {{ evolutionSelectedEvent.skill_name }}</h3>
+              <span>{{ changeLabel(evolutionSelectedEvent.change_type) }} {{ tx('信号', 'Signal') }}</span>
+              <h3>{{ phrase(evolutionSelectedEvent.role_name) }} · {{ phrase(evolutionSelectedEvent.skill_name) }}</h3>
               <strong>{{ evolutionDeltaText(evolutionSelectedEvent) }}</strong>
               <p>{{ evolutionDecision(evolutionSelectedEvent) }}</p>
               <div>
-                <em>{{ evolutionSelectedEvent.evidence_count }} 条证据</em>
-                <em>可信 {{ evolutionConfidencePct(evolutionSelectedEvent) }}%</em>
+                <em>{{ evolutionSelectedEvent.evidence_count }} {{ tx('条证据', 'evidence records') }}</em>
+                <em>{{ tx('可信', 'Confidence') }} {{ evolutionConfidencePct(evolutionSelectedEvent) }}%</em>
               </div>
             </div>
           </aside>
@@ -1533,8 +1536,8 @@ function evolutionBusinessLevel(event: any) {
 
         <div class="evolution-trade-ledger">
           <div class="evolution-ledger-head">
-            <div><span class="panel-kicker">变化明细</span><h3>岗位技能行情台账</h3></div>
-            <span class="status-badge good">{{ evolutionShown.length }} 条记录</span>
+            <div><span class="panel-kicker">{{ tx('变化明细', 'Change Details') }}</span><h3>{{ tx('岗位技能行情台账', 'Role Skill Signal Ledger') }}</h3></div>
+            <span class="status-badge good">{{ evolutionShown.length }} {{ tx('条记录', 'records') }}</span>
           </div>
           <div class="evolution-trade-table">
             <article
@@ -1547,26 +1550,26 @@ function evolutionBusinessLevel(event: any) {
             >
               <span class="change-badge" :class="event.change_type.toLowerCase()">{{ changeLabel(event.change_type) }}</span>
               <div>
-                <b>{{ event.role_name }} · {{ event.skill_name }}</b>
-                <small>{{ event.old_value }} → {{ event.new_value }}</small>
+                <b>{{ phrase(event.role_name) }} · {{ phrase(event.skill_name) }}</b>
+                <small>{{ phrase(event.old_value) }} → {{ phrase(event.new_value) }}</small>
               </div>
               <strong>{{ evolutionDeltaText(event) }}</strong>
-              <em>{{ event.evidence_count }} 条证据</em>
-              <p>{{ event.explanation }}</p>
+              <em>{{ event.evidence_count }} {{ tx('条证据', 'evidence records') }}</em>
+              <p>{{ phrase(event.explanation) }}</p>
               <RouterLink
                 v-if="event.status === 'AUTO_DETECTED'"
                 :to="{ path: '/audit', query: { type: 'EVOLUTION', id: event.id } }"
                 class="button secondary"
               >
-                进入审核
+                {{ tx('进入审核', 'Enter Audit') }}
               </RouterLink>
-              <span v-else class="status-badge" :class="event.status === 'APPROVED' ? 'good' : 'risk'">{{ event.status === 'APPROVED' ? '已通过' : '已处理' }}</span>
+              <span v-else class="status-badge" :class="event.status === 'APPROVED' ? 'good' : 'risk'">{{ event.status === 'APPROVED' ? tx('已通过', 'Approved') : tx('已处理', 'Processed') }}</span>
             </article>
           </div>
         </div>
       </template>
 
-      <div v-else class="evolution-empty">暂无演化事件，点击“执行演化分析”生成。</div>
+      <div v-else class="evolution-empty">{{ tx('暂无演化事件，点击“执行演化分析”生成。', 'No evolution events yet. Click “Run Evolution Analysis” to generate them.') }}</div>
     </section>
   </div>
 </template>
