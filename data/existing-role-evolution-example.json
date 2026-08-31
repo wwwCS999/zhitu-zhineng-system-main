@@ -1,0 +1,28 @@
+{
+  "roleName": "Java 开发工程师",
+  "period": "2026H1",
+  "changes": [
+    {
+      "skill": "Kubernetes",
+      "type": "ADDED",
+      "from": "加分/少见",
+      "to": "中高级常见",
+      "reason": "云原生发布要求在近期多源 JD 中增长"
+    },
+    {
+      "skill": "CI/CD",
+      "type": "ADDED",
+      "from": "工程辅助",
+      "to": "常见工程能力",
+      "reason": "企业持续交付体系要求提升"
+    },
+    {
+      "skill": "传统单体框架模板描述",
+      "type": "WEAKENED",
+      "from": "高频",
+      "to": "降低权重",
+      "reason": "近重复模板和岗位通胀校正"
+    }
+  ],
+  "evidencePolicy": "每项变化均需至少2个独立来源并经人工审核"
+}

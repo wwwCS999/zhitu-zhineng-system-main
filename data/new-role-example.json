@@ -1,0 +1,33 @@
+{
+  "candidateName": "AI Agent 工程师",
+  "definition": "面向企业多智能体协作与业务自动化，负责 Agent 工作流、工具调用、记忆、评测和部署的新兴岗位。",
+  "coreResponsibilities": [
+    "业务流程智能体化分析",
+    "Agent 工作流与工具编排",
+    "评测、监控与安全治理"
+  ],
+  "requiredSkills": [
+    "Python",
+    "AI Agent",
+    "Prompt Engineering",
+    "大模型API调用",
+    "LangChain"
+  ],
+  "bonusSkills": [
+    "LangGraph",
+    "MCP",
+    "RAG",
+    "向量数据库",
+    "Docker"
+  ],
+  "scenarios": [
+    "智能客服",
+    "企业流程自动化",
+    "知识工作助手"
+  ],
+  "verification": {
+    "sampleJDs": 10,
+    "independentSources": 5,
+    "humanReviewRequired": true
+  }
+}

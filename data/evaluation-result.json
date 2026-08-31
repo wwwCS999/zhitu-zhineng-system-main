@@ -1,0 +1,11 @@
+{
+  "jd_parse_precision": 0.9727,
+  "jd_parse_recall": 0.9727,
+  "jd_parse_f1": 0.9727,
+  "resume_skill_precision": 1.0,
+  "resume_skill_recall": 1.0,
+  "resume_skill_f1": 1.0,
+  "jd_count": 120,
+  "target": "JD 解析准确率 / F1 >= 0.90",
+  "hallucination_control": "实时解析采用原文证据门禁，未被 JD 原文或别名库支持的模型候选不入库。"
+}

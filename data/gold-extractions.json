@@ -1,0 +1,1942 @@
+[
+  {
+    "id": 1,
+    "jobTitle": "AI Agent 工程师",
+    "requiredSkills": [
+      "Python",
+      "大模型API调用",
+      "Prompt Engineering",
+      "RAG",
+      "LangChain",
+      "LangGraph",
+      "AI Agent",
+      "MCP",
+      "向量数据库",
+      "Docker"
+    ],
+    "source": "BOSS直聘"
+  },
+  {
+    "id": 2,
+    "jobTitle": "中级AI Agent 工程师",
+    "requiredSkills": [
+      "Python",
+      "大模型API调用",
+      "Prompt Engineering",
+      "RAG",
+      "LangChain",
+      "LangGraph",
+      "AI Agent",
+      "MCP",
+      "向量数据库",
+      "Docker"
+    ],
+    "source": "企业官网"
+  },
+  {
+    "id": 3,
+    "jobTitle": "高级AI Agent 工程师",
+    "requiredSkills": [
+      "Python",
+      "大模型API调用",
+      "Prompt Engineering",
+      "RAG",
+      "LangChain",
+      "LangGraph",
+      "AI Agent",
+      "MCP",
+      "向量数据库",
+      "Docker"
+    ],
+    "source": "智联招聘"
+  },
+  {
+    "id": 4,
+    "jobTitle": "AI Agent 工程师",
+    "requiredSkills": [
+      "Python",
+      "大模型API调用",
+      "Prompt Engineering",
+      "RAG",
+      "LangChain",
+      "LangGraph",
+      "AI Agent",
+      "MCP",
+      "向量数据库",
+      "Docker"
+    ],
+    "source": "前程无忧"
+  },
+  {
+    "id": 5,
+    "jobTitle": "中级AI Agent 工程师",
+    "requiredSkills": [
+      "Python",
+      "大模型API调用",
+      "Prompt Engineering",
+      "RAG",
+      "LangChain",
+      "LangGraph",
+      "AI Agent",
+      "MCP",
+      "向量数据库",
+      "Docker"
+    ],
+    "source": "高校就业网"
+  },
+  {
+    "id": 6,
+    "jobTitle": "高级AI Agent 工程师",
+    "requiredSkills": [
+      "Python",
+      "大模型API调用",
+      "Prompt Engineering",
+      "RAG",
+      "LangChain",
+      "LangGraph",
+      "AI Agent",
+      "MCP",
+      "向量数据库",
+      "Docker"
+    ],
+    "source": "BOSS直聘"
+  },
+  {
+    "id": 7,
+    "jobTitle": "AI Agent 工程师",
+    "requiredSkills": [
+      "Python",
+      "大模型API调用",
+      "Prompt Engineering",
+      "RAG",
+      "LangChain",
+      "LangGraph",
+      "AI Agent",
+      "MCP",
+      "向量数据库",
+      "Docker"
+    ],
+    "source": "企业官网"
+  },
+  {
+    "id": 8,
+    "jobTitle": "中级AI Agent 工程师",
+    "requiredSkills": [
+      "Python",
+      "大模型API调用",
+      "Prompt Engineering",
+      "RAG",
+      "LangChain",
+      "LangGraph",
+      "AI Agent",
+      "MCP",
+      "向量数据库",
+      "Docker"
+    ],
+    "source": "智联招聘"
+  },
+  {
+    "id": 9,
+    "jobTitle": "高级AI Agent 工程师",
+    "requiredSkills": [
+      "Python",
+      "大模型API调用",
+      "Prompt Engineering",
+      "RAG",
+      "LangChain",
+      "LangGraph",
+      "AI Agent",
+      "MCP",
+      "向量数据库",
+      "Docker"
+    ],
+    "source": "前程无忧"
+  },
+  {
+    "id": 10,
+    "jobTitle": "AI Agent 工程师",
+    "requiredSkills": [
+      "Python",
+      "大模型API调用",
+      "Prompt Engineering",
+      "RAG",
+      "LangChain",
+      "LangGraph",
+      "AI Agent",
+      "MCP",
+      "向量数据库",
+      "Docker"
+    ],
+    "source": "高校就业网"
+  },
+  {
+    "id": 11,
+    "jobTitle": "RAG 应用工程师",
+    "requiredSkills": [
+      "Python",
+      "大模型API调用",
+      "Prompt Engineering",
+      "RAG",
+      "LangChain",
+      "向量数据库",
+      "知识图谱",
+      "Docker"
+    ],
+    "source": "BOSS直聘"
+  },
+  {
+    "id": 12,
+    "jobTitle": "中级RAG 应用工程师",
+    "requiredSkills": [
+      "Python",
+      "大模型API调用",
+      "Prompt Engineering",
+      "RAG",
+      "LangChain",
+      "向量数据库",
+      "知识图谱",
+      "Docker"
+    ],
+    "source": "企业官网"
+  },
+  {
+    "id": 13,
+    "jobTitle": "高级RAG 应用工程师",
+    "requiredSkills": [
+      "Python",
+      "大模型API调用",
+      "Prompt Engineering",
+      "RAG",
+      "LangChain",
+      "向量数据库",
+      "知识图谱",
+      "Docker"
+    ],
+    "source": "智联招聘"
+  },
+  {
+    "id": 14,
+    "jobTitle": "RAG 应用工程师",
+    "requiredSkills": [
+      "Python",
+      "大模型API调用",
+      "Prompt Engineering",
+      "RAG",
+      "LangChain",
+      "向量数据库",
+      "知识图谱",
+      "Docker"
+    ],
+    "source": "前程无忧"
+  },
+  {
+    "id": 15,
+    "jobTitle": "中级RAG 应用工程师",
+    "requiredSkills": [
+      "Python",
+      "大模型API调用",
+      "Prompt Engineering",
+      "RAG",
+      "LangChain",
+      "向量数据库",
+      "知识图谱",
+      "Docker"
+    ],
+    "source": "高校就业网"
+  },
+  {
+    "id": 16,
+    "jobTitle": "高级RAG 应用工程师",
+    "requiredSkills": [
+      "Python",
+      "大模型API调用",
+      "Prompt Engineering",
+      "RAG",
+      "LangChain",
+      "向量数据库",
+      "知识图谱",
+      "Docker"
+    ],
+    "source": "BOSS直聘"
+  },
+  {
+    "id": 17,
+    "jobTitle": "RAG 应用工程师",
+    "requiredSkills": [
+      "Python",
+      "大模型API调用",
+      "Prompt Engineering",
+      "RAG",
+      "LangChain",
+      "向量数据库",
+      "知识图谱",
+      "Docker"
+    ],
+    "source": "企业官网"
+  },
+  {
+    "id": 18,
+    "jobTitle": "中级RAG 应用工程师",
+    "requiredSkills": [
+      "Python",
+      "大模型API调用",
+      "Prompt Engineering",
+      "RAG",
+      "LangChain",
+      "向量数据库",
+      "知识图谱",
+      "Docker"
+    ],
+    "source": "智联招聘"
+  },
+  {
+    "id": 19,
+    "jobTitle": "高级RAG 应用工程师",
+    "requiredSkills": [
+      "Python",
+      "大模型API调用",
+      "Prompt Engineering",
+      "RAG",
+      "LangChain",
+      "向量数据库",
+      "知识图谱",
+      "Docker"
+    ],
+    "source": "前程无忧"
+  },
+  {
+    "id": 20,
+    "jobTitle": "RAG 应用工程师",
+    "requiredSkills": [
+      "Python",
+      "大模型API调用",
+      "Prompt Engineering",
+      "RAG",
+      "LangChain",
+      "向量数据库",
+      "知识图谱",
+      "Docker"
+    ],
+    "source": "高校就业网"
+  },
+  {
+    "id": 21,
+    "jobTitle": "大模型可信治理工程师",
+    "requiredSkills": [
+      "Python",
+      "机器学习",
+      "大模型API调用",
+      "Prompt Engineering",
+      "RAG",
+      "知识图谱",
+      "Docker",
+      "单元测试"
+    ],
+    "source": "BOSS直聘"
+  },
+  {
+    "id": 22,
+    "jobTitle": "中级大模型可信治理工程师",
+    "requiredSkills": [
+      "Python",
+      "机器学习",
+      "大模型API调用",
+      "Prompt Engineering",
+      "RAG",
+      "知识图谱",
+      "Docker",
+      "单元测试"
+    ],
+    "source": "企业官网"
+  },
+  {
+    "id": 23,
+    "jobTitle": "高级大模型可信治理工程师",
+    "requiredSkills": [
+      "Python",
+      "机器学习",
+      "大模型API调用",
+      "Prompt Engineering",
+      "RAG",
+      "知识图谱",
+      "Docker",
+      "单元测试"
+    ],
+    "source": "智联招聘"
+  },
+  {
+    "id": 24,
+    "jobTitle": "大模型可信治理工程师",
+    "requiredSkills": [
+      "Python",
+      "机器学习",
+      "大模型API调用",
+      "Prompt Engineering",
+      "RAG",
+      "知识图谱",
+      "Docker",
+      "单元测试"
+    ],
+    "source": "前程无忧"
+  },
+  {
+    "id": 25,
+    "jobTitle": "中级大模型可信治理工程师",
+    "requiredSkills": [
+      "Python",
+      "机器学习",
+      "大模型API调用",
+      "Prompt Engineering",
+      "RAG",
+      "知识图谱",
+      "Docker",
+      "单元测试"
+    ],
+    "source": "高校就业网"
+  },
+  {
+    "id": 26,
+    "jobTitle": "高级大模型可信治理工程师",
+    "requiredSkills": [
+      "Python",
+      "机器学习",
+      "大模型API调用",
+      "Prompt Engineering",
+      "RAG",
+      "知识图谱",
+      "Docker",
+      "单元测试"
+    ],
+    "source": "BOSS直聘"
+  },
+  {
+    "id": 27,
+    "jobTitle": "大模型可信治理工程师",
+    "requiredSkills": [
+      "Python",
+      "机器学习",
+      "大模型API调用",
+      "Prompt Engineering",
+      "RAG",
+      "知识图谱",
+      "Docker",
+      "单元测试"
+    ],
+    "source": "企业官网"
+  },
+  {
+    "id": 28,
+    "jobTitle": "中级大模型可信治理工程师",
+    "requiredSkills": [
+      "Python",
+      "机器学习",
+      "大模型API调用",
+      "Prompt Engineering",
+      "RAG",
+      "知识图谱",
+      "Docker",
+      "单元测试"
+    ],
+    "source": "智联招聘"
+  },
+  {
+    "id": 29,
+    "jobTitle": "高级大模型可信治理工程师",
+    "requiredSkills": [
+      "Python",
+      "机器学习",
+      "大模型API调用",
+      "Prompt Engineering",
+      "RAG",
+      "知识图谱",
+      "Docker",
+      "单元测试"
+    ],
+    "source": "前程无忧"
+  },
+  {
+    "id": 30,
+    "jobTitle": "大模型可信治理工程师",
+    "requiredSkills": [
+      "Python",
+      "机器学习",
+      "大模型API调用",
+      "Prompt Engineering",
+      "RAG",
+      "知识图谱",
+      "Docker",
+      "单元测试"
+    ],
+    "source": "高校就业网"
+  },
+  {
+    "id": 31,
+    "jobTitle": "Java 开发工程师",
+    "requiredSkills": [
+      "Java",
+      "Spring Boot",
+      "Spring Cloud",
+      "MySQL",
+      "Redis",
+      "Kafka",
+      "Docker",
+      "Kubernetes",
+      "Git",
+      "CI/CD",
+      "RESTful API",
+      "微服务",
+      "SQL"
+    ],
+    "source": "BOSS直聘"
+  },
+  {
+    "id": 32,
+    "jobTitle": "中级Java 开发工程师",
+    "requiredSkills": [
+      "Java",
+      "Spring Boot",
+      "Spring Cloud",
+      "MySQL",
+      "Redis",
+      "Kafka",
+      "Docker",
+      "Kubernetes",
+      "Git",
+      "CI/CD",
+      "RESTful API",
+      "微服务",
+      "SQL"
+    ],
+    "source": "企业官网"
+  },
+  {
+    "id": 33,
+    "jobTitle": "高级Java 开发工程师",
+    "requiredSkills": [
+      "Java",
+      "Spring Boot",
+      "Spring Cloud",
+      "MySQL",
+      "Redis",
+      "Kafka",
+      "Docker",
+      "Kubernetes",
+      "Git",
+      "CI/CD",
+      "RESTful API",
+      "微服务",
+      "SQL"
+    ],
+    "source": "智联招聘"
+  },
+  {
+    "id": 34,
+    "jobTitle": "Java 开发工程师",
+    "requiredSkills": [
+      "Java",
+      "Spring Boot",
+      "Spring Cloud",
+      "MySQL",
+      "Redis",
+      "Kafka",
+      "Docker",
+      "Kubernetes",
+      "Git",
+      "CI/CD",
+      "RESTful API",
+      "微服务",
+      "SQL"
+    ],
+    "source": "前程无忧"
+  },
+  {
+    "id": 35,
+    "jobTitle": "中级Java 开发工程师",
+    "requiredSkills": [
+      "Java",
+      "Spring Boot",
+      "Spring Cloud",
+      "MySQL",
+      "Redis",
+      "Kafka",
+      "Docker",
+      "Kubernetes",
+      "Git",
+      "CI/CD",
+      "RESTful API",
+      "微服务",
+      "SQL"
+    ],
+    "source": "高校就业网"
+  },
+  {
+    "id": 36,
+    "jobTitle": "高级Java 开发工程师",
+    "requiredSkills": [
+      "Java",
+      "Spring Boot",
+      "Spring Cloud",
+      "MySQL",
+      "Redis",
+      "Kafka",
+      "Docker",
+      "Kubernetes",
+      "Git",
+      "CI/CD",
+      "RESTful API",
+      "微服务",
+      "SQL"
+    ],
+    "source": "BOSS直聘"
+  },
+  {
+    "id": 37,
+    "jobTitle": "Java 开发工程师",
+    "requiredSkills": [
+      "Java",
+      "Spring Boot",
+      "Spring Cloud",
+      "MySQL",
+      "Redis",
+      "Kafka",
+      "Docker",
+      "Kubernetes",
+      "Git",
+      "CI/CD",
+      "RESTful API",
+      "微服务",
+      "SQL"
+    ],
+    "source": "企业官网"
+  },
+  {
+    "id": 38,
+    "jobTitle": "中级Java 开发工程师",
+    "requiredSkills": [
+      "Java",
+      "Spring Boot",
+      "Spring Cloud",
+      "MySQL",
+      "Redis",
+      "Kafka",
+      "Docker",
+      "Kubernetes",
+      "Git",
+      "CI/CD",
+      "RESTful API",
+      "微服务",
+      "SQL"
+    ],
+    "source": "智联招聘"
+  },
+  {
+    "id": 39,
+    "jobTitle": "高级Java 开发工程师",
+    "requiredSkills": [
+      "Java",
+      "Spring Boot",
+      "Spring Cloud",
+      "MySQL",
+      "Redis",
+      "Kafka",
+      "Docker",
+      "Kubernetes",
+      "Git",
+      "CI/CD",
+      "RESTful API",
+      "微服务",
+      "SQL"
+    ],
+    "source": "前程无忧"
+  },
+  {
+    "id": 40,
+    "jobTitle": "Java 开发工程师",
+    "requiredSkills": [
+      "Java",
+      "Spring Boot",
+      "Spring Cloud",
+      "MySQL",
+      "Redis",
+      "Kafka",
+      "Docker",
+      "Kubernetes",
+      "Git",
+      "CI/CD",
+      "RESTful API",
+      "微服务",
+      "SQL"
+    ],
+    "source": "高校就业网"
+  },
+  {
+    "id": 41,
+    "jobTitle": "大数据开发工程师",
+    "requiredSkills": [
+      "Kafka",
+      "Hadoop",
+      "Spark",
+      "Flink",
+      "数据仓库",
+      "数据治理",
+      "ETL",
+      "Docker",
+      "Linux",
+      "SQL"
+    ],
+    "source": "BOSS直聘"
+  },
+  {
+    "id": 42,
+    "jobTitle": "中级大数据开发工程师",
+    "requiredSkills": [
+      "Kafka",
+      "Hadoop",
+      "Spark",
+      "Flink",
+      "数据仓库",
+      "数据治理",
+      "ETL",
+      "Docker",
+      "Linux",
+      "SQL"
+    ],
+    "source": "企业官网"
+  },
+  {
+    "id": 43,
+    "jobTitle": "高级大数据开发工程师",
+    "requiredSkills": [
+      "Kafka",
+      "Hadoop",
+      "Spark",
+      "Flink",
+      "数据仓库",
+      "数据治理",
+      "ETL",
+      "Docker",
+      "Linux",
+      "SQL"
+    ],
+    "source": "智联招聘"
+  },
+  {
+    "id": 44,
+    "jobTitle": "大数据开发工程师",
+    "requiredSkills": [
+      "Kafka",
+      "Hadoop",
+      "Spark",
+      "Flink",
+      "数据仓库",
+      "数据治理",
+      "ETL",
+      "Docker",
+      "Linux",
+      "SQL"
+    ],
+    "source": "前程无忧"
+  },
+  {
+    "id": 45,
+    "jobTitle": "中级大数据开发工程师",
+    "requiredSkills": [
+      "Kafka",
+      "Hadoop",
+      "Spark",
+      "Flink",
+      "数据仓库",
+      "数据治理",
+      "ETL",
+      "Docker",
+      "Linux",
+      "SQL"
+    ],
+    "source": "高校就业网"
+  },
+  {
+    "id": 46,
+    "jobTitle": "高级大数据开发工程师",
+    "requiredSkills": [
+      "Kafka",
+      "Hadoop",
+      "Spark",
+      "Flink",
+      "数据仓库",
+      "数据治理",
+      "ETL",
+      "Docker",
+      "Linux",
+      "SQL"
+    ],
+    "source": "BOSS直聘"
+  },
+  {
+    "id": 47,
+    "jobTitle": "大数据开发工程师",
+    "requiredSkills": [
+      "Kafka",
+      "Hadoop",
+      "Spark",
+      "Flink",
+      "数据仓库",
+      "数据治理",
+      "ETL",
+      "Docker",
+      "Linux",
+      "SQL"
+    ],
+    "source": "企业官网"
+  },
+  {
+    "id": 48,
+    "jobTitle": "中级大数据开发工程师",
+    "requiredSkills": [
+      "Kafka",
+      "Hadoop",
+      "Spark",
+      "Flink",
+      "数据仓库",
+      "数据治理",
+      "ETL",
+      "Docker",
+      "Linux",
+      "SQL"
+    ],
+    "source": "智联招聘"
+  },
+  {
+    "id": 49,
+    "jobTitle": "高级大数据开发工程师",
+    "requiredSkills": [
+      "Kafka",
+      "Hadoop",
+      "Spark",
+      "Flink",
+      "数据仓库",
+      "数据治理",
+      "ETL",
+      "Docker",
+      "Linux",
+      "SQL"
+    ],
+    "source": "前程无忧"
+  },
+  {
+    "id": 50,
+    "jobTitle": "大数据开发工程师",
+    "requiredSkills": [
+      "Kafka",
+      "Hadoop",
+      "Spark",
+      "Flink",
+      "数据仓库",
+      "数据治理",
+      "ETL",
+      "Docker",
+      "Linux",
+      "SQL"
+    ],
+    "source": "高校就业网"
+  },
+  {
+    "id": 51,
+    "jobTitle": "物联网平台工程师",
+    "requiredSkills": [
+      "MySQL",
+      "Kafka",
+      "Docker",
+      "Linux",
+      "物联网协议",
+      "嵌入式C",
+      "边缘计算",
+      "RESTful API",
+      "SQL"
+    ],
+    "source": "BOSS直聘"
+  },
+  {
+    "id": 52,
+    "jobTitle": "中级物联网平台工程师",
+    "requiredSkills": [
+      "MySQL",
+      "Kafka",
+      "Docker",
+      "Linux",
+      "物联网协议",
+      "嵌入式C",
+      "边缘计算",
+      "RESTful API",
+      "SQL"
+    ],
+    "source": "企业官网"
+  },
+  {
+    "id": 53,
+    "jobTitle": "高级物联网平台工程师",
+    "requiredSkills": [
+      "MySQL",
+      "Kafka",
+      "Docker",
+      "Linux",
+      "物联网协议",
+      "嵌入式C",
+      "边缘计算",
+      "RESTful API",
+      "SQL"
+    ],
+    "source": "智联招聘"
+  },
+  {
+    "id": 54,
+    "jobTitle": "物联网平台工程师",
+    "requiredSkills": [
+      "MySQL",
+      "Kafka",
+      "Docker",
+      "Linux",
+      "物联网协议",
+      "嵌入式C",
+      "边缘计算",
+      "RESTful API",
+      "SQL"
+    ],
+    "source": "前程无忧"
+  },
+  {
+    "id": 55,
+    "jobTitle": "中级物联网平台工程师",
+    "requiredSkills": [
+      "MySQL",
+      "Kafka",
+      "Docker",
+      "Linux",
+      "物联网协议",
+      "嵌入式C",
+      "边缘计算",
+      "RESTful API",
+      "SQL"
+    ],
+    "source": "高校就业网"
+  },
+  {
+    "id": 56,
+    "jobTitle": "高级物联网平台工程师",
+    "requiredSkills": [
+      "MySQL",
+      "Kafka",
+      "Docker",
+      "Linux",
+      "物联网协议",
+      "嵌入式C",
+      "边缘计算",
+      "RESTful API",
+      "SQL"
+    ],
+    "source": "BOSS直聘"
+  },
+  {
+    "id": 57,
+    "jobTitle": "物联网平台工程师",
+    "requiredSkills": [
+      "MySQL",
+      "Kafka",
+      "Docker",
+      "Linux",
+      "物联网协议",
+      "嵌入式C",
+      "边缘计算",
+      "RESTful API",
+      "SQL"
+    ],
+    "source": "企业官网"
+  },
+  {
+    "id": 58,
+    "jobTitle": "中级物联网平台工程师",
+    "requiredSkills": [
+      "MySQL",
+      "Kafka",
+      "Docker",
+      "Linux",
+      "物联网协议",
+      "嵌入式C",
+      "边缘计算",
+      "RESTful API",
+      "SQL"
+    ],
+    "source": "智联招聘"
+  },
+  {
+    "id": 59,
+    "jobTitle": "高级物联网平台工程师",
+    "requiredSkills": [
+      "MySQL",
+      "Kafka",
+      "Docker",
+      "Linux",
+      "物联网协议",
+      "嵌入式C",
+      "边缘计算",
+      "RESTful API",
+      "SQL"
+    ],
+    "source": "前程无忧"
+  },
+  {
+    "id": 60,
+    "jobTitle": "物联网平台工程师",
+    "requiredSkills": [
+      "MySQL",
+      "Kafka",
+      "Docker",
+      "Linux",
+      "物联网协议",
+      "嵌入式C",
+      "边缘计算",
+      "RESTful API",
+      "SQL"
+    ],
+    "source": "高校就业网"
+  },
+  {
+    "id": 61,
+    "jobTitle": "计算机视觉算法工程师",
+    "requiredSkills": [
+      "Python",
+      "深度学习",
+      "PyTorch",
+      "Docker",
+      "Linux",
+      "Git",
+      "边缘计算",
+      "计算机视觉"
+    ],
+    "source": "BOSS直聘"
+  },
+  {
+    "id": 62,
+    "jobTitle": "中级计算机视觉算法工程师",
+    "requiredSkills": [
+      "Python",
+      "深度学习",
+      "PyTorch",
+      "Docker",
+      "Linux",
+      "Git",
+      "边缘计算",
+      "计算机视觉"
+    ],
+    "source": "企业官网"
+  },
+  {
+    "id": 63,
+    "jobTitle": "高级计算机视觉算法工程师",
+    "requiredSkills": [
+      "Python",
+      "深度学习",
+      "PyTorch",
+      "Docker",
+      "Linux",
+      "Git",
+      "边缘计算",
+      "计算机视觉"
+    ],
+    "source": "智联招聘"
+  },
+  {
+    "id": 64,
+    "jobTitle": "计算机视觉算法工程师",
+    "requiredSkills": [
+      "Python",
+      "深度学习",
+      "PyTorch",
+      "Docker",
+      "Linux",
+      "Git",
+      "边缘计算",
+      "计算机视觉"
+    ],
+    "source": "前程无忧"
+  },
+  {
+    "id": 65,
+    "jobTitle": "中级计算机视觉算法工程师",
+    "requiredSkills": [
+      "Python",
+      "深度学习",
+      "PyTorch",
+      "Docker",
+      "Linux",
+      "Git",
+      "边缘计算",
+      "计算机视觉"
+    ],
+    "source": "高校就业网"
+  },
+  {
+    "id": 66,
+    "jobTitle": "高级计算机视觉算法工程师",
+    "requiredSkills": [
+      "Python",
+      "深度学习",
+      "PyTorch",
+      "Docker",
+      "Linux",
+      "Git",
+      "边缘计算",
+      "计算机视觉"
+    ],
+    "source": "BOSS直聘"
+  },
+  {
+    "id": 67,
+    "jobTitle": "计算机视觉算法工程师",
+    "requiredSkills": [
+      "Python",
+      "深度学习",
+      "PyTorch",
+      "Docker",
+      "Linux",
+      "Git",
+      "边缘计算",
+      "计算机视觉"
+    ],
+    "source": "企业官网"
+  },
+  {
+    "id": 68,
+    "jobTitle": "中级计算机视觉算法工程师",
+    "requiredSkills": [
+      "Python",
+      "深度学习",
+      "PyTorch",
+      "Docker",
+      "Linux",
+      "Git",
+      "边缘计算",
+      "计算机视觉"
+    ],
+    "source": "智联招聘"
+  },
+  {
+    "id": 69,
+    "jobTitle": "高级计算机视觉算法工程师",
+    "requiredSkills": [
+      "Python",
+      "深度学习",
+      "PyTorch",
+      "Docker",
+      "Linux",
+      "Git",
+      "边缘计算",
+      "计算机视觉"
+    ],
+    "source": "前程无忧"
+  },
+  {
+    "id": 70,
+    "jobTitle": "计算机视觉算法工程师",
+    "requiredSkills": [
+      "Python",
+      "深度学习",
+      "PyTorch",
+      "Docker",
+      "Linux",
+      "Git",
+      "边缘计算",
+      "计算机视觉"
+    ],
+    "source": "高校就业网"
+  },
+  {
+    "id": 71,
+    "jobTitle": "数字孪生解决方案工程师",
+    "requiredSkills": [
+      "MySQL",
+      "Kafka",
+      "Python",
+      "Docker",
+      "物联网协议",
+      "边缘计算",
+      "数字孪生",
+      "计算机视觉",
+      "SQL"
+    ],
+    "source": "BOSS直聘"
+  },
+  {
+    "id": 72,
+    "jobTitle": "中级数字孪生解决方案工程师",
+    "requiredSkills": [
+      "MySQL",
+      "Kafka",
+      "Python",
+      "Docker",
+      "物联网协议",
+      "边缘计算",
+      "数字孪生",
+      "计算机视觉",
+      "SQL"
+    ],
+    "source": "企业官网"
+  },
+  {
+    "id": 73,
+    "jobTitle": "高级数字孪生解决方案工程师",
+    "requiredSkills": [
+      "MySQL",
+      "Kafka",
+      "Python",
+      "Docker",
+      "物联网协议",
+      "边缘计算",
+      "数字孪生",
+      "计算机视觉",
+      "SQL"
+    ],
+    "source": "智联招聘"
+  },
+  {
+    "id": 74,
+    "jobTitle": "数字孪生解决方案工程师",
+    "requiredSkills": [
+      "MySQL",
+      "Kafka",
+      "Python",
+      "Docker",
+      "物联网协议",
+      "边缘计算",
+      "数字孪生",
+      "计算机视觉",
+      "SQL"
+    ],
+    "source": "前程无忧"
+  },
+  {
+    "id": 75,
+    "jobTitle": "中级数字孪生解决方案工程师",
+    "requiredSkills": [
+      "MySQL",
+      "Kafka",
+      "Python",
+      "Docker",
+      "物联网协议",
+      "边缘计算",
+      "数字孪生",
+      "计算机视觉",
+      "SQL"
+    ],
+    "source": "高校就业网"
+  },
+  {
+    "id": 76,
+    "jobTitle": "高级数字孪生解决方案工程师",
+    "requiredSkills": [
+      "MySQL",
+      "Kafka",
+      "Python",
+      "Docker",
+      "物联网协议",
+      "边缘计算",
+      "数字孪生",
+      "计算机视觉",
+      "SQL"
+    ],
+    "source": "BOSS直聘"
+  },
+  {
+    "id": 77,
+    "jobTitle": "数字孪生解决方案工程师",
+    "requiredSkills": [
+      "MySQL",
+      "Kafka",
+      "Python",
+      "Docker",
+      "物联网协议",
+      "边缘计算",
+      "数字孪生",
+      "计算机视觉",
+      "SQL"
+    ],
+    "source": "企业官网"
+  },
+  {
+    "id": 78,
+    "jobTitle": "中级数字孪生解决方案工程师",
+    "requiredSkills": [
+      "MySQL",
+      "Kafka",
+      "Python",
+      "Docker",
+      "物联网协议",
+      "边缘计算",
+      "数字孪生",
+      "计算机视觉",
+      "SQL"
+    ],
+    "source": "智联招聘"
+  },
+  {
+    "id": 79,
+    "jobTitle": "高级数字孪生解决方案工程师",
+    "requiredSkills": [
+      "MySQL",
+      "Kafka",
+      "Python",
+      "Docker",
+      "物联网协议",
+      "边缘计算",
+      "数字孪生",
+      "计算机视觉",
+      "SQL"
+    ],
+    "source": "前程无忧"
+  },
+  {
+    "id": 80,
+    "jobTitle": "数字孪生解决方案工程师",
+    "requiredSkills": [
+      "MySQL",
+      "Kafka",
+      "Python",
+      "Docker",
+      "物联网协议",
+      "边缘计算",
+      "数字孪生",
+      "计算机视觉",
+      "SQL"
+    ],
+    "source": "高校就业网"
+  },
+  {
+    "id": 81,
+    "jobTitle": "云原生开发工程师",
+    "requiredSkills": [
+      "Java",
+      "Spring Cloud",
+      "Redis",
+      "Kafka",
+      "Docker",
+      "Kubernetes",
+      "Linux",
+      "Git",
+      "CI/CD",
+      "微服务"
+    ],
+    "source": "BOSS直聘"
+  },
+  {
+    "id": 82,
+    "jobTitle": "中级云原生开发工程师",
+    "requiredSkills": [
+      "Java",
+      "Spring Cloud",
+      "Redis",
+      "Kafka",
+      "Docker",
+      "Kubernetes",
+      "Linux",
+      "Git",
+      "CI/CD",
+      "微服务"
+    ],
+    "source": "企业官网"
+  },
+  {
+    "id": 83,
+    "jobTitle": "高级云原生开发工程师",
+    "requiredSkills": [
+      "Java",
+      "Spring Cloud",
+      "Redis",
+      "Kafka",
+      "Docker",
+      "Kubernetes",
+      "Linux",
+      "Git",
+      "CI/CD",
+      "微服务"
+    ],
+    "source": "智联招聘"
+  },
+  {
+    "id": 84,
+    "jobTitle": "云原生开发工程师",
+    "requiredSkills": [
+      "Java",
+      "Spring Cloud",
+      "Redis",
+      "Kafka",
+      "Docker",
+      "Kubernetes",
+      "Linux",
+      "Git",
+      "CI/CD",
+      "微服务"
+    ],
+    "source": "前程无忧"
+  },
+  {
+    "id": 85,
+    "jobTitle": "中级云原生开发工程师",
+    "requiredSkills": [
+      "Java",
+      "Spring Cloud",
+      "Redis",
+      "Kafka",
+      "Docker",
+      "Kubernetes",
+      "Linux",
+      "Git",
+      "CI/CD",
+      "微服务"
+    ],
+    "source": "高校就业网"
+  },
+  {
+    "id": 86,
+    "jobTitle": "高级云原生开发工程师",
+    "requiredSkills": [
+      "Java",
+      "Spring Cloud",
+      "Redis",
+      "Kafka",
+      "Docker",
+      "Kubernetes",
+      "Linux",
+      "Git",
+      "CI/CD",
+      "微服务"
+    ],
+    "source": "BOSS直聘"
+  },
+  {
+    "id": 87,
+    "jobTitle": "云原生开发工程师",
+    "requiredSkills": [
+      "Java",
+      "Spring Cloud",
+      "Redis",
+      "Kafka",
+      "Docker",
+      "Kubernetes",
+      "Linux",
+      "Git",
+      "CI/CD",
+      "微服务"
+    ],
+    "source": "企业官网"
+  },
+  {
+    "id": 88,
+    "jobTitle": "中级云原生开发工程师",
+    "requiredSkills": [
+      "Java",
+      "Spring Cloud",
+      "Redis",
+      "Kafka",
+      "Docker",
+      "Kubernetes",
+      "Linux",
+      "Git",
+      "CI/CD",
+      "微服务"
+    ],
+    "source": "智联招聘"
+  },
+  {
+    "id": 89,
+    "jobTitle": "高级云原生开发工程师",
+    "requiredSkills": [
+      "Java",
+      "Spring Cloud",
+      "Redis",
+      "Kafka",
+      "Docker",
+      "Kubernetes",
+      "Linux",
+      "Git",
+      "CI/CD",
+      "微服务"
+    ],
+    "source": "前程无忧"
+  },
+  {
+    "id": 90,
+    "jobTitle": "云原生开发工程师",
+    "requiredSkills": [
+      "Java",
+      "Spring Cloud",
+      "Redis",
+      "Kafka",
+      "Docker",
+      "Kubernetes",
+      "Linux",
+      "Git",
+      "CI/CD",
+      "微服务"
+    ],
+    "source": "高校就业网"
+  },
+  {
+    "id": 91,
+    "jobTitle": "机器学习工程师",
+    "requiredSkills": [
+      "Python",
+      "机器学习",
+      "深度学习",
+      "PyTorch",
+      "TensorFlow",
+      "数据治理",
+      "Docker",
+      "Git",
+      "SQL"
+    ],
+    "source": "BOSS直聘"
+  },
+  {
+    "id": 92,
+    "jobTitle": "中级机器学习工程师",
+    "requiredSkills": [
+      "Python",
+      "机器学习",
+      "深度学习",
+      "PyTorch",
+      "TensorFlow",
+      "数据治理",
+      "Docker",
+      "Git",
+      "SQL"
+    ],
+    "source": "企业官网"
+  },
+  {
+    "id": 93,
+    "jobTitle": "高级机器学习工程师",
+    "requiredSkills": [
+      "Python",
+      "机器学习",
+      "深度学习",
+      "PyTorch",
+      "TensorFlow",
+      "数据治理",
+      "Docker",
+      "Git",
+      "SQL"
+    ],
+    "source": "智联招聘"
+  },
+  {
+    "id": 94,
+    "jobTitle": "机器学习工程师",
+    "requiredSkills": [
+      "Python",
+      "机器学习",
+      "深度学习",
+      "PyTorch",
+      "TensorFlow",
+      "数据治理",
+      "Docker",
+      "Git",
+      "SQL"
+    ],
+    "source": "前程无忧"
+  },
+  {
+    "id": 95,
+    "jobTitle": "中级机器学习工程师",
+    "requiredSkills": [
+      "Python",
+      "机器学习",
+      "深度学习",
+      "PyTorch",
+      "TensorFlow",
+      "数据治理",
+      "Docker",
+      "Git",
+      "SQL"
+    ],
+    "source": "高校就业网"
+  },
+  {
+    "id": 96,
+    "jobTitle": "高级机器学习工程师",
+    "requiredSkills": [
+      "Python",
+      "机器学习",
+      "深度学习",
+      "PyTorch",
+      "TensorFlow",
+      "数据治理",
+      "Docker",
+      "Git",
+      "SQL"
+    ],
+    "source": "BOSS直聘"
+  },
+  {
+    "id": 97,
+    "jobTitle": "机器学习工程师",
+    "requiredSkills": [
+      "Python",
+      "机器学习",
+      "深度学习",
+      "PyTorch",
+      "TensorFlow",
+      "数据治理",
+      "Docker",
+      "Git",
+      "SQL"
+    ],
+    "source": "企业官网"
+  },
+  {
+    "id": 98,
+    "jobTitle": "中级机器学习工程师",
+    "requiredSkills": [
+      "Python",
+      "机器学习",
+      "深度学习",
+      "PyTorch",
+      "TensorFlow",
+      "数据治理",
+      "Docker",
+      "Git",
+      "SQL"
+    ],
+    "source": "智联招聘"
+  },
+  {
+    "id": 99,
+    "jobTitle": "高级机器学习工程师",
+    "requiredSkills": [
+      "Python",
+      "机器学习",
+      "深度学习",
+      "PyTorch",
+      "TensorFlow",
+      "数据治理",
+      "Docker",
+      "Git",
+      "SQL"
+    ],
+    "source": "前程无忧"
+  },
+  {
+    "id": 100,
+    "jobTitle": "机器学习工程师",
+    "requiredSkills": [
+      "Python",
+      "机器学习",
+      "深度学习",
+      "PyTorch",
+      "TensorFlow",
+      "数据治理",
+      "Docker",
+      "Git",
+      "SQL"
+    ],
+    "source": "高校就业网"
+  },
+  {
+    "id": 101,
+    "jobTitle": "智能系统工程师",
+    "requiredSkills": [
+      "Python",
+      "Docker",
+      "Linux",
+      "Git",
+      "物联网协议",
+      "边缘计算",
+      "计算机视觉",
+      "ROS"
+    ],
+    "source": "BOSS直聘"
+  },
+  {
+    "id": 102,
+    "jobTitle": "中级智能系统工程师",
+    "requiredSkills": [
+      "Python",
+      "Docker",
+      "Linux",
+      "Git",
+      "物联网协议",
+      "边缘计算",
+      "计算机视觉",
+      "ROS"
+    ],
+    "source": "企业官网"
+  },
+  {
+    "id": 103,
+    "jobTitle": "高级智能系统工程师",
+    "requiredSkills": [
+      "Python",
+      "Docker",
+      "Linux",
+      "Git",
+      "物联网协议",
+      "边缘计算",
+      "计算机视觉",
+      "ROS"
+    ],
+    "source": "智联招聘"
+  },
+  {
+    "id": 104,
+    "jobTitle": "智能系统工程师",
+    "requiredSkills": [
+      "Python",
+      "Docker",
+      "Linux",
+      "Git",
+      "物联网协议",
+      "边缘计算",
+      "计算机视觉",
+      "ROS"
+    ],
+    "source": "前程无忧"
+  },
+  {
+    "id": 105,
+    "jobTitle": "中级智能系统工程师",
+    "requiredSkills": [
+      "Python",
+      "Docker",
+      "Linux",
+      "Git",
+      "物联网协议",
+      "边缘计算",
+      "计算机视觉",
+      "ROS"
+    ],
+    "source": "高校就业网"
+  },
+  {
+    "id": 106,
+    "jobTitle": "高级智能系统工程师",
+    "requiredSkills": [
+      "Python",
+      "Docker",
+      "Linux",
+      "Git",
+      "物联网协议",
+      "边缘计算",
+      "计算机视觉",
+      "ROS"
+    ],
+    "source": "BOSS直聘"
+  },
+  {
+    "id": 107,
+    "jobTitle": "智能系统工程师",
+    "requiredSkills": [
+      "Python",
+      "Docker",
+      "Linux",
+      "Git",
+      "物联网协议",
+      "边缘计算",
+      "计算机视觉",
+      "ROS"
+    ],
+    "source": "企业官网"
+  },
+  {
+    "id": 108,
+    "jobTitle": "中级智能系统工程师",
+    "requiredSkills": [
+      "Python",
+      "Docker",
+      "Linux",
+      "Git",
+      "物联网协议",
+      "边缘计算",
+      "计算机视觉",
+      "ROS"
+    ],
+    "source": "智联招聘"
+  },
+  {
+    "id": 109,
+    "jobTitle": "高级智能系统工程师",
+    "requiredSkills": [
+      "Python",
+      "Docker",
+      "Linux",
+      "Git",
+      "物联网协议",
+      "边缘计算",
+      "计算机视觉",
+      "ROS"
+    ],
+    "source": "前程无忧"
+  },
+  {
+    "id": 110,
+    "jobTitle": "智能系统工程师",
+    "requiredSkills": [
+      "Python",
+      "Docker",
+      "Linux",
+      "Git",
+      "物联网协议",
+      "边缘计算",
+      "计算机视觉",
+      "ROS"
+    ],
+    "source": "高校就业网"
+  },
+  {
+    "id": 111,
+    "jobTitle": "数据治理工程师",
+    "requiredSkills": [
+      "MySQL",
+      "知识图谱",
+      "Spark",
+      "Flink",
+      "数据仓库",
+      "数据治理",
+      "ETL",
+      "SQL"
+    ],
+    "source": "BOSS直聘"
+  },
+  {
+    "id": 112,
+    "jobTitle": "中级数据治理工程师",
+    "requiredSkills": [
+      "MySQL",
+      "知识图谱",
+      "Spark",
+      "Flink",
+      "数据仓库",
+      "数据治理",
+      "ETL",
+      "SQL"
+    ],
+    "source": "企业官网"
+  },
+  {
+    "id": 113,
+    "jobTitle": "高级数据治理工程师",
+    "requiredSkills": [
+      "MySQL",
+      "知识图谱",
+      "Spark",
+      "Flink",
+      "数据仓库",
+      "数据治理",
+      "ETL",
+      "SQL"
+    ],
+    "source": "智联招聘"
+  },
+  {
+    "id": 114,
+    "jobTitle": "数据治理工程师",
+    "requiredSkills": [
+      "MySQL",
+      "知识图谱",
+      "Spark",
+      "Flink",
+      "数据仓库",
+      "数据治理",
+      "ETL",
+      "SQL"
+    ],
+    "source": "前程无忧"
+  },
+  {
+    "id": 115,
+    "jobTitle": "中级数据治理工程师",
+    "requiredSkills": [
+      "MySQL",
+      "知识图谱",
+      "Spark",
+      "Flink",
+      "数据仓库",
+      "数据治理",
+      "ETL",
+      "SQL"
+    ],
+    "source": "高校就业网"
+  },
+  {
+    "id": 116,
+    "jobTitle": "高级数据治理工程师",
+    "requiredSkills": [
+      "MySQL",
+      "知识图谱",
+      "Spark",
+      "Flink",
+      "数据仓库",
+      "数据治理",
+      "ETL",
+      "SQL"
+    ],
+    "source": "BOSS直聘"
+  },
+  {
+    "id": 117,
+    "jobTitle": "数据治理工程师",
+    "requiredSkills": [
+      "MySQL",
+      "知识图谱",
+      "Spark",
+      "Flink",
+      "数据仓库",
+      "数据治理",
+      "ETL",
+      "SQL"
+    ],
+    "source": "企业官网"
+  },
+  {
+    "id": 118,
+    "jobTitle": "中级数据治理工程师",
+    "requiredSkills": [
+      "MySQL",
+      "知识图谱",
+      "Spark",
+      "Flink",
+      "数据仓库",
+      "数据治理",
+      "ETL",
+      "SQL"
+    ],
+    "source": "智联招聘"
+  },
+  {
+    "id": 119,
+    "jobTitle": "高级数据治理工程师",
+    "requiredSkills": [
+      "MySQL",
+      "知识图谱",
+      "Spark",
+      "Flink",
+      "数据仓库",
+      "数据治理",
+      "ETL",
+      "SQL"
+    ],
+    "source": "前程无忧"
+  },
+  {
+    "id": 120,
+    "jobTitle": "数据治理工程师",
+    "requiredSkills": [
+      "MySQL",
+      "知识图谱",
+      "Spark",
+      "Flink",
+      "数据仓库",
+      "数据治理",
+      "ETL",
+      "SQL"
+    ],
+    "source": "高校就业网"
+  }
+]
