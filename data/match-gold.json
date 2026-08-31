@@ -1,0 +1,32 @@
+{
+  "thresholds": { "match": 70, "partial": 55 },
+  "labelRule": {
+    "match": "简历技能覆盖岗位必备技能 ≥ 80%",
+    "mismatch": "简历技能覆盖岗位必备技能 ≤ 20%",
+    "partial": "覆盖在 20%~80% 之间（不参与二分类准确率，仅用于三分类与 MAE）"
+  },
+  "roles": [
+    { "name": "Java 开发工程师", "level": "初级", "required": ["Java", "Spring Boot", "MySQL", "Redis", "微服务"], "bonus": ["Docker", "Kubernetes", "Kafka", "单元测试"] },
+    { "name": "AI Agent 工程师", "level": "中级", "required": ["Python", "大模型API调用", "Prompt Engineering", "RAG", "LangChain"], "bonus": ["LangGraph", "AI Agent", "MCP", "向量数据库"] },
+    { "name": "大数据开发工程师", "level": "中级", "required": ["SQL", "Spark", "Flink", "Hadoop", "数据仓库"], "bonus": ["Kafka", "ETL", "数据治理"] },
+    { "name": "机器学习算法工程师", "level": "高级", "required": ["Python", "机器学习", "深度学习", "PyTorch", "TensorFlow"], "bonus": ["计算机视觉", "大模型API调用", "知识图谱"] },
+    { "name": "云原生 DevOps 工程师", "level": "中级", "required": ["Docker", "Kubernetes", "Linux", "CI/CD", "微服务"], "bonus": ["Kafka", "Redis", "单元测试", "Git"] },
+    { "name": "物联网工程师", "level": "中级", "required": ["嵌入式C", "物联网协议", "边缘计算", "Linux"], "bonus": ["ROS", "数字孪生", "计算机视觉"] },
+    { "name": "知识图谱工程师", "level": "高级", "required": ["知识图谱", "Python", "SQL", "向量数据库", "RAG"], "bonus": ["Spark", "大模型API调用", "LangChain"] },
+    { "name": "数据治理工程师", "level": "中级", "required": ["SQL", "数据治理", "ETL", "数据仓库", "MySQL"], "bonus": ["Spark", "Flink", "知识图谱"] }
+  ],
+  "resumes": [
+    { "name": "Java-01", "skills": ["Java", "Spring Boot", "MySQL", "Redis", "微服务", "Docker", "Git"], "projects": "微服务商城 高并发秒杀系统", "experienceYears": 2, "education": "本科" },
+    { "name": "Java-02", "skills": ["Java", "MySQL", "Git"], "projects": "学生管理系统", "experienceYears": 0.5, "education": "本科" },
+    { "name": "LLM-01", "skills": ["Python", "大模型API调用", "Prompt Engineering", "RAG", "LangChain", "向量数据库"], "projects": "企业知识库RAG问答系统", "experienceYears": 2, "education": "硕士" },
+    { "name": "LLM-02", "skills": ["Python", "大模型API调用", "Prompt Engineering"], "projects": "聊天机器人Demo", "experienceYears": 1, "education": "本科" },
+    { "name": "BigData-01", "skills": ["SQL", "Spark", "Flink", "Hadoop", "数据仓库", "Kafka", "ETL"], "projects": "实时数仓平台 用户画像分析", "experienceYears": 3, "education": "本科" },
+    { "name": "ML-01", "skills": ["Python", "机器学习", "深度学习", "PyTorch", "TensorFlow", "计算机视觉"], "projects": "目标检测模型 图像分类系统", "experienceYears": 4, "education": "博士" },
+    { "name": "DevOps-01", "skills": ["Docker", "Kubernetes", "Linux", "CI/CD", "微服务", "Git"], "projects": "容器化部署平台 K8s集群治理", "experienceYears": 3, "education": "本科" },
+    { "name": "DevOps-02", "skills": ["Docker", "Linux", "Git"], "projects": "个人博客部署", "experienceYears": 1, "education": "本科" },
+    { "name": "IoT-01", "skills": ["嵌入式C", "物联网协议", "边缘计算", "Linux"], "projects": "智慧工厂边缘网关 设备接入系统", "experienceYears": 2, "education": "本科" },
+    { "name": "KG-01", "skills": ["知识图谱", "Python", "SQL", "向量数据库", "RAG", "Spark"], "projects": "企业知识图谱构建与推理平台", "experienceYears": 3, "education": "硕士" },
+    { "name": "DataGov-01", "skills": ["SQL", "数据治理", "ETL", "数据仓库", "MySQL"], "projects": "数据中台治理 元数据管理系统", "experienceYears": 2, "education": "本科" },
+    { "name": "AgentSenior-01", "skills": ["Python", "大模型API调用", "RAG", "LangChain", "AI Agent", "MCP", "LangGraph"], "projects": "多智能体协作平台 Agent编排框架", "experienceYears": 5, "education": "硕士" }
+  ]
+}

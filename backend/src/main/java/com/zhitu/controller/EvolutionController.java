@@ -1,0 +1,3 @@
+package com.zhitu.controller;
+import com.zhitu.common.ApiResponse;import com.zhitu.service.EvolutionService;import org.springframework.web.bind.annotation.*;import java.util.*;
+@RestController @RequestMapping("/api/evolution") public class EvolutionController {private final EvolutionService service;public EvolutionController(EvolutionService s){service=s;}@PostMapping("/analyze")public ApiResponse<Map<String,Object>>analyze(){return ApiResponse.ok("岗位能力演化分析完成",service.analyze());}@GetMapping("/events")public ApiResponse<List<Map<String,Object>>>events(){return ApiResponse.ok(service.events());}}

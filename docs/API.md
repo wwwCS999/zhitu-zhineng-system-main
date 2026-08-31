@@ -1,0 +1,26 @@
+# REST API
+
+- `GET /api/dashboard/overview`：总览指标、趋势和智能体状态
+- `POST /api/data/import/csv`：导入 JD CSV
+- `POST /api/data/upload`：上传 PDF/Word/HTML/文本资料
+- `POST /api/data/url`：采集公开网页并进入统一治理流程（含内网地址阻断）
+- `GET /api/data/documents`：数据源与质量结果
+- `POST /api/jobs/parse-all`：批量解析未处理 JD
+- `GET /api/jobs`：岗位列表
+- `GET /api/jobs/roles/{id}`：岗位详情及技能证据
+- `POST /api/emerging/discover`：执行新岗位发现
+- `GET /api/emerging/candidates`：候选岗位
+- `POST /api/evolution/analyze`：执行岗位能力演化
+- `GET /api/evolution/events`：演化事件
+- `GET /api/graph/panorama`：全景图谱
+- `POST /api/resumes/parse`：上传简历并解析
+- `POST /api/matches/analyze`：多维人岗匹配
+- `GET /api/matches/{id}`：匹配报告
+- `POST /api/learning/generate`：生成学习路径
+- `GET /api/learning/{id}`：学习路径详情
+- `GET /api/audits/pending`：待审核项
+- `POST /api/audits/{type}/{id}/decision`：通过/驳回/修改，`type` 为 `EMERGING_ROLE` 或 `EVOLUTION`
+- `POST /api/agent/chat`：基于治理后 JD 与业务分析证据的大模型问答，请求体为 `{ "message": "...", "sessionId": "..." }`
+- `GET /api/agent/status`：查看问答当前为大模型证据模式还是检索模式（不返回 API 密钥）
+- `GET /api/agent/runs`：查看包含问答模式、意图和证据数量的智能体运行记录
+- `POST /api/orchestrator/run-full-pipeline`：执行完整闭环
